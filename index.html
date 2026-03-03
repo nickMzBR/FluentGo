@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>FluentGo - FX</title>
+<title>FluentGo - Combo FX</title>
 <style>
 body{margin:0; font-family:Arial;background:#222; color:#fff; text-align:center; overflow:hidden;}
 header{display:flex; justify-content:space-between; padding:15px 25px; background:#1a1a1a; z-index:100;}
@@ -12,8 +12,10 @@ button:hover{transform:scale(1.05);}
 .hidden{display:none;}
 #lessonSection,#taskModal,#congratsModal{position:fixed; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px; z-index:50;}
 #lessonContent,#taskModalContent{background:#333; padding:20px; border-radius:10px; width:80%; max-width:600px; animation:fadeIn 0.5s;}
-#progressBar{width:80%; background:#555; border-radius:10px; margin:10px auto; height:20px; overflow:hidden;}
-#progressFill{width:0%; height:100%; background:#2563EB; transition:width 0.5s;}
+#progressBar,#comboBar{width:80%; background:#555; border-radius:10px; margin:10px auto; height:20px; overflow:hidden;}
+#progressFill,#comboFill{width:0%; height:100%; transition:width 0.3s;}
+#progressFill{background:#2563EB;}
+#comboFill{background:#FFD700;}
 canvas{position:fixed; top:0; left:0; pointer-events:none; z-index:10;}
 @keyframes fadeIn{from{opacity:0;} to{opacity:1;}}
 </style>
@@ -42,6 +44,7 @@ canvas{position:fixed; top:0; left:0; pointer-events:none; z-index:10;}
   <h2 id="currentLanguage"></h2>
   <h3>XP: <span id="xpDisplay">0</span></h3>
   <div id="progressBar"><div id="progressFill"></div></div>
+  <div id="comboBar"><div id="comboFill"></div></div>
   <button onclick="startLesson()">Começar Módulo</button>
 </div>
 
@@ -83,7 +86,7 @@ canvas{position:fixed; top:0; left:0; pointer-events:none; z-index:10;}
 <audio id="wrongSound" src="https://actions.google.com/sounds/v1/cartoon/boing.ogg"></audio>
 
 <script type="module">
-// Firebase
+// Firebase (mesmo código que você já tinha)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
@@ -97,6 +100,7 @@ const firebaseConfig = {
   messagingSenderId: "613715387990",
   appId: "1:613715387990:web:0345ade26374dd32d1fdf7"
 };
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
@@ -110,11 +114,12 @@ lessonText=document.getElementById("lessonText"), taskModal=document.getElementB
 taskTitle=document.getElementById("taskTitle"), exerciseContainer=document.getElementById("exerciseContainer"),
 progressFill=document.getElementById("progressFill"), congratsModal=document.getElementById("congratsModal"),
 congratsLanguage=document.getElementById("congratsLanguage"), correctSound=document.getElementById("correctSound"),
-wrongSound=document.getElementById("wrongSound");
+wrongSound=document.getElementById("wrongSound"), comboFill=document.getElementById("comboFill");
 
 settingsBtn.style.display="none"; logoutBtn.style.display="none";
 
 let user=null, currentLanguage="Ingles", currentModule=null, currentTask=null, currentQuestion=null, xp=0;
+let comboCount=0, maxCombo=0;
 const questionsPerTask=5,totalModules=10,totalTasks=10;
 
 const exercises={Ingles:[],Espanhol:[],Japones:[]};
@@ -149,7 +154,8 @@ updateProgress();
 }
 function nextQuestion(){ const ex=exercises[currentLanguage][currentModule-1][currentTask-1][currentQuestion]; let ans=ex.type==="translate"?document.getElementById("answerInput").value:null; checkAnswer(ans);}
 function checkAnswer(ans){ const ex=exercises[currentLanguage][currentModule-1][currentTask-1][currentQuestion]; let correct=false; if(ex.type==="translate") correct=ans.toLowerCase()===ex.answer.toLowerCase(); else correct=ans===ex.answer;
-if(correct){ xp+=10; xpDisplay.innerText=xp; correctSound.play(); spawnParticles(window.innerWidth/2,200,"#00FF00"); } else { wrongSound.play(); spawnParticles(window.innerWidth/2,200,"#FF0000"); wrongSound.play();}
+if(correct){ xp+=10; xpDisplay.innerText=xp; correctSound.play(); spawnParticles(window.innerWidth/2,200,"#00FF00"); comboCount++; maxCombo=Math.max(maxCombo,comboCount); comboFill.style.width=(comboCount/5*100)+"%"; } 
+else { wrongSound.play(); spawnParticles(window.innerWidth/2,200,"#FF0000"); comboCount=0; comboFill.style.width="0%";}
 currentQuestion++; if(currentQuestion<questionsPerTask){ showExercise();} else{ currentTask++; currentQuestion=0; if(currentTask>totalTasks){ currentModule++; currentTask=1; if(currentModule>totalModules){ congratsLanguage.innerText=currentLanguage; congratsModal.style.display="flex"; taskModal.style.display="none"; lessonSection.style.display="none"; spawnParticles(window.innerWidth/2,window.innerHeight/2,"#2563EB"); return;} } taskModal.style.display="none"; } updateProgress();}
 function updateProgress(){ const total=totalModules*totalTasks; const completed=(currentModule-1)*totalTasks + (currentTask-1) + (currentQuestion/questionsPerTask); progressFill.style.width=(completed/total)*100+"%";}
 function exitTask(){ taskModal.style.display="none"; lessonSection.style.display="flex";}
@@ -165,7 +171,7 @@ window.closeSettings=function(){ settingsSection.classList.add("hidden"); appSec
 window.saveLanguage=function(){ currentLanguage=document.getElementById("languageSelect").value; if(user) set(ref(db,"users/"+user.uid+"/language"), currentLanguage).then(()=>closeSettings()); }
 
 onAuthStateChanged(auth,u=>{ if(u){ user=u; authSection.classList.add("hidden"); appSection.classList.remove("hidden"); settingsBtn.style.display="inline-block"; logoutBtn.style.display="inline-block"; currentModule=null; currentTask=null; currentQuestion=null;
-if(user) get(ref(db,"users/"+user.uid)).then(snapshot=>{ const data=snapshot.exists()? snapshot.val():{}; currentLanguage=data.language||"Ingles"; document.getElementById("languageSelect").value=currentLanguage; document.getElementById("currentLanguage").innerText=currentLanguage;}); } else{ user=null; authSection.classList.remove("hidden"); appSection.classList.add("hidden"); settingsBtn.style.display="none"; logoutBtn.style.display="none"; currentModule=null; currentTask=null; currentQuestion=null; }});
+if(user) get(ref(db,"users/"+user.uid)).then(snapshot=>{ const data=snapshot.exists()? snapshot.val():{}; currentLanguage=data.language||"Ingles"; document.getElementById("languageSelect").value=currentLanguage; document.getElementById("currentLanguage").innerText=currentLanguage;}); } else{ user=null; authSection.classList.remove("hidden"); appSection.classList.add("hidden"); settingsBtn.style.display="none"; logoutBtn.style.display="none"; currentModule=null; currentTask=null; currentQuestion=null; comboCount=0; comboFill.style.width="0%"; }});
 </script>
 </body>
 </html>
