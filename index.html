@@ -2,21 +2,19 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>FluentGo</title>
+<title>FluentGo Full</title>
 <style>
 body { margin:0; font-family: Arial, sans-serif; background:#222; color:#fff; text-align:center;}
 header { display:flex; justify-content:space-between; padding:15px 25px; background:#1a1a1a;}
 button, select, input { padding:8px; border-radius:8px; border:none; margin:5px;}
 button { background:#2563EB; color:white; cursor:pointer;}
 select, input { background:#333; color:white;}
-.module { background:#2c2c2c; margin:15px auto; padding:15px; width:80%; border-radius:10px;}
 .hidden { display:none; }
-.disabled { opacity:0.5; pointer-events:none; }
-
-/* Tela de parabéns */
-#congratsModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); color:#fff; justify-content:center; align-items:center; flex-direction:column; font-size:1.5em; }
+#taskModal, #adModal, #congratsModal { position:fixed; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px; }
+#taskModal { background:#222; color:#fff; }
+#adModal { background:rgba(0,0,0,0.8); color:#fff; }
+#congratsModal { background:rgba(0,0,0,0.9); color:#fff; font-size:1.5em; display:none; }
 #congratsModal h1 { color:#2563EB; margin-bottom:20px; }
-#congratsModal button { font-size:1em; padding:10px 20px; }
 </style>
 </head>
 <body>
@@ -40,6 +38,7 @@ select, input { background:#333; color:white;}
 <div id="appSection" class="hidden">
   <h2 id="currentLanguage"></h2>
   <h3>XP: <span id="xpDisplay">0</span></h3>
+  <button onclick="startNextTask()">Começar/Continuar Tarefa</button>
 </div>
 
 <div id="settingsSection" class="hidden">
@@ -54,19 +53,19 @@ select, input { background:#333; color:white;}
   <button onclick="closeSettings()">Fechar</button>
 </div>
 
-<div id="adModal" class="hidden" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);color:#fff;display:flex;flex-direction:column;justify-content:center;align-items:center;">
+<div id="taskModal" class="hidden">
+  <h3 id="taskTitle"></h3>
+  <div id="exerciseContainer"></div>
+  <button id="nextQuestionBtn" onclick="nextQuestion()">Próxima Pergunta</button>
+  <button onclick="exitTask()">Sair da Tarefa</button>
+</div>
+
+<div id="adModal" class="hidden">
   <h2>Anúncio</h2>
   <p>Assista este anúncio para continuar!</p>
   <button onclick="closeAd()">Fechar Anúncio</button>
 </div>
 
-<div id="taskModal" class="hidden" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#222; color:#fff; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px;">
-  <h3 id="taskTitle"></h3>
-  <div id="exerciseContainer"></div>
-  <button id="nextQuestionBtn">Próxima Pergunta</button>
-</div>
-
-<!-- Tela de parabéns -->
 <div id="congratsModal">
   <h1>Parabéns! 🎉</h1>
   <p>Você concluiu o curso de <span id="congratsLanguage"></span>!</p>
@@ -101,7 +100,6 @@ const xpDisplay = document.getElementById("xpDisplay");
 const taskModal = document.getElementById("taskModal");
 const taskTitle = document.getElementById("taskTitle");
 const exerciseContainer = document.getElementById("exerciseContainer");
-const nextQuestionBtn = document.getElementById("nextQuestionBtn");
 const adModal = document.getElementById("adModal");
 const congratsModal = document.getElementById("congratsModal");
 const congratsLanguage = document.getElementById("congratsLanguage");
@@ -109,32 +107,63 @@ const congratsLanguage = document.getElementById("congratsLanguage");
 settingsBtn.style.display="none";
 logoutBtn.style.display="none";
 
-let currentModule = 1;
-let currentTask = 1;
-let currentQuestion = 0;
-let questionsPerTask = 5;
-let totalModules = 10;
-let totalTasks = 10;
-let currentLanguage = "Ingles";
 let user = null;
+let currentLanguage = "Ingles";
+let currentModule=1, currentTask=1, currentQuestion=0;
+const questionsPerTask=5;
+const totalModules=10, totalTasks=10;
 
-const exercisesTemplate = [
-  {type:"translate", question:"Traduza 'Hello'", answer:"Olá"},
-  {type:"multiple", question:"Qual é a tradução de 'Goodbye'?", options:["Tchau","Obrigado","Por favor"], answer:"Tchau"},
-  {type:"order", question:"Ordene: 'I am Nick'", words:["I","Nick","am"], answer:["I","am","Nick"]},
-  {type:"translate", question:"Traduza 'Thank you'", answer:"Obrigado"},
-  {type:"multiple", question:"Qual é a tradução de 'Please'?", options:["Por favor","Desculpa","Oi"], answer:"Por favor"}
-];
+// ======= Exercícios completos para 3 línguas =======
+// Para simplificar aqui, vou gerar **um template completo de dados estruturados**.
+// No arquivo real, você vai repetir o mesmo esquema para todos os módulos e tarefas.
+const exercises = {
+  Ingles: [],
+  Espanhol: [],
+  Japones: []
+};
 
-function getCurrentExercise(){
-  return exercisesTemplate[currentQuestion];
+// Função para gerar tarefas automáticas baseadas em palavras/frases simples
+function generateTasks(lang){
+  const baseWords = {
+    Ingles:[
+      ["Hello","Olá"],["Goodbye","Tchau"],["Thank you","Obrigado"],["Please","Por favor"],["Yes","Sim"],
+      ["No","Não"],["How are you?","Como vai?"],["I am Nick","Eu sou Nick"],["Good morning","Bom dia"],["Sorry","Desculpa"]
+    ],
+    Espanhol:[
+      ["Hola","Oi"],["Adiós","Tchau"],["Gracias","Obrigado"],["Por favor","Por favor"],["Sí","Sim"],
+      ["No","Não"],["¿Cómo estás?","Como vai?"],["Soy Nick","Eu sou Nick"],["Buenos días","Bom dia"],["Lo siento","Desculpa"]
+    ],
+    Japones:[
+      ["こんにちは (Konnichiwa)","Olá"],["さようなら (Sayounara)","Tchau"],["ありがとう (Arigatou)","Obrigado"],["お願いします (Onegaishimasu)","Por favor"],["はい (Hai)","Sim"],
+      ["いいえ (Iie)","Não"],["お元気ですか (Ogenki desu ka)","Como vai?"],["私はニックです (Watashi wa Nick desu)","Eu sou Nick"],["おはよう (Ohayou)","Bom dia"],["ごめんなさい (Gomen nasai)","Desculpa"]
+    ]
+  };
+  
+  for(let m=0;m<10;m++){
+    exercises[lang][m]=[];
+    for(let t=0;t<10;t++){
+      let task=[];
+      for(let q=0;q<5;q++){
+        const w = baseWords[lang][q%baseWords[lang].length];
+        if(q%2===0) task.push({type:"translate", question:w[0], answer:w[1]});
+        else task.push({type:"multiple", question:w[0], options:["Errado1","Errado2",w[1]], answer:w[1]});
+      }
+      exercises[lang][m].push(task);
+    }
+  }
 }
+
+// Gerar para todas as línguas
+["Ingles","Espanhol","Japones"].forEach(generateTasks);
+
+// ======= Lógica das tarefas =======
+function startNextTask(){ showExercise(); }
 
 function showExercise(){
   taskModal.classList.remove("hidden");
-  const ex = getCurrentExercise();
+  const ex = exercises[currentLanguage][currentModule-1][currentTask-1][currentQuestion];
   exerciseContainer.innerHTML="";
-  taskTitle.innerText = `Módulo ${currentModule} - Tarefa ${currentTask} - Pergunta ${currentQuestion+1}`;
+  taskTitle.innerText=`${currentLanguage} - Módulo ${currentModule} Tarefa ${currentTask} Pergunta ${currentQuestion+1}`;
 
   if(ex.type==="translate"){
     const input = document.createElement("input");
@@ -153,109 +182,68 @@ function showExercise(){
       exerciseContainer.appendChild(btn);
       exerciseContainer.appendChild(document.createElement("br"));
     });
-  } else if(ex.type==="order"){
-    exerciseContainer.appendChild(document.createTextNode(ex.question));
-    exerciseContainer.appendChild(document.createElement("br"));
-    ex.words.forEach(word=>{
-      const btn = document.createElement("button");
-      btn.innerText=word;
-      btn.onclick=()=>selectWord(word);
-      exerciseContainer.appendChild(btn);
-    });
-    document.selectedWords=[];
   }
 }
 
-function selectWord(word){
-  const ex = getCurrentExercise();
-  document.selectedWords.push(word);
-  if(document.selectedWords.length===ex.words.length){
-    checkAnswer(document.selectedWords);
-  }
+function nextQuestion(){
+  const ex = exercises[currentLanguage][currentModule-1][currentTask-1][currentQuestion];
+  let ans = ex.type==="translate"? document.getElementById("answerInput").value : null;
+  checkAnswer(ans);
 }
 
 function checkAnswer(ans){
-  const ex = getCurrentExercise();
+  const ex = exercises[currentLanguage][currentModule-1][currentTask-1][currentQuestion];
   let correct=false;
-  if(ex.type==="order") correct = JSON.stringify(ans)===JSON.stringify(ex.answer);
-  else correct = ans.toLowerCase()===ex.answer.toLowerCase();
+  if(ex.type==="translate") correct = ans.toLowerCase()===ex.answer.toLowerCase();
+  else correct = ans===ex.answer;
 
   alert(correct?"Correto!":"Errado! Resposta: "+ex.answer);
 
-  set(ref(db, `users/${user.uid}/tasks/module${currentModule}-task${currentTask}-q${currentQuestion+1}`), ans);
+  if(user) set(ref(db, `users/${user.uid}/tasks/${currentLanguage}-module${currentModule}-task${currentTask}-q${currentQuestion+1}`), ans);
 
   currentQuestion++;
   if(currentQuestion<questionsPerTask) showExercise();
-  else { 
-    get(ref(db,"users/"+user.uid+"/xp")).then(snap=>{
-      let xp = snap.exists()? snap.val():0;
-      set(ref(db,"users/"+user.uid+"/xp"), xp+10);
-      xpDisplay.innerText=xp+10;
-    });
-    taskModal.classList.add("hidden");
-    adModal.classList.remove("hidden");
-  }
+  else adModal.classList.remove("hidden");
 }
 
 function closeAd(){
   adModal.classList.add("hidden");
   currentTask++;
   currentQuestion=0;
-
-  if(currentTask <= totalTasks){
-    showExercise();
-  } else {
+  if(currentTask>totalTasks){
     currentModule++;
     currentTask=1;
-    if(currentModule <= totalModules){
-      showExercise();
-    } else {
-      // Curso finalizado
-      congratsLanguage.innerText = currentLanguage;
+    if(currentModule>totalModules){
+      congratsLanguage.innerText=currentLanguage;
       congratsModal.style.display="flex";
+      return;
     }
   }
+  showExercise();
 }
 
-function closeCongrats(){
-  congratsModal.style.display="none";
-}
+function exitTask(){ taskModal.classList.add("hidden"); }
+function closeCongrats(){ congratsModal.style.display="none"; }
 
-// Auth
-window.register=function(){
-  const email=document.getElementById("email").value;
-  const password=document.getElementById("password").value;
-  createUserWithEmailAndPassword(auth,email,password).catch(e=>alert(e.message));
-}
-
-window.login=function(){
-  const email=document.getElementById("email").value;
-  const password=document.getElementById("password").value;
-  signInWithEmailAndPassword(auth,email,password).catch(e=>alert(e.message));
-}
-
+// ======= Auth =======
+window.register=function(){ createUserWithEmailAndPassword(auth,document.getElementById("email").value,document.getElementById("password").value).catch(e=>alert(e.message)); }
+window.login=function(){ signInWithEmailAndPassword(auth,document.getElementById("email").value,document.getElementById("password").value).catch(e=>alert(e.message)); }
 window.logout=function(){ signOut(auth); }
-
 window.openSettings=function(){ settingsSection.classList.remove("hidden"); appSection.classList.add("hidden"); }
 window.closeSettings=function(){ settingsSection.classList.add("hidden"); appSection.classList.remove("hidden"); }
-window.saveLanguage=function(){
-  currentLanguage=document.getElementById("languageSelect").value;
-  set(ref(db,"users/"+user.uid+"/language"), currentLanguage).then(()=>closeSettings());
-}
+window.saveLanguage=function(){ currentLanguage=document.getElementById("languageSelect").value; if(user) set(ref(db,"users/"+user.uid+"/language"), currentLanguage).then(()=>closeSettings()); }
 
-onAuthStateChanged(auth,(u)=>{
+onAuthStateChanged(auth,u=>{
   if(u){
     user=u;
     authSection.classList.add("hidden");
     appSection.classList.remove("hidden");
     settingsBtn.style.display="inline-block";
     logoutBtn.style.display="inline-block";
-    get(ref(db,"users/"+user.uid)).then(snapshot=>{
+    if(user) get(ref(db,"users/"+user.uid)).then(snapshot=>{
       const data=snapshot.exists()? snapshot.val():{};
       currentLanguage=data.language||"Ingles";
       document.getElementById("languageSelect").value=currentLanguage;
-      if(!data.unlockedModules) set(ref(db,"users/"+user.uid+"/unlockedModules"),[1]);
-      showExercise();
     });
   } else {
     user=null;
