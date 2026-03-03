@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>FluentGo V0.1</title>
+<title>FluentGo Full</title>
 <style>
 body { margin:0; font-family: Arial, sans-serif; background:#222; color:#fff; text-align:center;}
 header { display:flex; justify-content:space-between; padding:15px 25px; background:#1a1a1a;}
@@ -101,20 +101,20 @@ logoutBtn.style.display="none";
 
 let user = null;
 let currentLanguage = "Ingles";
-let currentModule=1, currentTask=1, currentQuestion=0;
-const questionsPerTask=5;
-const totalModules=10, totalTasks=10;
+let currentModule = null;
+let currentTask = null;
+let currentQuestion = null;
+const questionsPerTask = 5;
+const totalModules = 10, totalTasks = 10;
 
-// ======= Exercícios completos para 3 línguas =======
+// ======= Exercícios =======
 const exercises = { Ingles: [], Espanhol: [], Japones: [] };
-
 function generateTasks(lang){
   const baseWords = {
     Ingles:[["Hello","Olá"],["Goodbye","Tchau"],["Thank you","Obrigado"],["Please","Por favor"],["Yes","Sim"],["No","Não"],["How are you?","Como vai?"],["I am Nick","Eu sou Nick"],["Good morning","Bom dia"],["Sorry","Desculpa"]],
     Espanhol:[["Hola","Oi"],["Adiós","Tchau"],["Gracias","Obrigado"],["Por favor","Por favor"],["Sí","Sim"],["No","Não"],["¿Cómo estás?","Como vai?"],["Soy Nick","Eu sou Nick"],["Buenos días","Bom dia"],["Lo siento","Desculpa"]],
     Japones:[["こんにちは (Konnichiwa)","Olá"],["さようなら (Sayounara)","Tchau"],["ありがとう (Arigatou)","Obrigado"],["お願いします (Onegaishimasu)","Por favor"],["はい (Hai)","Sim"],["いいえ (Iie)","Não"],["お元気ですか (Ogenki desu ka)","Como vai?"],["私はニックです (Watashi wa Nick desu)","Eu sou Nick"],["おはよう (Ohayou)","Bom dia"],["ごめんなさい (Gomen nasai)","Desculpa"]]
   };
-  
   for(let m=0;m<10;m++){
     exercises[lang][m]=[];
     for(let t=0;t<10;t++){
@@ -128,12 +128,12 @@ function generateTasks(lang){
     }
   }
 }
-
 ["Ingles","Espanhol","Japones"].forEach(generateTasks);
 
-// ======= Lógica das tarefas =======
+// ======= Lógica de tarefas =======
 function startNextTask(){
   if(!user) return alert("Entre para começar!");
+  if(currentModule===null){ currentModule=1; currentTask=1; currentQuestion=0; }
   taskModal.classList.remove("hidden");
   showExercise();
 }
@@ -142,7 +142,6 @@ function showExercise(){
   const ex = exercises[currentLanguage][currentModule-1][currentTask-1][currentQuestion];
   exerciseContainer.innerHTML="";
   taskTitle.innerText=`${currentLanguage} - Módulo ${currentModule} Tarefa ${currentTask} Pergunta ${currentQuestion+1}`;
-
   if(ex.type==="translate"){
     const input = document.createElement("input");
     input.id="answerInput";
@@ -150,11 +149,11 @@ function showExercise(){
     exerciseContainer.appendChild(document.createTextNode(ex.question));
     exerciseContainer.appendChild(document.createElement("br"));
     exerciseContainer.appendChild(input);
-  } else if(ex.type==="multiple"){
+  } else {
     exerciseContainer.appendChild(document.createTextNode(ex.question));
     exerciseContainer.appendChild(document.createElement("br"));
     ex.options.forEach(opt=>{
-      const btn = document.createElement("button");
+      const btn=document.createElement("button");
       btn.innerText=opt;
       btn.onclick=()=>checkAnswer(opt);
       exerciseContainer.appendChild(btn);
@@ -174,9 +173,7 @@ function checkAnswer(ans){
   let correct=false;
   if(ex.type==="translate") correct = ans.toLowerCase()===ex.answer.toLowerCase();
   else correct = ans===ex.answer;
-
   alert(correct?"Correto!":"Errado! Resposta: "+ex.answer);
-
   if(user) set(ref(db, `users/${user.uid}/tasks/${currentLanguage}-module${currentModule}-task${currentTask}-q${currentQuestion+1}`), ans);
 
   currentQuestion++;
@@ -195,7 +192,7 @@ function checkAnswer(ans){
         return;
       }
     }
-    taskModal.classList.add("hidden"); // fecha modal após terminar tarefa
+    taskModal.classList.add("hidden"); // fecha modal após concluir tarefa
   }
 }
 
@@ -228,6 +225,9 @@ onAuthStateChanged(auth,u=>{
     appSection.classList.add("hidden");
     settingsBtn.style.display="none";
     logoutBtn.style.display="none";
+    currentModule = null;
+    currentTask = null;
+    currentQuestion = null;
   }
 });
 </script>
