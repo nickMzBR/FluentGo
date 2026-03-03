@@ -3,34 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FluentGo Pro | v9.0 Anti-Travamento</title>
+    <title>FluentGo Pro | Fix v10</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #2563EB; --secondary: #10B981; --bg: #0F172A; --card: #1E293B; --text: #F8FAFC; --gold: #F59E0B; --error: #EF4444; }
+        :root { --primary: #2563EB; --secondary: #10B981; --bg: #0F172A; --card: #1E293B; --text: #F8FAFC; --error: #EF4444; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; }
-        body { margin:0; background: var(--bg); color: var(--text); overflow-x: hidden; padding-bottom: 80px; height: 100vh; }
+        body { margin:0; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
         .container { padding: 20px; max-width: 500px; margin: 0 auto; height: 100%; display: flex; flex-direction: column; }
         .hidden { display: none !important; }
         
+        /* HEADER */
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #0F172A; border-bottom: 1px solid #334155; }
         .card { background: var(--card); padding: 20px; border-radius: 24px; border: 1px solid #334155; margin-bottom: 15px; text-align: center; }
         
-        button { padding: 16px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; width: 100%; transition: 0.2s; font-size: 15px; }
-        .btn-main { background: var(--primary); color: white; box-shadow: 0 4px 0 #1D4ED8; }
-        .btn-check { background: var(--secondary); color: white; box-shadow: 0 4px 0 #059669; }
+        /* BOTÕES */
+        button { padding: 18px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; width: 100%; transition: 0.2s; font-size: 16px; text-transform: uppercase; }
+        .btn-check { background: var(--primary); color: white; box-shadow: 0 5px 0 #1D4ED8; }
+        .btn-next { background: var(--secondary) !important; color: white !important; box-shadow: 0 5px 0 #059669 !important; }
+        .btn-wrong { background: var(--error) !important; color: white !important; box-shadow: 0 5px 0 #991B1B !important; }
 
-        nav { position: fixed; bottom: 0; width: 100%; background: #1E293B; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #334155; z-index: 1000; }
+        /* ÁREA DE JOGO */
+        .word-area { min-height: 120px; border: 2px dashed #475569; border-radius: 20px; margin: 20px 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 15px; transition: 0.3s; }
+        .area-correct { background: rgba(16, 185, 129, 0.2); border-color: var(--secondary); }
+        .area-wrong { background: rgba(239, 68, 68, 0.2); border-color: var(--error); }
+
+        .chip { background: #334155; padding: 12px 18px; border-radius: 14px; font-weight: 700; cursor: pointer; color: white; border: 1px solid #475569; font-size: 16px; box-shadow: 0 3px 0 #0F172A; }
+        .chip.used { opacity: 0.1; pointer-events: none; }
+
+        nav { position: fixed; bottom: 0; width: 100%; background: #1E293B; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #334155; }
         nav div { font-size: 24px; cursor: pointer; opacity: 0.4; }
         nav div.active { opacity: 1; color: var(--primary); }
-
-        .word-area { min-height: 120px; border: 2px dashed #475569; border-radius: 20px; margin: 20px 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 15px; background: rgba(0,0,0,0.2); }
-        .chip { background: #334155; padding: 12px 18px; border-radius: 14px; font-weight: 700; cursor: pointer; color: white; border: 1px solid #475569; font-size: 16px; }
-        .chip.used { opacity: 0.1; pointer-events: none; }
-        
-        /* FEEDBACK CORRIGIDO - Z-INDEX 99999 */
-        #feedbackBar { position: fixed; bottom: 0; left: 0; right: 0; padding: 30px 20px; transform: translateY(100%); transition: 0.3s ease-out; z-index: 99999; text-align: center; border-top: 4px solid rgba(255,255,255,0.1); }
-        #feedbackBar.correct { transform: translateY(0); background: #065F46; }
-        #feedbackBar.wrong { transform: translateY(0); background: #991B1B; }
     </style>
 </head>
 <body>
@@ -40,81 +42,52 @@
 <audio id="sndClick" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
 
 <header id="mainHeader" class="hidden">
-    <div style="font-weight:900;">FLUENTGO <span id="langTag" style="color:var(--primary); font-size:12px;">EN</span></div>
+    <div style="font-weight:900;">FLUENTGO <span id="langTag" style="color:var(--primary)">EN</span></div>
     <div style="font-weight: 800; color: var(--secondary);">🔥 <span id="userXP">0</span></div>
 </header>
 
 <main id="homeView" class="container hidden">
-    <div class="card">
+    <div class="card" style="margin-top:20px;">
         <h2 id="levelTxt">Nível 1</h2>
         <p id="taskTxt">Tarefa 1 de 10</p>
-        <button id="startBtn" class="btn-main">PRATICAR TAREFA</button>
+        <button id="startBtn" class="btn-check" style="background:var(--primary); box-shadow:0 5px 0 #1D4ED8;">PRATICAR TAREFA</button>
     </div>
 </main>
 
-<main id="rankingView" class="container hidden">
-    <h3 style="text-align: center;">🏆 Ranking Global</h3>
-    <div id="leaderboard" class="card"></div>
-</main>
-
-<main id="vipView" class="container hidden">
-    <h3 style="text-align: center;">💎 FluentGo Premium</h3>
-    <div class="card" style="border: 2px solid var(--gold);">
-        <h2 style="color:var(--gold);">R$ 4,99/mês</h2>
-        <button class="btn-main" style="background:var(--gold); color:black;">ASSINAR</button>
-    </div>
-</main>
-
-<main id="settingsView" class="container hidden">
-    <h3 style="text-align: center;">⚙️ Configurações</h3>
-    <div class="card">
-        <p style="font-size:11px; color:#94a3b8; font-weight:800;">IDIOMA</p>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-            <button onclick="changeLang('English')" class="btn-main" style="font-size:12px;">🇺🇸 Inglês</button>
-            <button onclick="changeLang('Spanish')" class="btn-main" style="font-size:12px;">🇪🇸 Espanhol</button>
-            <button onclick="changeLang('French')" class="btn-main" style="font-size:12px;">🇫🇷 Francês</button>
-            <button onclick="changeLang('Italian')" class="btn-main" style="font-size:12px;">🇮🇹 Italiano</button>
-        </div>
-        <hr style="margin:20px 0; border:0; border-top:1px solid #334155;">
-        <div style="display:flex; justify-content:space-between;">
-            <span>Sons</span> <input type="checkbox" id="soundToggle" checked>
-        </div>
-        <button onclick="auth.signOut()" style="color:var(--error); background:none; margin-top:20px;">Sair da conta</button>
-    </div>
-</main>
-
-<div id="practiceView" class="hidden" style="position:fixed; inset:0; background:var(--bg); z-index:5000;">
+<div id="practiceView" class="hidden" style="position:fixed; inset:0; background:var(--bg); z-index:9999;">
     <div class="container">
         <div style="display:flex; align-items:center; gap:15px;">
-            <button onclick="closePractice()" style="width:40px; background:none; font-size:24px;">✕</button>
+            <button onclick="closePractice()" style="width:40px; background:none; font-size:24px; box-shadow:none;">✕</button>
             <div style="background:#334155; flex:1; height:10px; border-radius:10px;">
                 <div id="innerBar" style="width:0%; height:100%; background:var(--secondary); transition:0.3s;"></div>
             </div>
         </div>
-        <h2 id="targetPhrase" style="text-align:center; font-size:2rem; margin:40px 0;">...</h2>
+
+        <h2 id="targetPhrase" style="text-align:center; font-size:1.8rem; margin:40px 0; font-weight:900;">...</h2>
+        
         <div id="dropZone" class="word-area"></div>
+        
         <div id="wordBank" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;"></div>
-        <div style="margin-top:auto; padding-bottom:100px;">
-            <button id="checkBtn" class="btn-check">VERIFICAR</button>
+
+        <div id="feedbackText" style="text-align:center; margin-top:20px; font-weight:bold; min-height:24px;"></div>
+        
+        <div style="margin-top:auto; padding-bottom:30px;">
+            <button id="actionBtn" class="btn-check">VERIFICAR</button>
         </div>
-    </div>
-    <div id="feedbackBar">
-        <h3 id="feedbackMsg" style="color:white; margin-bottom:15px; font-size:1.4rem;"></h3>
-        <button id="nextBtn" style="background:white; color:black; font-weight:900;">CONTINUAR</button>
     </div>
 </div>
 
 <nav id="mainNav" class="hidden">
-    <div onclick="showTab('homeView')" id="nav-home" class="active">🏠</div>
-    <div onclick="showTab('rankingView')" id="nav-ranking">🏆</div>
-    <div onclick="showTab('vipView')" id="nav-vip">💎</div>
-    <div onclick="showTab('settingsView')" id="nav-settings">⚙️</div>
+    <div onclick="showTab('homeView')" class="active">🏠</div>
+    <div>🏆</div>
+    <div>💎</div>
+    <div>⚙️</div>
 </nav>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getDatabase, ref, get, update, query, orderByChild, limitToLast } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = { apiKey: "AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw", authDomain: "fluentgo-35024.firebaseapp.com", databaseURL: "https://fluentgo-35024-default-rtdb.firebaseio.com", projectId: "fluentgo-35024", appId: "1:613715387990:web:0345ade26374dd32d1fdf7" };
 const app = initializeApp(firebaseConfig);
@@ -123,51 +96,21 @@ const db = getDatabase(app);
 
 const phrases = {
     English: [{pt: "O carro é azul", en: "the car is blue"}, {pt: "Eu bebo leite", en: "i drink milk"}],
-    Spanish: [{pt: "Eu como pão", en: "yo como pan"}],
-    French: [{pt: "Eu sou estudante", en: "je suis étudiant"}],
-    Italian: [{pt: "Bom dia", en: "buongiorno"}]
+    Spanish: [{pt: "Yo como pan", en: "yo como pan"}]
 };
 
 let userData = { xp: 0, lvl: 1, task: 1, lang: "English" };
 let currentQ = [];
 let qIdx = 0;
 let selection = [];
+let isChecking = true; // Define se o botão verifica ou avança
 
-function play(id) { if(document.getElementById('soundToggle').checked) { const a = document.getElementById(id); a.currentTime = 0; a.play(); } }
-
-window.showTab = (id) => {
-    ['homeView', 'rankingView', 'vipView', 'settingsView'].forEach(v => document.getElementById(v).classList.add('hidden'));
-    document.querySelectorAll('nav div').forEach(d => d.classList.remove('active'));
-    document.getElementById(id).classList.remove('hidden');
-    document.getElementById('nav-' + id.replace('View', '')).classList.add('active');
-    if(id === 'rankingView') loadRanking();
-};
-
-async function loadRanking() {
-    const rRef = query(ref(db, 'users'), orderByChild('xp'), limitToLast(10));
-    const snap = await get(rRef);
-    const board = document.getElementById('leaderboard');
-    board.innerHTML = "";
-    let users = [];
-    snap.forEach(c => users.push(c.val()));
-    users.reverse().forEach((u, i) => {
-        board.innerHTML += `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #334155;">
-            <span>${i+1}. ${u.email ? u.email.split('@')[0] : 'User'}</span><b>${u.xp || 0} XP</b>
-        </div>`;
-    });
-}
-
-window.changeLang = async (l) => {
-    userData.lang = l;
-    updateUI();
-    if(auth.currentUser) await update(ref(db, 'users/'+auth.currentUser.uid), {lang: l});
-};
+function play(id) { document.getElementById(id).currentTime = 0; document.getElementById(id).play(); }
 
 function updateUI() {
     document.getElementById('userXP').innerText = userData.xp || 0;
     document.getElementById('levelTxt').innerText = `Nível ${userData.lvl || 1}`;
     document.getElementById('taskTxt').innerText = `Tarefa ${userData.task || 1} de 10`;
-    document.getElementById('langTag').innerText = (userData.lang || "EN").substring(0,2).toUpperCase();
 }
 
 document.getElementById('startBtn').onclick = () => {
@@ -179,19 +122,32 @@ document.getElementById('startBtn').onclick = () => {
 };
 
 function renderQ() {
-    const q = currentQ[qIdx];
+    isChecking = true;
     selection = [];
+    const q = currentQ[qIdx];
+    
+    // Reset de UI
+    const btn = document.getElementById('actionBtn');
+    btn.innerText = "VERIFICAR";
+    btn.className = "btn-check";
+    document.getElementById('dropZone').className = "word-area";
+    document.getElementById('feedbackText').innerText = "";
     document.getElementById('innerBar').style.width = `${(qIdx / 5) * 100}%`;
     document.getElementById('targetPhrase').innerText = q.pt;
     document.getElementById('dropZone').innerHTML = "";
-    document.getElementById('feedbackBar').classList.remove('correct', 'wrong');
+    
     const bank = document.getElementById('wordBank');
     bank.innerHTML = "";
-    let parts = [...q.en.split(" "), "the", "is"].sort(() => Math.random() - 0.5);
+    let parts = [...q.en.split(" "), "is", "a"].sort(() => Math.random() - 0.5);
+    
     parts.forEach((w, i) => {
-        const b = document.createElement('button'); b.className = "chip"; b.innerText = w; b.id = "w-"+i;
+        const b = document.createElement('button');
+        b.className = "chip"; b.innerText = w; b.id = "w-"+i;
         b.onclick = () => {
-            play('sndClick'); selection.push(w); b.classList.add('used');
+            if(!isChecking) return;
+            play('sndClick');
+            selection.push(w);
+            b.classList.add('used');
             const s = document.createElement('span'); s.className = "chip"; s.innerText = w;
             document.getElementById('dropZone').appendChild(s);
         };
@@ -199,33 +155,49 @@ function renderQ() {
     });
 }
 
-document.getElementById('checkBtn').onclick = () => {
-    const guess = selection.join(" ").toLowerCase().trim();
-    const correct = currentQ[qIdx].en.toLowerCase().trim();
-    const bar = document.getElementById('feedbackBar');
-    if(guess === correct) {
-        play('sndCorrect');
-        bar.className = "correct";
-        document.getElementById('feedbackMsg').innerText = "Excelente! ✨";
+document.getElementById('actionBtn').onclick = function() {
+    if(isChecking) {
+        // LÓGICA DE VERIFICAÇÃO
+        const guess = selection.join(" ").toLowerCase().trim();
+        const correct = currentQ[qIdx].en.toLowerCase().trim();
+        const btn = this;
+        const zone = document.getElementById('dropZone');
+
+        if(guess === correct) {
+            play('sndCorrect');
+            zone.classList.add('area-correct');
+            btn.innerText = "CONTINUAR";
+            btn.classList.add('btn-next');
+            document.getElementById('feedbackText').innerText = "Excelente! ✨";
+            document.getElementById('feedbackText').style.color = "var(--secondary)";
+        } else {
+            play('sndWrong');
+            zone.classList.add('area-wrong');
+            btn.innerText = "ENTENDI";
+            btn.classList.add('btn-wrong');
+            document.getElementById('feedbackText').innerText = "Resposta: " + correct;
+            document.getElementById('feedbackText').style.color = "var(--error)";
+        }
+        isChecking = false;
     } else {
-        play('sndWrong');
-        bar.className = "wrong";
-        document.getElementById('feedbackMsg').innerText = "Resposta: " + correct;
+        // LÓGICA DE AVANÇAR
+        qIdx++;
+        if(qIdx < 5) {
+            renderQ();
+        } else {
+            finishTask();
+        }
     }
 };
 
-document.getElementById('nextBtn').onclick = async () => {
-    document.getElementById('feedbackBar').classList.remove('correct', 'wrong');
-    qIdx++;
-    if(qIdx < 5) renderQ();
-    else {
-        userData.xp += 50; userData.task++;
-        if(userData.task > 10) { userData.task = 1; userData.lvl++; }
-        await update(ref(db, 'users/'+auth.currentUser.uid), userData);
-        document.getElementById('practiceView').classList.add('hidden');
-        updateUI();
-    }
-};
+async function finishTask() {
+    userData.xp += 50;
+    userData.task++;
+    if(userData.task > 10) { userData.task = 1; userData.lvl++; }
+    if(auth.currentUser) await update(ref(db, 'users/'+auth.currentUser.uid), userData);
+    document.getElementById('practiceView').classList.add('hidden');
+    updateUI();
+}
 
 onAuthStateChanged(auth, async (u) => {
     if(u) {
@@ -237,6 +209,10 @@ onAuthStateChanged(auth, async (u) => {
 });
 
 window.closePractice = () => document.getElementById('practiceView').classList.add('hidden');
+window.showTab = (id) => {
+    document.getElementById('homeView').classList.add('hidden');
+    document.getElementById(id).classList.remove('hidden');
+};
 </script>
 </body>
 </html>
