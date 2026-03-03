@@ -3,85 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FluentGo Pro | v11 Estável</title>
+    <title>FluentGo Pro | v12 Final</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #2563EB; --secondary: #10B981; --bg: #0F172A; --card: #1E293B; --text: #F8FAFC; --error: #EF4444; }
+        :root { --primary: #2563EB; --secondary: #10B981; --bg: #0F172A; --card: #1E293B; --text: #F8FAFC; --gold: #F59E0B; --error: #EF4444; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
-        
         body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
-        .container { flex: 1; padding: 15px; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; width: 100%; position: relative; }
+        .container { flex: 1; padding: 15px; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; width: 100%; }
         .hidden { display: none !important; }
         
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #0F172A; border-bottom: 1px solid #334155; }
-        .card { background: var(--card); padding: 25px; border-radius: 24px; border: 1px solid #334155; text-align: center; }
+        .card { background: var(--card); padding: 25px; border-radius: 24px; border: 1px solid #334155; text-align: center; margin-bottom: 15px; }
         
-        button { padding: 18px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; width: 100%; font-size: 16px; text-transform: uppercase; transition: transform 0.1s; }
-        button:active { transform: scale(0.98); }
-        
+        button { padding: 16px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; width: 100%; font-size: 15px; text-transform: uppercase; }
         .btn-check { background: var(--primary); color: white; box-shadow: 0 5px 0 #1D4ED8; }
-        .btn-next { background: var(--secondary) !important; color: white !important; box-shadow: 0 5px 0 #059669 !important; }
-        .btn-wrong { background: var(--error) !important; color: white !important; box-shadow: 0 5px 0 #991B1B !important; }
+        .btn-check:active { transform: translateY(3px); box-shadow: 0 2px 0 #1D4ED8; }
+        .btn-lang { background: #334155; color: white; border: 1px solid #475569; margin-top: 8px; font-size: 12px; }
+        .btn-lang.active { border: 2px solid var(--primary); background: rgba(37, 99, 235, 0.1); }
 
         .word-area { min-height: 110px; border: 2px dashed #475569; border-radius: 20px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 15px; background: rgba(255,255,255,0.02); margin: 20px 0; }
-        .area-correct { background: rgba(16, 185, 129, 0.15); border-color: var(--secondary); border-style: solid; }
-        .area-wrong { background: rgba(239, 68, 68, 0.15); border-color: var(--error); border-style: solid; }
-
-        .chip { background: #334155; padding: 12px 16px; border-radius: 14px; font-weight: 700; color: white; border: 1px solid #475569; font-size: 16px; box-shadow: 0 3px 0 #0F172A; }
+        .chip { background: #334155; padding: 12px 16px; border-radius: 14px; font-weight: 700; color: white; border: 1px solid #475569; }
         .chip.used { opacity: 0.15; pointer-events: none; }
 
         nav { background: #1E293B; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #334155; }
+        nav div { font-size: 24px; cursor: pointer; opacity: 0.4; }
+        nav div.active { opacity: 1; color: var(--primary); }
     </style>
 </head>
 <body>
 
-<header id="mainHeader" class="hidden">
-    <div style="font-weight:900; letter-spacing: 1px;">FLUENTGO</div>
+<header id="appHeader" class="hidden">
+    <div style="font-weight:900;">FLUENTGO <span id="langTag" style="color:var(--primary); font-size:10px;">EN</span></div>
     <div style="font-weight: 800; color: var(--secondary);">🔥 <span id="userXP">0</span></div>
 </header>
 
 <main id="homeView" class="container hidden">
-    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
-        <div class="card">
-            <h2 id="levelTxt" style="font-size: 1.5rem; margin-bottom: 5px;">Nível 1</h2>
-            <p id="taskTxt" style="color: #94a3b8; margin-bottom: 25px;">Tarefa 1 de 10</p>
-            <button id="startBtn" class="btn-check">PRATICAR TAREFA</button>
+    <div class="card" style="margin-top: 20px;">
+        <h2 id="levelTxt">Nível 1</h2>
+        <p id="taskTxt" style="color: #94a3b8; margin-bottom: 20px;">Tarefa 1 de 10</p>
+        <button id="startBtn" class="btn-check">PRATICAR TAREFA</button>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <button onclick="changeLang('English')" id="ln-English" class="btn-lang">🇺🇸 Inglês</button>
+        <button onclick="changeLang('Spanish')" id="ln-Spanish" class="btn-lang">🇪🇸 Espanhol</button>
+        <button onclick="changeLang('French')" id="ln-French" class="btn-lang">🇫🇷 Francês</button>
+        <button onclick="changeLang('Italian')" id="ln-Italian" class="btn-lang">🇮🇹 Italiano</button>
+    </div>
+</main>
+
+<main id="vipView" class="container hidden">
+    <div class="card" style="border: 2px solid var(--gold);">
+        <h3 style="color:var(--gold)">💎 PLANO PREMIUM</h3>
+        <p style="margin: 15px 0; font-size: 14px; color: #94a3b8;">Vidas infinitas e sem anúncios.</p>
+        <button class="btn-check" style="background:var(--gold); box-shadow: 0 5px 0 #b45309; color: black;">R$ 4,99 / MÊS</button>
+    </div>
+</main>
+
+<main id="settingsView" class="container hidden">
+    <div class="card">
+        <h3 style="margin-bottom: 20px;">⚙️ AJUSTES</h3>
+        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:15px; border-radius:15px;">
+            <span>Efeitos de Som</span>
+            <input type="checkbox" id="soundToggle" checked style="width:22px; height:22px;">
         </div>
+        <button onclick="auth.signOut()" style="background:none; color:var(--error); margin-top:20px;">Sair da Conta</button>
     </div>
 </main>
 
 <div id="practiceView" class="hidden" style="position:fixed; inset:0; background:var(--bg); z-index:9999; display: flex; flex-direction: column;">
     <div class="container">
         <div style="display:flex; align-items:center; gap:15px; margin-bottom: 20px;">
-            <button onclick="closePractice()" style="width:40px; background:none; font-size:24px; box-shadow:none; padding: 0;">✕</button>
+            <button onclick="closePractice()" style="width:40px; background:none; font-size:24px; box-shadow:none;">✕</button>
             <div style="background:#334155; flex:1; height:10px; border-radius:10px; overflow:hidden;">
                 <div id="innerBar" style="width:0%; height:100%; background:var(--secondary); transition:0.4s;"></div>
             </div>
         </div>
-
         <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
             <h2 id="targetPhrase" style="text-align:center; font-size:1.8rem; font-weight:900; margin-bottom: 10px;">...</h2>
             <div id="dropZone" class="word-area"></div>
             <div id="wordBank" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;"></div>
         </div>
-
         <div style="padding: 20px 0;">
-            <div id="feedbackText" style="text-align:center; margin-bottom:15px; font-weight:800; min-height:24px; font-size: 1.1rem;"></div>
+            <div id="feedbackText" style="text-align:center; margin-bottom:15px; font-weight:800; min-height:24px;"></div>
             <button id="actionBtn" class="btn-check">VERIFICAR</button>
         </div>
     </div>
 </div>
 
-<nav id="mainNav" class="hidden">
-    <div onclick="showTab('homeView')" style="font-size: 24px; cursor:pointer;">🏠</div>
-    <div style="font-size: 24px; opacity: 0.2;">🏆</div>
-    <div style="font-size: 24px; opacity: 0.2;">⚙️</div>
+<nav id="bottomNav" class="hidden">
+    <div onclick="showTab('homeView')" id="nv-home" class="active">🏠</div>
+    <div onclick="showTab('vipView')" id="nv-vip">💎</div>
+    <div onclick="showTab('settingsView')" id="nv-settings">⚙️</div>
 </nav>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getDatabase, ref, get, update, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, onValue, update, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = { apiKey: "AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw", authDomain: "fluentgo-35024.firebaseapp.com", databaseURL: "https://fluentgo-35024-default-rtdb.firebaseio.com", projectId: "fluentgo-35024", appId: "1:613715387990:web:0345ade26374dd32d1fdf7" };
 const app = initializeApp(firebaseConfig);
@@ -91,58 +110,73 @@ const db = getDatabase(app);
 const phrases = [
     {pt: "O carro é azul", en: "the car is blue"},
     {pt: "Eu bebo leite", en: "i drink milk"},
-    {pt: "A maçã é vermelha", en: "the apple is red"},
-    {pt: "O gato dorme", en: "the cat sleeps"},
-    {pt: "Eu tenho um livro", en: "i have a book"}
+    {pt: "O gato é preto", en: "the cat is black"}
 ];
 
-let userData = { xp: 0, lvl: 1, task: 1 };
-let currentQ = [];
+let user = { xp: 0, lvl: 1, task: 1, lang: "English" };
 let qIdx = 0;
 let selection = [];
-let state = "CHECK"; // CHECK ou NEXT
+let state = "CHECK";
 
-function updateUI() {
-    document.getElementById('userXP').innerText = userData.xp || 0;
-    document.getElementById('levelTxt').innerText = `Nível ${userData.lvl || 1}`;
-    document.getElementById('taskTxt').innerText = `Tarefa ${userData.task || 1} de 10`;
+// ATUALIZAÇÃO EM TEMPO REAL (CORREÇÃO DO UNDEFINED)
+onAuthStateChanged(auth, (u) => {
+    if(u) {
+        onValue(ref(db, 'users/'+u.uid), (snap) => {
+            if(snap.exists()) {
+                user = snap.val();
+            } else {
+                set(ref(db, 'users/'+u.uid), user);
+            }
+            updateHomeUI();
+            document.getElementById('appHeader').classList.remove('hidden');
+            document.getElementById('homeView').classList.remove('hidden');
+            document.getElementById('bottomNav').classList.remove('hidden');
+        });
+    }
+});
+
+function updateHomeUI() {
+    document.getElementById('userXP').innerText = user.xp || 0;
+    document.getElementById('levelTxt').innerText = `Nível ${user.lvl || 1}`;
+    document.getElementById('taskTxt').innerText = `Tarefa ${user.task || 1} de 10`;
+    document.getElementById('langTag').innerText = (user.lang || "EN").substring(0,2).toUpperCase();
+    document.querySelectorAll('.btn-lang').forEach(b => b.classList.remove('active'));
+    document.getElementById('ln-'+user.lang)?.classList.add('active');
 }
+
+window.changeLang = (l) => {
+    user.lang = l;
+    update(ref(db, 'users/'+auth.currentUser.uid), {lang: l});
+};
 
 document.getElementById('startBtn').onclick = () => {
     qIdx = 0;
-    currentQ = [...phrases].sort(() => 0.5 - Math.random()).slice(0, 5);
     document.getElementById('practiceView').classList.remove('hidden');
-    loadQuestion();
+    loadQ();
 };
 
-function loadQuestion() {
-    state = "CHECK";
-    selection = [];
-    const q = currentQ[qIdx];
-    
-    // Reset visual
+function loadQ() {
+    state = "CHECK"; selection = [];
+    const q = phrases[qIdx % phrases.length];
     const btn = document.getElementById('actionBtn');
     btn.innerText = "VERIFICAR";
     btn.className = "btn-check";
     document.getElementById('feedbackText').innerText = "";
-    document.getElementById('dropZone').className = "word-area";
     document.getElementById('dropZone').innerHTML = "";
     document.getElementById('innerBar').style.width = `${(qIdx / 5) * 100}%`;
     document.getElementById('targetPhrase').innerText = q.pt;
     
     const bank = document.getElementById('wordBank');
     bank.innerHTML = "";
-    let words = [...q.en.split(" "), "is", "a", "the"].sort(() => Math.random() - 0.5);
-    
-    words.forEach(w => {
+    [...q.en.split(" "), "is", "a"].sort(() => Math.random() - 0.5).forEach(w => {
         const b = document.createElement('button');
         b.className = "chip"; b.innerText = w;
         b.onclick = () => {
             if(state !== "CHECK") return;
             selection.push(w);
             b.classList.add('used');
-            const span = document.createElement('span'); span.className = "chip"; span.innerText = w;
-            document.getElementById('dropZone').appendChild(span);
+            const s = document.createElement('span'); s.className = "chip"; s.innerText = w;
+            document.getElementById('dropZone').appendChild(s);
         };
         bank.appendChild(b);
     });
@@ -151,63 +185,36 @@ function loadQuestion() {
 document.getElementById('actionBtn').onclick = function() {
     if(state === "CHECK") {
         const guess = selection.join(" ").toLowerCase().trim();
-        const correct = currentQ[qIdx].en.toLowerCase().trim();
-        const zone = document.getElementById('dropZone');
-
+        const correct = phrases[qIdx % phrases.length].en.toLowerCase().trim();
         if(guess === correct) {
-            this.innerText = "CONTINUAR";
-            this.className = "btn-next";
-            zone.classList.add('area-correct');
-            document.getElementById('feedbackText').innerText = "Muito bem! ✨";
-            document.getElementById('feedbackText').style.color = "var(--secondary)";
+            this.innerText = "CONTINUAR"; this.className = "btn-check btn-next";
+            document.getElementById('feedbackText').innerText = "Correto! ✨";
         } else {
-            this.innerText = "ENTENDI";
-            this.className = "btn-wrong";
-            zone.classList.add('area-wrong');
+            this.innerText = "ENTENDI"; this.className = "btn-check btn-wrong";
             document.getElementById('feedbackText').innerText = "Resposta: " + correct;
-            document.getElementById('feedbackText').style.color = "var(--error)";
         }
         state = "NEXT";
     } else {
         qIdx++;
-        if(qIdx < 5) {
-            loadQuestion();
-        } else {
-            completeTask();
-        }
+        if(qIdx < 5) loadQ();
+        else finish();
     }
 };
 
-async function completeTask() {
-    userData.xp = (userData.xp || 0) + 50;
-    userData.task = (userData.task || 0) + 1;
-    if(userData.task > 10) { userData.task = 1; userData.lvl = (userData.lvl || 0) + 1; }
-    
-    if(auth.currentUser) {
-        await update(ref(db, 'users/'+auth.currentUser.uid), userData);
-    }
+async function finish() {
+    user.xp += 50; user.task += 1;
+    if(user.task > 10) { user.task = 1; user.lvl += 1; }
+    await update(ref(db, 'users/'+auth.currentUser.uid), user);
     document.getElementById('practiceView').classList.add('hidden');
-    updateUI();
 }
 
-onAuthStateChanged(auth, async (u) => {
-    if(u) {
-        const s = await get(ref(db, 'users/'+u.uid));
-        if(s.exists()) userData = s.val();
-        else await set(ref(db, 'users/'+u.uid), userData);
-        
-        document.getElementById('mainHeader').classList.remove('hidden');
-        document.getElementById('homeView').classList.remove('hidden');
-        document.getElementById('mainNav').classList.remove('hidden');
-        updateUI();
-    }
-});
-
-window.closePractice = () => document.getElementById('practiceView').classList.add('hidden');
 window.showTab = (id) => {
-    document.getElementById('homeView').classList.add('hidden');
+    ['homeView', 'vipView', 'settingsView'].forEach(v => document.getElementById(v).classList.add('hidden'));
+    document.querySelectorAll('nav div').forEach(d => d.classList.remove('active'));
     document.getElementById(id).classList.remove('hidden');
+    document.getElementById('nv-'+id.replace('View','')).classList.add('active');
 };
+window.closePractice = () => document.getElementById('practiceView').classList.add('hidden');
 </script>
 </body>
 </html>
