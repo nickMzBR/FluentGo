@@ -56,8 +56,8 @@ select, input {
 <header>
   <div>FluentGo</div>
   <div>
-    <button onclick="openSettings()">Configurações</button>
-    <button onclick="logout()">Sair</button>
+    <button id="settingsBtn" onclick="openSettings()">Configurações</button>
+    <button id="logoutBtn" onclick="logout()">Sair</button>
   </div>
 </header>
 
@@ -121,14 +121,25 @@ const db = getDatabase(app);
 const authSection = document.getElementById("authSection");
 const appSection = document.getElementById("appSection");
 const settingsSection = document.getElementById("settingsSection");
+const settingsBtn = document.getElementById("settingsBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+
+settingsBtn.style.display = "none";
+logoutBtn.style.display = "none";
 
 window.register = function() {
-  createUserWithEmailAndPassword(auth, email.value, password.value)
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  createUserWithEmailAndPassword(auth, email, password)
     .catch(e => alert(e.message));
 }
 
 window.login = function() {
-  signInWithEmailAndPassword(auth, email.value, password.value)
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  signInWithEmailAndPassword(auth, email, password)
     .catch(e => alert(e.message));
 }
 
@@ -182,6 +193,9 @@ onAuthStateChanged(auth, (user) => {
     authSection.classList.add("hidden");
     appSection.classList.remove("hidden");
 
+    settingsBtn.style.display = "inline-block";
+    logoutBtn.style.display = "inline-block";
+
     get(ref(db, "users/" + user.uid)).then(snapshot => {
       if (snapshot.exists()) {
         const data = snapshot.val();
@@ -195,6 +209,9 @@ onAuthStateChanged(auth, (user) => {
   } else {
     authSection.classList.remove("hidden");
     appSection.classList.add("hidden");
+
+    settingsBtn.style.display = "none";
+    logoutBtn.style.display = "none";
   }
 });
 
