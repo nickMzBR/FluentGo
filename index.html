@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>FluentGo</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #222;
+  color: #fff;
+  text-align: center;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 25px;
+  background: #1a1a1a;
+}
+
+button, select, input {
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  margin: 5px;
+}
+
+button {
+  background: #2563EB;
+  color: white;
+  cursor: pointer;
+}
+
+select, input {
+  background: #333;
+  color: white;
+}
+
+.module {
+  background: #2c2c2c;
+  margin: 15px auto;
+  padding: 15px;
+  width: 80%;
+  border-radius: 10px;
+}
+
+.hidden {
+  display: none;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div>FluentGo</div>
+  <div>
+    <button onclick="openSettings()">Configurações</button>
+    <button onclick="logout()">Sair</button>
+  </div>
+</header>
+
+<div id="authSection">
+  <h2>Entrar</h2>
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Senha"><br>
+  <button onclick="register()">Criar Conta</button>
+  <button onclick="login()">Entrar</button>
+</div>
+
+<div id="appSection" class="hidden">
+  <h2 id="currentLanguage"></h2>
+  <div id="modules"></div>
+</div>
+
+<div id="settingsSection" class="hidden">
+  <h2>Configurações</h2>
+  <select id="languageSelect">
+    <option value="Ingles">Inglês</option>
+    <option value="Espanhol">Espanhol</option>
+    <option value="Frances">Francês</option>
+  </select>
+  <br>
+  <button onclick="saveLanguage()">Salvar</button>
+  <button onclick="closeSettings()">Fechar</button>
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { 
+  getAuth, 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+import { 
+  getDatabase, 
+  ref, 
+  set, 
+  get 
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw",
+  authDomain: "fluentgo-35024.firebaseapp.com",
+  databaseURL: "https://fluentgo-35024-default-rtdb.firebaseio.com",
+  projectId: "fluentgo-35024",
+  storageBucket: "fluentgo-35024.firebasestorage.app",
+  messagingSenderId: "613715387990",
+  appId: "1:613715387990:web:0345ade26374dd32d1fdf7"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+
+const authSection = document.getElementById("authSection");
+const appSection = document.getElementById("appSection");
+const settingsSection = document.getElementById("settingsSection");
+
+window.register = function() {
+  createUserWithEmailAndPassword(auth, email.value, password.value)
+    .catch(e => alert(e.message));
+}
+
+window.login = function() {
+  signInWithEmailAndPassword(auth, email.value, password.value)
+    .catch(e => alert(e.message));
+}
+
+window.logout = function() {
+  signOut(auth);
+}
+
+window.openSettings = function() {
+  settingsSection.classList.remove("hidden");
+  appSection.classList.add("hidden");
+}
+
+window.closeSettings = function() {
+  settingsSection.classList.add("hidden");
+  appSection.classList.remove("hidden");
+}
+
+window.saveLanguage = function() {
+  const user = auth.currentUser;
+  const language = document.getElementById("languageSelect").value;
+
+  set(ref(db, "users/" + user.uid), {
+    language: language
+  }).then(() => {
+    loadModules(language);
+    closeSettings();
+  });
+}
+
+function loadModules(language) {
+  document.getElementById("currentLanguage").innerText = "Idioma: " + language;
+
+  const modulesDiv = document.getElementById("modules");
+  modulesDiv.innerHTML = "";
+
+  for (let i = 1; i <= 10; i++) {
+    const module = document.createElement("div");
+    module.className = "module";
+    module.innerHTML = `<h3>${language} - Módulo ${i}</h3>`;
+
+    for (let t = 1; t <= 10; t++) {
+      module.innerHTML += `<p>Tarefa ${t}</p>`;
+    }
+
+    modulesDiv.appendChild(module);
+  }
+}
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    authSection.classList.add("hidden");
+    appSection.classList.remove("hidden");
+
+    get(ref(db, "users/" + user.uid)).then(snapshot => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        document.getElementById("languageSelect").value = data.language;
+        loadModules(data.language);
+      } else {
+        loadModules("Ingles");
+      }
+    });
+
+  } else {
+    authSection.classList.remove("hidden");
+    appSection.classList.add("hidden");
+  }
+});
+
+</script>
+</body>
+</html>
