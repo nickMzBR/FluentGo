@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FluentGo | Aprenda</title>
+    <title>FluentGo | Aprenda & Pratique</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #2563EB; --secondary: #10B981; --bg: #0F172A; --card: #1E293B; --text: #F8FAFC; --gold: #F59E0B; --error: #EF4444; }
@@ -13,6 +13,7 @@
         .hidden { display: none !important; }
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #0F172A; border-bottom: 1px solid #334155; }
         .card { background: var(--card); padding: 25px; border-radius: 24px; border: 1px solid #334155; text-align: center; margin-bottom: 15px; }
+        input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #475569; background: #0F172A; color: white; margin-bottom: 10px; font-weight: 600; outline: none; }
         button { padding: 16px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; width: 100%; font-size: 15px; text-transform: uppercase; transition: 0.2s; }
         .btn-check { background: var(--primary); color: white; box-shadow: 0 5px 0 #1D4ED8; }
         .btn-check:active { transform: translateY(3px); box-shadow: 0 2px 0 #1D4ED8; }
@@ -23,20 +24,25 @@
         .word-area { min-height: 120px; border: 2px dashed #475569; border-radius: 20px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 15px; background: rgba(255,255,255,0.02); margin: 15px 0; }
         .chip { background: #334155; padding: 12px 16px; border-radius: 14px; font-weight: 700; color: white; border: 1px solid #475569; }
         .chip.used { opacity: 0.1; pointer-events: none; }
-        #levelUpOverlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.95); z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+
+        /* MODAL DE TUTORIAL */
+        #tutorialView { position: fixed; inset: 0; background: var(--bg); z-index: 10001; display: flex; flex-direction: column; padding: 20px; justify-content: center; }
+        .tip-box { background: var(--card); padding: 30px; border-radius: 30px; border: 2px solid var(--primary); }
     </style>
 </head>
 <body>
 
-<div id="levelUpOverlay" class="hidden">
-    <div style="font-size: 80px;">🏆</div>
-    <h1 style="font-size: 2.5rem; font-weight: 900; color: var(--gold);">LEVEL UP!</h1>
-    <p id="levelUpText" style="font-size: 1.2rem; margin-bottom: 30px;"></p>
-    <button onclick="closeLevelUp()" class="btn-check" style="max-width: 250px;">CONTINUAR</button>
+<div id="tutorialView" class="hidden">
+    <div class="tip-box">
+        <div style="font-size: 40px; margin-bottom: 15px;">💡</div>
+        <h2 id="tutorialTitle" style="color: var(--primary); margin-bottom: 10px;">Dica do Nível</h2>
+        <p id="tutorialText" style="line-height: 1.6; color: #cbd5e1; margin-bottom: 25px;"></p>
+        <button onclick="startActualPractice()" class="btn-check">ENTENDI, VAMOS LÁ!</button>
+    </div>
 </div>
 
 <header id="appHeader" class="hidden">
-    <div style="font-weight:900;"><span id="userNameHeader" style="font-size:12px; display:block; opacity:0.7;">Olá</span>FLUENTGO <span id="langTag" style="color:var(--primary); font-size:10px;">EN</span></div>
+    <div style="font-weight:900;"><span id="userNameHeader" style="font-size:11px; display:block; opacity:0.7;">Olá</span>FLUENTGO <span id="langTag" style="color:var(--primary); font-size:10px;">EN</span></div>
     <div style="font-weight: 800; color: var(--secondary);">🔥 <span id="userXP">0</span></div>
 </header>
 
@@ -57,15 +63,19 @@
 <main id="settingsView" class="container hidden">
     <div class="card">
         <h3 style="text-align:left; font-size: 14px; color: var(--primary);">👤 PERFIL</h3>
-        <input type="text" id="usernameInput" style="width:100%; padding:14px; border-radius:12px; border:1px solid #475569; background:#0F172A; color:white; margin:10px 0;">
-        <button id="saveUserBtn" class="btn-check" style="padding: 10px; font-size: 12px;">SALVAR NOME</button>
+        <input type="text" id="usernameInput" placeholder="Seu apelido">
+        <button id="saveUserBtn" class="btn-check" style="padding: 10px; font-size: 12px;">SALVAR NICKNAME</button>
     </div>
+    
     <div class="card">
-        <h3 style="text-align:left; margin-bottom:15px; font-size: 14px;">🌍 IDIOMA</h3>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <h3 style="text-align:left; margin-bottom:15px; font-size: 14px;">🌎 IDIOMA</h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom: 20px;">
             <button onclick="changeLang('English')" class="btn-lang" id="ln-English" style="background:#0F172A; color:white; border-radius:12px; padding:12px;">English</button>
             <button onclick="changeLang('Spanish')" class="btn-lang" id="ln-Spanish" style="background:#0F172A; color:white; border-radius:12px; padding:12px;">Español</button>
         </div>
+        
+        <hr style="border:0; border-top:1px solid #334155; margin: 15px 0;">
+        <button onclick="auth.signOut().then(()=>location.reload())" style="background: rgba(239, 68, 68, 0.1); color: var(--error); border: 1px solid var(--error); padding: 12px; font-size: 12px;">SAIR DA CONTA</button>
     </div>
 </main>
 
@@ -79,7 +89,7 @@
         </div>
         <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
             <p id="qStatus" style="text-align:center; font-weight:900; color:var(--primary); font-size:12px;"></p>
-            <h2 id="targetPhrase" style="text-align:center; font-size:1.8rem; font-weight:900; margin:15px 0;">...</h2>
+            <h2 id="targetPhrase" style="text-align:center; font-size: 1.8rem; font-weight:900; margin:15px 0;">...</h2>
             <div id="dropZone" class="word-area"></div>
             <div id="wordBank" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;"></div>
         </div>
@@ -106,28 +116,12 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// DICIONÁRIO AMPLO PARA MISTURA
+// Dicionário Ampliado
 const DATA = {
-    LIVING: {
-        PT: ["O gato", "O médico", "A menina", "O cachorro", "O irmão", "O professor", "O menino", "O cavalo", "A mãe"],
-        EN: ["The cat", "The doctor", "The girl", "The dog", "The brother", "The teacher", "The boy", "The horse", "The mother"],
-        ES: ["El gato", "El médico", "La niña", "El perro", "El hermano", "El profesor", "El niño", "El caballo", "La madre"]
-    },
-    THINGS: {
-        PT: ["O carro", "A casa", "O sol", "A pizza", "A ponte", "O livro", "A maçã", "O rio", "A rua"],
-        EN: ["The car", "The house", "The sun", "The pizza", "The bridge", "The book", "The apple", "The river", "The street"],
-        ES: ["El coche", "La casa", "El sol", "La pizza", "El puente", "El libro", "La manzana", "El río", "La calle"]
-    },
-    VERBS: {
-        PT: ["bebe", "corre", "come", "dorme", "estuda", "fala", "lê", "canta", "trabalha"],
-        EN: ["drinks", "runs", "eats", "sleeps", "studies", "speaks", "reads", "sings", "works"],
-        ES: ["bebe", "corre", "come", "duerme", "estudia", "habla", "lee", "canta", "trabaja"]
-    },
-    ADJS: {
-        PT: ["azul", "grande", "bonito", "caro", "rápido", "feliz", "frio", "quente", "novo"],
-        EN: ["blue", "big", "beautiful", "expensive", "fast", "happy", "cold", "hot", "new"],
-        ES: ["azul", "grande", "hermoso", "caro", "rápido", "feliz", "frío", "caliente", "nuevo"]
-    }
+    LIVING: { PT:["O gato","O médico","A menina","O cachorro","O irmão","O professor"], EN:["The cat","The doctor","The girl","The dog","The brother","The teacher"], ES:["El gato","El médico","La niña","El perro","El hermano","El profesor"] },
+    THINGS: { PT:["O carro","A casa","O livro","A maçã","A ponte","O sol"], EN:["The car","The house","The book","The apple","The bridge","The sun"], ES:["El coche","La casa","El libro","La manzana","El puente","El sol"] },
+    VERBS: { PT:["bebe","corre","come","dorme","estuda","canta"], EN:["drinks","runs","eats","sleeps","studies","sings"], ES:["bebe","corre","come","duerme","estudia","canta"] },
+    ADJS: { PT:["azul","grande","bonito","caro","rápido","feliz"], EN:["blue","big","beautiful","expensive","fast","happy"], ES:["azul","grande","hermoso","caro","rápido","feliz"] }
 };
 
 let user = { username: "Player", xp: 0, lvl: 1, task: 1, lang: "English" };
@@ -153,46 +147,56 @@ function updateUI() {
     document.getElementById('taskTxt').innerText = `Tarefa ${user.task} de 10`;
 }
 
-// GERAÇÃO ANTI-REPETIÇÃO
+// SISTEMA DE ENSINO (TUTORIAL)
+document.getElementById('startBtn').onclick = () => {
+    const code = user.lang === "English" ? "Inglês" : "Espanhol";
+    const tips = {
+        "English": [
+            "Para descrever objetos, usamos 'The' (O/A) + 'is' (é). Ex: The car is blue.",
+            "Para seres vivos, o verbo ganha um 's' no final. Ex: The cat eats (O gato come).",
+            "Adjetivos em inglês costumam vir depois do 'is' em frases simples."
+        ],
+        "Spanish": [
+            "Em espanhol, 'O' é 'El' e 'A' é 'La'. Ex: El gato, La casa.",
+            "O verbo 'é' em espanhol é 'es'. Ex: El coche es azul.",
+            "Muitas palavras são parecidas com o português, mas a pronúncia muda!"
+        ]
+    };
+    
+    const randomTip = tips[user.lang][Math.floor(Math.random() * tips[user.lang].length)];
+    document.getElementById('tutorialTitle').innerText = `Lição de ${code}`;
+    document.getElementById('tutorialText').innerText = randomTip;
+    document.getElementById('tutorialView').classList.remove('hidden');
+};
+
+function startActualPractice() {
+    document.getElementById('tutorialView').classList.add('hidden');
+    qIdx = 0; 
+    currentQs = generateUniqueQuestions();
+    document.getElementById('practiceView').classList.remove('hidden');
+    loadQ();
+}
+
 function generateUniqueQuestions() {
     let list = [];
     let code = user.lang === "English" ? "EN" : "ES";
-    let usedCombos = new Set();
-
+    let used = new Set();
     while(list.length < 10) {
-        let type = Math.random() > 0.5 ? 'ACTION' : 'STATE';
-        let subIdx = Math.floor(Math.random() * DATA.LIVING.PT.length);
-        let actionIdx = Math.floor(Math.random() * DATA.VERBS.PT.length);
-        let adjIdx = Math.floor(Math.random() * DATA.ADJS.PT.length);
-        
-        let comboKey = `${type}-${subIdx}-${type === 'ACTION' ? actionIdx : adjIdx}`;
-        
-        if(!usedCombos.has(comboKey)) {
-            usedCombos.add(comboKey);
-            if(type === 'ACTION') {
-                list.push({
-                    pt: `${DATA.LIVING.PT[subIdx]} ${DATA.VERBS.PT[actionIdx]}`,
-                    target: `${DATA.LIVING[code][subIdx]} ${DATA.VERBS[code][actionIdx]}`.toLowerCase()
-                });
+        let isAction = Math.random() > 0.5;
+        let sIdx = Math.floor(Math.random() * DATA.LIVING.PT.length);
+        let key = `${isAction}-${sIdx}-${Math.floor(Math.random()*5)}`;
+        if(!used.has(key)) {
+            used.add(key);
+            if(isAction) {
+                list.push({ pt: `${DATA.LIVING.PT[sIdx]} ${DATA.VERBS.PT[sIdx]}`, target: `${DATA.LIVING[code][sIdx]} ${DATA.VERBS[code][sIdx]}`.toLowerCase() });
             } else {
                 let is = code === "EN" ? "is" : "es";
-                let sub = Math.random() > 0.5 ? DATA.LIVING : DATA.THINGS;
-                list.push({
-                    pt: `${sub.PT[subIdx]} é ${DATA.ADJS.PT[adjIdx]}`,
-                    target: `${sub[code][subIdx]} ${is} ${DATA.ADJS[code][adjIdx]}`.toLowerCase()
-                });
+                list.push({ pt: `${DATA.THINGS.PT[sIdx]} é ${DATA.ADJS.PT[sIdx]}`, target: `${DATA.THINGS[code][sIdx]} ${is} ${DATA.ADJS[code][sIdx]}`.toLowerCase() });
             }
         }
     }
     return list;
 }
-
-document.getElementById('startBtn').onclick = () => {
-    qIdx = 0; 
-    currentQs = generateUniqueQuestions();
-    document.getElementById('practiceView').classList.remove('hidden');
-    loadQ();
-};
 
 function loadQ() {
     state = "CHECK"; selection = [];
@@ -204,18 +208,11 @@ function loadQ() {
     document.getElementById('innerBar').style.width = `${(qIdx / 10) * 100}%`;
     document.getElementById('actionBtn').innerText = "VERIFICAR";
     document.getElementById('actionBtn').style.background = "var(--primary)";
-    
     const bank = document.getElementById('wordBank'); bank.innerHTML = "";
-    let words = [...q.target.split(" "), "not", "the", "a"].sort(() => Math.random() - 0.5);
-    
+    let words = [...q.target.split(" "), "not", "a"].sort(() => Math.random() - 0.5);
     words.forEach(w => {
         const b = document.createElement('button'); b.className = "chip"; b.innerText = w;
-        b.onclick = () => {
-            if(state !== "CHECK") return;
-            selection.push(w); b.classList.add('used');
-            const s = document.createElement('span'); s.className = "chip"; s.innerText = w;
-            document.getElementById('dropZone').appendChild(s);
-        };
+        b.onclick = () => { if(state === "CHECK") { selection.push(w); b.classList.add('used'); const s = document.createElement('span'); s.className = "chip"; s.innerText = w; document.getElementById('dropZone').appendChild(s); }};
         bank.appendChild(b);
     });
 }
@@ -223,15 +220,12 @@ function loadQ() {
 document.getElementById('actionBtn').onclick = async function() {
     if(state === "CHECK") {
         if(selection.join(" ").toLowerCase() === currentQs[qIdx].target) {
-            this.innerText = "CONTINUAR"; this.style.background = "var(--secondary)";
+            this.innerText = "PRÓXIMA"; this.style.background = "var(--secondary)";
             document.getElementById('feedbackText').innerText = "CORRETO! ✨";
             state = "NEXT";
         } else {
-            document.getElementById('feedbackText').innerText = "TENTE NOVAMENTE";
-            setTimeout(() => {
-                document.getElementById('dropZone').innerHTML = ""; selection = [];
-                document.querySelectorAll('.chip').forEach(c => c.classList.remove('used'));
-            }, 600);
+            document.getElementById('feedbackText').innerText = "OPS! TENTE DE NOVO";
+            setTimeout(() => { document.getElementById('dropZone').innerHTML = ""; selection = []; document.querySelectorAll('.chip').forEach(c => c.classList.remove('used')); }, 600);
         }
     } else {
         qIdx++;
@@ -239,7 +233,7 @@ document.getElementById('actionBtn').onclick = async function() {
         else {
             let nextTask = user.task + 1;
             let nextLvl = user.lvl;
-            if(nextTask > 10) { nextTask = 1; nextLvl++; triggerLevelUp(nextLvl); }
+            if(nextTask > 10) { nextTask = 1; nextLvl++; }
             user.xp += 100; user.task = nextTask; user.lvl = nextLvl;
             await update(ref(db, 'users/'+auth.currentUser.uid), user);
             document.getElementById('practiceView').classList.add('hidden');
@@ -247,22 +241,6 @@ document.getElementById('actionBtn').onclick = async function() {
     }
 };
 
-function triggerLevelUp(newLvl) {
-    document.getElementById('levelUpText').innerText = `Você alcançou o Nível ${newLvl}!`;
-    document.getElementById('levelUpOverlay').classList.remove('hidden');
-}
-
-function buildRanking(all) {
-    const sorted = Object.values(all).sort((a,b) => (b.xp || 0) - (a.xp || 0)).slice(0, 10);
-    document.getElementById('leaderboardList').innerHTML = sorted.map((u, i) => `
-        <div style="display:flex; justify-content:space-between; padding:12px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:5px;">
-            <span>${i+1}º ${u.username || 'Player'}</span>
-            <span style="color:var(--gold)">${u.xp || 0} XP</span>
-        </div>
-    `).join('');
-}
-
-window.closeLevelUp = () => document.getElementById('levelUpOverlay').classList.add('hidden');
 window.showTab = (id) => {
     ['homeView', 'rankingView', 'settingsView'].forEach(v => document.getElementById(v).classList.add('hidden'));
     document.getElementById(id).classList.remove('hidden');
@@ -273,6 +251,16 @@ document.getElementById('saveUserBtn').onclick = () => {
     const n = document.getElementById('usernameInput').value.trim();
     if(n) update(ref(db, 'users/'+auth.currentUser.uid), {username: n});
 };
+
+function buildRanking(all) {
+    const sorted = Object.values(all).sort((a,b) => (b.xp || 0) - (a.xp || 0)).slice(0, 10);
+    document.getElementById('leaderboardList').innerHTML = sorted.map((u, i) => `
+        <div style="display:flex; justify-content:space-between; padding:12px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:5px;">
+            <span>${i+1}º ${u.username || 'Player'}</span>
+            <span style="color:var(--gold)">${u.xp || 0} XP</span>
+        </div>
+    `).join('');
+}
 </script>
 </body>
 </html>
