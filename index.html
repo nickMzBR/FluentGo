@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FluentGo Ultra | 100 Levels Final</title>
+    <title>FluentGo Ultra | 100 Levels Beast Mode</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #2563EB; --secondary: #10B981; --bg: #0F172A; --card: #1E293B; --text: #F8FAFC; --gold: #F59E0B; --error: #EF4444; }
@@ -16,14 +16,12 @@
         button { padding: 16px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; width: 100%; font-size: 15px; text-transform: uppercase; transition: 0.2s; }
         .btn-check { background: var(--primary); color: white; box-shadow: 0 5px 0 #1D4ED8; }
         .btn-check:active { transform: translateY(3px); box-shadow: 0 2px 0 #1D4ED8; }
-        
         nav { position: fixed; bottom: 0; left: 0; right: 0; background: #1E293B; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #334155; z-index: 100; height: 75px; }
         nav div { display: flex; flex-direction: column; align-items: center; font-size: 20px; cursor: pointer; opacity: 0.4; flex: 1; }
         nav span { font-size: 9px; font-weight: 700; margin-top: 5px; text-transform: uppercase; }
         nav div.active { opacity: 1; color: var(--primary); }
-
-        .word-area { min-height: 110px; border: 2px dashed #475569; border-radius: 20px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 15px; background: rgba(255,255,255,0.02); margin: 15px 0; }
-        .chip { background: #334155; padding: 12px 16px; border-radius: 14px; font-weight: 700; color: white; border: 1px solid #475569; cursor: pointer; }
+        .word-area { min-height: 120px; border: 2px dashed #475569; border-radius: 20px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 15px; background: rgba(255,255,255,0.02); margin: 15px 0; }
+        .chip { background: #334155; padding: 12px 16px; border-radius: 14px; font-weight: 700; color: white; border: 1px solid #475569; }
         .chip.used { opacity: 0.1; pointer-events: none; }
     </style>
 </head>
@@ -36,16 +34,16 @@
 
 <main id="homeView" class="container hidden">
     <div class="card" style="margin-top: 40px;">
-        <div style="font-size: 12px; font-weight: 900; color: var(--primary); letter-spacing: 2px;">PROGRESSO ATUAL</div>
-        <h1 id="levelDisplay" style="font-size: 4rem; font-weight: 900; margin: 10px 0; color: var(--gold);">1</h1>
-        <h2 id="levelTxt" style="margin-bottom: 5px;">Nível 1</h2>
+        <div style="font-size: 10px; font-weight: 900; color: var(--primary); letter-spacing: 2px; text-transform: uppercase;">Progresso Total</div>
+        <h1 id="levelDisplay" style="font-size: 4rem; font-weight: 900; margin: 5px 0; color: var(--gold);">1</h1>
+        <h2 id="levelTxt">Nível 1</h2>
         <p id="taskTxt" style="color: #94a3b8; margin-bottom: 30px;">Tarefa 1 de 10</p>
-        <button id="startBtn" class="btn-check">PRATICAR AGORA</button>
+        <button id="startBtn" class="btn-check">PRATICAR TAREFA</button>
     </div>
 </main>
 
 <main id="rankingView" class="container hidden">
-    <h3 style="text-align:center; margin-bottom:20px;">🏆 RANKING MUNDIAL (TOP 100)</h3>
+    <h3 style="text-align:center; margin-bottom:20px;">🏆 RANKING GLOBAL</h3>
     <div id="leaderboardList"></div>
 </main>
 
@@ -53,13 +51,12 @@
     <div class="card">
         <h3 style="text-align:left; margin-bottom:15px;">🌍 IDIOMA DE ESTUDO</h3>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:25px;">
-            <button onclick="changeLang('English')" class="btn-lang" id="ln-English" style="background:#334155; color:white; border-radius:12px; padding:10px;">English</button>
-            <button onclick="changeLang('Spanish')" class="btn-lang" id="ln-Spanish" style="background:#334155; color:white; border-radius:12px; padding:10px;">Español</button>
-            <button onclick="changeLang('French')" class="btn-lang" id="ln-French" style="background:#334155; color:white; border-radius:12px; padding:10px;">Français</button>
-            <button onclick="changeLang('Italian')" class="btn-lang" id="ln-Italian" style="background:#334155; color:white; border-radius:12px; padding:10px;">Italiano</button>
+            <button onclick="changeLang('English')" class="btn-lang" id="ln-English" style="background:#334155; color:white; border-radius:12px; padding:12px;">English</button>
+            <button onclick="changeLang('Spanish')" class="btn-lang" id="ln-Spanish" style="background:#334155; color:white; border-radius:12px; padding:12px;">Español</button>
+            <button onclick="changeLang('French')" class="btn-lang" id="ln-French" style="background:#334155; color:white; border-radius:12px; padding:12px;">Français</button>
+            <button onclick="changeLang('Italian')" class="btn-lang" id="ln-Italian" style="background:#334155; color:white; border-radius:12px; padding:12px;">Italiano</button>
         </div>
-        <hr style="border:0; border-top:1px solid #334155; margin-bottom:20px;">
-        <button onclick="auth.signOut().then(()=>location.reload())" style="color:var(--error); background:none; border:1px solid var(--error);">DESCONECTAR</button>
+        <button onclick="auth.signOut().then(()=>location.reload())" style="color:var(--error); background:none; border:1px solid var(--error);">SAIR DA CONTA</button>
     </div>
 </main>
 
@@ -67,18 +64,18 @@
     <div class="container">
         <div style="display:flex; align-items:center; gap:15px; margin-bottom: 20px;">
             <button onclick="closePractice()" style="width:40px; background:none; font-size:24px; color:white; border:none;">✕</button>
-            <div style="background:#334155; flex:1; height:12px; border-radius:10px; overflow:hidden;">
+            <div style="background:#334155; flex:1; height:10px; border-radius:10px; overflow:hidden;">
                 <div id="innerBar" style="width:0%; height:100%; background:var(--secondary); transition:0.4s;"></div>
             </div>
         </div>
         <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
-            <p id="qStatus" style="text-align:center; font-weight:900; color:var(--primary); font-size:12px; margin-bottom:5px;"></p>
-            <h2 id="targetPhrase" style="text-align:center; font-size:1.8rem; font-weight:900; margin-bottom:20px;">...</h2>
+            <p id="qStatus" style="text-align:center; font-weight:900; color:var(--primary); font-size:12px;"></p>
+            <h2 id="targetPhrase" style="text-align:center; font-size:1.8rem; font-weight:900; margin:15px 0;">...</h2>
             <div id="dropZone" class="word-area"></div>
             <div id="wordBank" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;"></div>
         </div>
-        <div style="padding-bottom: 30px;">
-            <div id="feedbackText" style="text-align:center; margin-bottom:15px; font-weight:800; min-height:24px; font-size:1.1rem;"></div>
+        <div style="padding-bottom: 25px;">
+            <div id="feedbackText" style="text-align:center; margin-bottom:15px; font-weight:800; min-height:24px;"></div>
             <button id="actionBtn" class="btn-check">VERIFICAR</button>
         </div>
     </div>
@@ -100,48 +97,59 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// --- MOTOR DE CONTEÚDO GIGANTE (PREDEFINIDO POR LÓGICA) ---
+// --- DICIONÁRIO ULTRA EXPANDIDO ---
 const DIC = {
-    PT: ["O gato", "A casa", "O carro", "O amigo", "A maçã", "O sol", "A água", "O livro", "O café", "O cachorro", "O menino", "A menina", "A porta", "O céu", "O pão", "A rua"],
-    EN: ["the cat", "the house", "the car", "the friend", "the apple", "the sun", "the water", "the book", "the coffee", "the dog", "the boy", "the girl", "the door", "the sky", "the bread", "the street"],
-    ES: ["el gato", "la casa", "el coche", "el amigo", "la manzana", "el sol", "el agua", "el libro", "el café", "el perro", "el niño", "la niña", "la puerta", "el cielo", "el pan", "la calle"],
-    FR: ["le chat", "la maison", "la voiture", "l'ami", "la pomme", "le soleil", "l'eau", "le livre", "le café", "le chien", "le garçon", "la fille", "la porte", "le ciel", "le pain", "la rue"],
-    IT: ["il gatto", "la casa", "la macchina", "l'amico", "la mela", "il sole", "l'acqua", "il libro", "il caffè", "il cane", "il ragazzo", "la ragazza", "la porta", "il cielo", "il pane", "la strada"],
-    ADJ_PT: ["é azul", "é grande", "é bom", "é novo", "dorme", "corre", "bebe", "fala"],
-    ADJ_EN: ["is blue", "is big", "is good", "is new", "sleeps", "runs", "drinks", "speaks"],
-    ADJ_ES: ["es azul", "es grande", "es bueno", "es nuevo", "duerme", "corre", "bebe", "habla"],
-    ADJ_FR: ["est bleu", "est grand", "est bon", "est neuf", "dort", "court", "boit", "parle"],
-    ADJ_IT: ["è blu", "è grande", "è buono", "è nuovo", "dorme", "corre", "beve", "parla"]
+    PT: ["O gato", "O carro", "A casa", "O amigo", "O livro", "A maçã", "O sol", "A água", "O café", "O cachorro", "O menino", "A menina", "A porta", "O céu", "O pão", "A rua", "A mesa", "A cadeira", "A janela", "O professor", "O médico", "O leite", "A pizza", "O irmão", "A cidade", "O país", "A música", "O filme", "O relógio", "O sapato", "A floresta", "O rio", "O avião", "O cavalo", "A ponte"],
+    EN: ["the cat", "the car", "the house", "the friend", "the book", "the apple", "the sun", "the water", "the coffee", "the dog", "the boy", "the girl", "the door", "the sky", "the bread", "the street", "the table", "the chair", "the window", "the teacher", "the doctor", "the milk", "the pizza", "the brother", "the city", "the country", "the music", "the movie", "the watch", "the shoe", "the forest", "the river", "the plane", "the horse", "the bridge"],
+    ES: ["el gato", "el coche", "la casa", "el amigo", "el libro", "la manzana", "el sol", "el agua", "el café", "el perro", "el niño", "la niña", "la puerta", "el cielo", "el pan", "la calle", "la mesa", "la silla", "la ventana", "el profesor", "el médico", "la leche", "la pizza", "el hermano", "la ciudad", "el país", "la música", "la película", "el reloj", "el zapato", "el bosque", "el río", "el avión", "el caballo", "el puente"],
+    FR: ["le chat", "la voiture", "la maison", "l'ami", "le livre", "la pomme", "le soleil", "l'eau", "le café", "le chien", "le garçon", "la fille", "la porte", "le ciel", "le pain", "la rue", "la table", "la chaise", "la fenêtre", "le professeur", "le médecin", "le lait", "la pizza", "le frère", "la ville", "le pays", "la musique", "le film", "la montre", "la chaussure", "la forêt", "le fleuve", "l'avion", "le cheval", "le pont"],
+    IT: ["il gatto", "la macchina", "la casa", "l'amico", "il libro", "la mela", "il sole", "l'acqua", "il caffè", "il cane", "il ragazzo", "la ragazza", "la porta", "il cielo", "il pane", "la strada", "il tavolo", "la sedia", "la finestra", "il professore", "il medico", "il latte", "la pizza", "il fratello", "la città", "il paese", "la musica", "il film", "l'orologio", "la scarpa", "la foresta", "il fiume", "l'aereo", "il cavallo", "il ponte"],
+    V_PT: ["bebe", "corre", "fala", "dorme", "come", "abre", "olha", "canta", "estuda", "trabalha", "escreve", "lê", "escuta", "cozinha", "viaja", "dança", "caminha", "nada", "dirige", "ajuda"],
+    V_EN: ["drinks", "runs", "speaks", "sleeps", "eats", "opens", "looks", "sings", "studies", "works", "writes", "reads", "listens", "cooks", "travels", "dances", "walks", "swims", "drives", "helps"],
+    V_ES: ["bebe", "corre", "habla", "duerme", "come", "abre", "mira", "canta", "estudia", "trabaja", "escribe", "lee", "escucha", "cocina", "viaja", "baila", "camina", "nada", "conduce", "ayuda"],
+    V_FR: ["boit", "court", "parle", "dort", "mange", "ouvre", "regarde", "chante", "étudie", "travaille", "écrit", "lit", "écoute", "cuisine", "voyage", "danse", "marche", "nage", "conduit", "aide"],
+    V_IT: ["beve", "corre", "parla", "dorme", "mangia", "apre", "guarda", "canta", "studia", "lavora", "scrive", "legge", "ascolta", "cucina", "viaggia", "balla", "cammina", "nuota", "guida", "aiuta"],
+    ADJ_PT: ["azul", "grande", "feliz", "novo", "rápido", "frio", "quente", "bonito", "vermelho", "verde", "pequeno", "inteligente", "forte", "cansado", "caro", "barato"],
+    ADJ_EN: ["blue", "big", "happy", "new", "fast", "cold", "hot", "beautiful", "red", "green", "small", "intelligent", "strong", "tired", "expensive", "cheap"],
+    ADJ_ES: ["azul", "grande", "feliz", "nuevo", "rápido", "frío", "caliente", "hermoso", "rojo", "verde", "pequeño", "inteligente", "fuerte", "cansado", "caro", "barato"],
+    ADJ_FR: ["bleu", "grand", "heureux", "nouveau", "rapide", "froid", "chaud", "beau", "rouge", "vert", "petit", "intelligent", "fort", "fatigué", "cher", "bon marché"],
+    ADJ_IT: ["blu", "grande", "felice", "nuovo", "veloce", "freddo", "caldo", "bello", "rosso", "verde", "piccolo", "intelligente", "forte", "stanco", "costoso", "economico"]
 };
 
-// Gera 10 questões predefinidas para qualquer combinação de Nível/Tarefa/Língua
+const langMap = { "English": "EN", "Spanish": "ES", "French": "FR", "Italian": "IT" };
+
 function getTaskQuestions(lang, level, task) {
     let list = [];
-    const langKey = lang.substring(0,2).toUpperCase();
-    for(let i=1; i<=10; i++) {
-        // Fórmula determinística para selecionar palavras baseado nos IDs
+    const code = langMap[lang] || "EN";
+    for(let i=0; i<10; i++) {
         const seed = (level * 100) + (task * 10) + i;
-        const sub1 = DIC.PT[seed % DIC.PT.length];
-        const subTarget = DIC[langKey][seed % DIC[langKey].length];
-        const adj1 = DIC.ADJ_PT[seed % DIC.ADJ_PT.length];
-        const adjTarget = DIC["ADJ_"+langKey][seed % DIC["ADJ_"+langKey].length];
+        const subIdx = seed % DIC.PT.length;
+        const vIdx = seed % DIC.V_PT.length;
+        const adjIdx = seed % DIC.ADJ_PT.length;
         
-        list.push({
-            pt: `${sub1} ${adj1}`,
-            target: `${subTarget} ${adjTarget}`.toLowerCase()
-        });
+        // Estrutura Dinâmica baseada no nível: frases ficam mais longas
+        if (level < 20) {
+            list.push({ pt: `${DIC.PT[subIdx]} ${DIC.V_PT[vIdx]}`, target: `${DIC[code][subIdx]} ${DIC["V_"+code][vIdx]}`.toLowerCase() });
+        } else {
+            const is = {EN:"is", ES:"es", FR:"est", IT:"è"}[code];
+            list.push({ 
+                pt: `${DIC.PT[subIdx]} ${DIC.V_PT[vIdx]} e é ${DIC.ADJ_PT[adjIdx]}`, 
+                target: `${DIC[code][subIdx]} ${DIC["V_"+code][vIdx]} and ${is} ${DIC["ADJ_"+code][adjIdx]}`.toLowerCase() 
+            });
+        }
     }
     return list;
 }
 
 let user = { xp: 0, lvl: 1, task: 1, lang: "English" };
-let currentQuestions = [];
+let currentQs = [];
 let qIdx = 0, selection = [], state = "CHECK";
 
 onAuthStateChanged(auth, (u) => {
     if(u) {
         onValue(ref(db, 'users/'+u.uid), (snap) => {
-            user = snap.exists() ? snap.val() : user;
+            const d = snap.val();
+            if(d) { user.xp = d.xp||0; user.lvl = d.lvl||1; user.task = d.task||1; user.lang = d.lang||"English"; }
             updateUI();
             ['appHeader', 'homeView', 'bottomNav'].forEach(id => document.getElementById(id).classList.remove('hidden'));
         });
@@ -154,26 +162,23 @@ function updateUI() {
     document.getElementById('levelDisplay').innerText = user.lvl;
     document.getElementById('levelTxt').innerText = `Nível ${user.lvl}`;
     document.getElementById('taskTxt').innerText = `Tarefa ${user.task} de 10`;
-    document.getElementById('langTag').innerText = user.lang.substring(0,2).toUpperCase();
+    document.getElementById('langTag').innerText = langMap[user.lang];
     document.querySelectorAll('.btn-lang').forEach(b => b.style.border = "none");
     document.getElementById('ln-'+user.lang).style.border = "2px solid var(--primary)";
 }
 
 function buildRanking(all) {
     const list = document.getElementById('leaderboardList');
-    const sorted = Object.values(all).sort((a,b) => b.xp - a.xp).slice(0, 100);
+    const sorted = Object.values(all).sort((a,b) => (b.xp || 0) - (a.xp || 0)).slice(0, 50);
     list.innerHTML = sorted.map((u, i) => `
-        <div style="display:flex; justify-content:space-between; padding:15px; background:rgba(255,255,255,0.05); border-radius:15px; margin-bottom:8px; border:1px solid #334155;">
-            <span><b>${i+1}º</b> ${u.email?.split('@')[0]}</span>
-            <span style="color:var(--gold)">${u.xp} XP</span>
+        <div style="display:flex; justify-content:space-between; padding:15px; background:rgba(255,255,255,0.05); border-radius:15px; margin-bottom:8px;">
+            <span><b>${i+1}º</b> ${u.email?.split('@')[0] || 'Player'}</span>
+            <span style="color:var(--gold)">${u.xp || 0} XP</span>
         </div>
     `).join('');
 }
 
-window.changeLang = (l) => {
-    user.lang = l;
-    update(ref(db, 'users/'+auth.currentUser.uid), {lang: l});
-};
+window.changeLang = (l) => { user.lang = l; update(ref(db, 'users/'+auth.currentUser.uid), {lang: l}); };
 
 window.showTab = (id) => {
     ['homeView', 'rankingView', 'settingsView'].forEach(v => document.getElementById(v).classList.add('hidden'));
@@ -183,15 +188,14 @@ window.showTab = (id) => {
 };
 
 document.getElementById('startBtn').onclick = () => {
-    qIdx = 0;
-    currentQuestions = getTaskQuestions(user.lang, user.lvl, user.task);
+    qIdx = 0; currentQs = getTaskQuestions(user.lang, user.lvl, user.task);
     document.getElementById('practiceView').classList.remove('hidden');
     loadQ();
 };
 
 function loadQ() {
     state = "CHECK"; selection = [];
-    const q = currentQuestions[qIdx];
+    const q = currentQs[qIdx];
     document.getElementById('qStatus').innerText = `QUESTÃO ${qIdx + 1}/10`;
     document.getElementById('targetPhrase').innerText = q.pt;
     document.getElementById('dropZone').innerHTML = "";
@@ -199,10 +203,8 @@ function loadQ() {
     document.getElementById('innerBar').style.width = `${(qIdx / 10) * 100}%`;
     document.getElementById('actionBtn').innerText = "VERIFICAR";
     document.getElementById('actionBtn').style.background = "var(--primary)";
-    
-    const bank = document.getElementById('wordBank');
-    bank.innerHTML = "";
-    const options = [...q.target.split(" "), "the", "is", "a"].sort(() => Math.random() - 0.5);
+    const bank = document.getElementById('wordBank'); bank.innerHTML = "";
+    const options = [...q.target.split(" "), "and", "is", "a", "not"].sort(() => Math.random() - 0.5);
     options.forEach(w => {
         const b = document.createElement('button'); b.className = "chip"; b.innerText = w;
         b.onclick = () => {
@@ -218,26 +220,23 @@ function loadQ() {
 document.getElementById('actionBtn').onclick = async function() {
     if(state === "CHECK") {
         const guess = selection.join(" ").toLowerCase().trim();
-        const correct = currentQuestions[qIdx].target.toLowerCase().trim();
-        if(guess === correct) {
-            this.innerText = "PRÓXIMA"; this.style.background = "var(--secondary)";
+        if(guess === currentQs[qIdx].target.toLowerCase().trim()) {
+            this.innerText = "CONTINUAR"; this.style.background = "var(--secondary)";
             document.getElementById('feedbackText').innerText = "Excelente! ✨";
             document.getElementById('feedbackText').style.color = "var(--secondary)";
             state = "NEXT";
         } else {
-            document.getElementById('feedbackText').innerText = "Tente novamente!";
+            document.getElementById('feedbackText').innerText = "Ops! Tente novamente.";
             document.getElementById('feedbackText').style.color = "var(--error)";
             setTimeout(() => {
-                document.getElementById('dropZone').innerHTML = "";
-                selection = [];
+                document.getElementById('dropZone').innerHTML = ""; selection = [];
                 document.querySelectorAll('.chip').forEach(c => c.classList.remove('used'));
-            }, 600);
+            }, 800);
         }
     } else {
         qIdx++;
-        if(qIdx < 10) {
-            loadQ();
-        } else {
+        if(qIdx < 10) loadQ();
+        else {
             user.xp += 100; user.task += 1;
             if(user.task > 10) { user.task = 1; user.lvl += 1; }
             await update(ref(db, 'users/'+auth.currentUser.uid), user);
