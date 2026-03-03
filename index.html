@@ -3,27 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FluentGo | Curso Completo</title>
+    <title>FluentGo | Pro</title>
     <style>
-        :root { --primary: #2563EB; --secondary: #10B981; --premium: #FF9900; --ads: #EF4444; --bg: #121212; --card: #1E1E1E; }
-        body { margin:0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #fff; text-align: center; }
-        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: #000; border-bottom: 2px solid #333; position: sticky; top: 0; }
+        :root { --primary: #2563EB; --secondary: #10B981; --premium: #FF9900; --danger: #EF4444; --bg: #121212; --card: #1E1E1E; }
+        body { margin:0; font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: #fff; text-align: center; overflow-x: hidden; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: #000; border-bottom: 2px solid #333; position: sticky; top: 0; z-index: 100; }
+        
         .container { padding: 20px; max-width: 600px; margin: 0 auto; }
         .hidden { display: none !important; }
-        .card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid #333; margin-bottom: 20px; }
-        button { padding: 14px 24px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; }
-        .btn-main { background: var(--primary); color: white; width: 100%; margin-top: 10px; }
+        
+        /* UI Elements */
+        .card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid #333; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        button { padding: 14px 24px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 1em; }
+        button:active { transform: scale(0.95); }
+        .btn-main { background: var(--primary); color: white; width: 100%; margin-top: 10px; box-shadow: 0 4px 0 #1D4ED8; }
+        .btn-main:active { box-shadow: none; transform: translateY(4px); }
         .btn-ghost { background: #333; color: #ccc; width: 100%; margin-top: 10px; }
-        .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .btn-ads { background: transparent; border: 2px solid var(--ads); color: var(--ads); font-size: 0.8em; }
+        
+        /* Stats & Shop */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .stat-box { background: #252525; padding: 12px; border-radius: 15px; border: 1px solid #333; font-size: 0.9em; }
+        .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .btn-ads { background: transparent; border: 2px solid var(--danger); color: var(--danger); font-size: 0.8em; }
         .btn-premium { background: transparent; border: 2px solid var(--premium); color: var(--premium); font-size: 0.8em; }
-        .btn-option { background: #252525; color: white; width: 100%; margin: 5px 0; text-align: left; border: 2px solid #444; }
-        .btn-word { background: #444; color: white; margin: 5px; display: inline-block; padding: 10px 15px; border-radius: 8px; }
-        .btn-word.used { opacity: 0.2; pointer-events: none; }
-        .word-area { min-height: 60px; border-bottom: 2px dashed #444; margin-bottom: 20px; padding: 10px; display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; }
-        .progress-container { background: #333; height: 10px; border-radius: 5px; margin: 10px 0; overflow: hidden; }
+
+        /* Progress Bar */
+        .progress-container { background: #333; height: 12px; border-radius: 6px; margin: 15px 0; overflow: hidden; }
         .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
-        input[type="text"] { background: #252525; border: 2px solid #444; padding: 15px; border-radius: 15px; color: white; font-size: 1.2em; text-align: center; width: 85%; outline: none; }
+
+        /* Input & Word Bubbles */
+        input[type="text"] { background: #252525; border: 2px solid #444; padding: 15px; border-radius: 15px; color: white; font-size: 1.2em; text-align: center; width: 85%; outline: none; margin-bottom: 15px; }
+        .btn-word { background: #444; color: white; margin: 5px; display: inline-block; padding: 10px 18px; border-radius: 10px; border-bottom: 3px solid #222; }
+        .btn-word.used { opacity: 0.2; pointer-events: none; }
+        .word-area { min-height: 70px; border-bottom: 2px dashed #444; margin-bottom: 25px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; }
+        
         canvas { position: fixed; inset: 0; pointer-events: none; z-index: 2000; }
     </style>
 </head>
@@ -32,15 +45,17 @@
 <canvas id="fxCanvas"></canvas>
 
 <header>
-    <div style="font-size: 1.5em; font-weight: 900;">FLUENT<span style="color:var(--primary)">GO</span></div>
-    <div id="userMenu" class="hidden"><span id="userXpDisplay" style="color: var(--premium); font-weight: bold;">0 XP</span></div>
+    <div style="font-size: 1.4em; font-weight: 900; letter-spacing: -1px;">FLUENT<span style="color:var(--primary)">GO</span></div>
+    <div id="userMenu" class="hidden">
+        <span id="userXpDisplay" style="color: var(--premium); font-weight: bold;">0 XP</span>
+    </div>
 </header>
 
 <div id="authSection" class="container">
     <div class="card" style="margin-top: 50px;">
-        <h2>Aprenda um novo idioma</h2>
-        <input type="email" id="email" placeholder="E-mail"><br><br>
-        <input type="password" id="password" placeholder="Senha"><br><br>
+        <h2>Aprenda grátis. Para sempre.</h2>
+        <input type="email" id="email" placeholder="E-mail" style="width: 85%; padding: 12px; margin-bottom: 10px; border-radius: 8px; background: #222; border: 1px solid #444; color: white;">
+        <input type="password" id="password" placeholder="Senha" style="width: 85%; padding: 12px; margin-bottom: 20px; border-radius: 8px; background: #222; border: 1px solid #444; color: white;">
         <button id="loginBtn" class="btn-main">ENTRAR</button>
         <button id="registerBtn" class="btn-ghost">CRIAR CONTA</button>
     </div>
@@ -48,47 +63,54 @@
 
 <div id="langOnboarding" class="container hidden">
     <div class="card">
-        <h2>Escolha seu curso:</h2>
-        <button class="btn-main" onclick="setInitialLang('Ingles')">🇺🇸 Inglês</button>
-        <button class="btn-main" onclick="setInitialLang('Espanhol')">🇪🇸 Espanhol</button>
-        <button class="btn-main" onclick="setInitialLang('Japones')">🇯🇵 Japonês</button>
+        <h2>O que vamos aprender?</h2>
+        <button class="btn-ghost" style="border: 2px solid var(--primary); color: white;" onclick="switchLanguage('Ingles')">🇺🇸 Inglês</button>
+        <button class="btn-ghost" style="border: 2px solid var(--secondary); color: white;" onclick="switchLanguage('Espanhol')">🇪🇸 Espanhol</button>
+        <button class="btn-ghost" style="border: 2px solid #FF0055; color: white;" onclick="switchLanguage('Japones')">🇯🇵 Japonês</button>
     </div>
 </div>
 
 <div id="appSection" class="container hidden">
-    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-        <div style="flex:1; background:#252525; padding:10px; border-radius:15px;">🌍 <b id="currentLangLabel">---</b></div>
-        <div style="flex:1; background:#252525; padding:10px; border-radius:15px;">🔥 Combo: <b id="comboLabel">0</b></div>
+    <div class="stats-grid">
+        <div class="stat-box">🌍 Idioma: <b id="currentLangLabel">---</b></div>
+        <div class="stat-box">🔥 Combo: <b id="comboLabel">0</b></div>
     </div>
+
     <div class="card">
         <h3 id="moduleLabel">Módulo 1</h3>
-        <p id="taskLabel" style="color: #aaa;">Desafio Aleatório</p>
+        <p id="taskLabel" style="color: #aaa;">Lição Diária</p>
         <div class="progress-container"><div id="mainProgress" class="progress-fill"></div></div>
-        <button id="startBtn" class="btn-main">ESTUDAR AGORA</button>
+        <button id="startBtn" class="btn-main" style="padding: 20px; font-size: 1.2em;">CONTINUAR CURSO</button>
+        
         <div class="shop-grid">
-            <button class="btn-ads" onclick="alert('Indisponível')">Remover Ads R$4,99</button>
-            <button class="btn-premium" onclick="alert('Indisponível')">Premium R$9,99</button>
+            <button class="btn-ads" onclick="alert('Em breve!')">Remover Ads R$4,99</button>
+            <button class="btn-premium" onclick="alert('Em breve!')">Premium R$9,99</button>
         </div>
     </div>
-    <button id="configBtn" class="btn-ghost">⚙️ Mudar Idioma</button>
+
+    <button id="configBtn" class="btn-ghost">⚙️ Trocar de Curso</button>
+    <button id="logoutBtn" class="btn-ghost" style="color: var(--danger); border: 1px solid #444;">Sair da Conta</button>
 </div>
 
 <div id="studyModal" class="container hidden">
-    <div class="card" style="margin-top: 50px;">
-        <h4 style="color:var(--premium)">ESTUDE ESTA FRASE</h4>
-        <h1 id="studyWord">...</h1>
+    <div class="card" style="margin-top: 50px; padding: 40px 20px;">
+        <h4 style="color:var(--premium)">MEMORIZE</h4>
+        <h1 id="studyWord" style="font-size: 2.5em;">...</h1>
         <h2 id="studyTranslation" style="color:var(--secondary)">...</h2>
-        <button id="nextStudyBtn" class="btn-main">ENTENDI</button>
+        <button id="nextStudyBtn" class="btn-main">PRÓXIMO</button>
     </div>
 </div>
 
 <div id="taskModal" class="hidden" style="position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: flex; flex-direction: column;">
-    <div style="padding: 20px;"><div class="progress-container"><div id="taskProgress" class="progress-fill"></div></div></div>
+    <div style="padding: 20px; display: flex; align-items: center; gap: 15px;">
+        <div class="progress-container" style="flex:1;"><div id="taskProgress" class="progress-fill"></div></div>
+        <button id="closeTask" style="background:none; color:#666; font-size: 1.5em;">✕</button>
+    </div>
     <div class="container" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-        <h1 id="questionDisplay">...</h1>
+        <h1 id="questionDisplay">Pergunta</h1>
         <div id="exerciseArea"></div>
-        <div id="feedback" style="margin-top: 20px; font-weight: bold; min-height: 30px;"></div>
-        <button id="checkBtn" class="btn-main">VERIFICAR</button>
+        <div id="feedback" style="margin-top: 20px; font-weight: bold; min-height: 30px; font-size: 1.2em;"></div>
+        <button id="checkBtn" class="btn-main" style="width: 80%; align-self: center;">VERIFICAR</button>
     </div>
 </div>
 
@@ -102,150 +124,152 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// --- CURRÍCULO GIGANTE PARA ZERO REPETIÇÃO ---
+// CURRÍCULO
 const courseData = {
     Ingles: {
-        M1: [ {q:"Olá", a:["hello", "hi"], type:"input"}, {q:"Obrigado", a:["thanks", "thank you"], type:"choice", options:["Thanks", "Please", "Water"]}, {q:"Sim", a:["yes", "yeah"], type:"phrase", words:["yes", "please", "no"]}, {q:"Tchau", a:["bye", "goodbye"], type:"input"}, {q:"Welcome", a:["bem-vindo"], type:"input"} ],
-        M2: [ {q:"Água", a:["water"], type:"input"}, {q:"Pão", a:["bread"], type:"choice", options:["Bread", "Coffee", "Milk"]}, {q:"Eu como maçã", a:["i eat apple"], type:"phrase", words:["i", "eat", "apple", "drink"]}, {q:"Leite", a:["milk"], type:"input"}, {q:"Café", a:["coffee"], type:"choice", options:["Coffee", "Water", "Tea"]} ],
-        M3: [ {q:"Mãe", a:["mother", "mom"], type:"input"}, {q:"Pai", a:["father", "dad"], type:"choice", options:["Father", "Son", "Brother"]}, {q:"Meu irmão", a:["my brother"], type:"phrase", words:["my", "brother", "sister"]}, {q:"Irmã", a:["sister"], type:"input"} ],
-        M4: [ {q:"Um", a:["one"], type:"input"}, {q:"Dois", a:["two"], type:"choice", options:["One", "Two", "Three"]}, {q:"Três carros", a:["three cars"], type:"phrase", words:["three", "cars", "one"]}, {q:"Quatro", a:["four"], type:"input"} ],
-        M5: [ {q:"Azul", a:["blue"], type:"input"}, {q:"Vermelho", a:["red"], type:"choice", options:["Red", "Blue", "Green"]}, {q:"O céu é azul", a:["the sky is blue"], type:"phrase", words:["the", "sky", "is", "blue"]}, {q:"Verde", a:["green"], type:"input"} ],
-        M6: [ {q:"Eu sou", a:["i am"], type:"input"}, {q:"Você é", a:["you are"], type:"choice", options:["You are", "I am", "He is"]}, {q:"Ela é feliz", a:["she is happy"], type:"phrase", words:["she", "is", "happy", "sad"]}, {q:"Ele é", a:["he is"], type:"input"} ],
-        M7: [ {q:"Cachorro", a:["dog"], type:"input"}, {q:"Gato", a:["cat"], type:"choice", options:["Cat", "Dog", "Bird"]}, {q:"Eu tenho um gato", a:["i have a cat"], type:"phrase", words:["i", "have", "a", "cat"]}, {q:"Pássaro", a:["bird"], type:"input"} ],
-        M8: [ {q:"Casa", a:["house"], type:"input"}, {q:"Escola", a:["school"], type:"choice", options:["School", "House", "Work"]}, {q:"Vou para escola", a:["i go to school"], type:"phrase", words:["i", "go", "to", "school"]}, {q:"Trabalho", a:["work"], type:"input"} ],
-        M9: [ {q:"Grande", a:["big"], type:"input"}, {q:"Pequeno", a:["small"], type:"choice", options:["Small", "Big", "New"]}, {q:"O carro é novo", a:["the car is new"], type:"phrase", words:["the", "car", "is", "new"]}, {q:"Velho", a:["old"], type:"input"} ],
-        M10:[ {q:"Eu bebo", a:["i drink"], type:"input"}, {q:"Eu falo", a:["i speak"], type:"choice", options:["I speak", "I drink", "I eat"]}, {q:"Eu falo inglês", a:["i speak english"], type:"phrase", words:["i", "speak", "english", "portuguese"]}, {q:"Eu vejo", a:["i see"], type:"input"} ]
+        M1: [{q:"Olá", a:["hello", "hi"], type:"input"}, {q:"Sim", a:["yes"], type:"choice", options:["Yes", "No", "Please"]}, {q:"Tchau", a:["bye", "goodbye"], type:"phrase", words:["bye", "hi", "goodbye"]}],
+        M2: [{q:"Água", a:["water"], type:"input"}, {q:"Café", a:["coffee"], type:"choice", options:["Coffee", "Milk", "Tea"]}]
     },
     Espanhol: {
-        M1: [ {q:"Olá", a:["hola"], type:"input"}, {q:"Obrigado", a:["gracias"], type:"choice", options:["Gracias", "Si", "No"]}, {q:"Por favor", a:["por favor"], type:"phrase", words:["por", "favor", "de", "nada"]} ]
-        // (Os outros 9 módulos seguem o mesmo padrão...)
+        M1: [{q:"Olá", a:["hola"], type:"input"}, {q:"Obrigado", a:["gracias"], type:"choice", options:["Gracias", "Si", "No"]}]
     },
     Japones: {
-        M1: [ {q:"Olá", a:["konnichiwa"], type:"input"}, {q:"Obrigado", a:["arigatou"], type:"choice", options:["Arigatou", "Hai", "Iie"]}, {q:"Sim", a:["hai"], type:"input"} ]
-        // (Os outros 9 módulos seguem o mesmo padrão...)
+        M1: [{q:"Olá", a:["konnichiwa"], type:"input"}, {q:"Sim", a:["hai"], type:"choice", options:["Hai", "Iie", "Desu"]}]
     }
 };
 
-let userData = { xp: 0, lang: "", mod: 1, combo: 0 };
-let currentLessonQuestions = [];
+// ESTADO GLOBAL
+let userData = { xp: 0, currentLang: "", combo: 0, progress: {} };
+let activeLesson = [];
 let qIdx = 0;
-let phraseParts = [];
+let phraseBuilder = [];
 
 const showSection = (id) => {
     ["authSection", "appSection", "taskModal", "langOnboarding", "studyModal"].forEach(s => document.getElementById(s).classList.add("hidden"));
     document.getElementById(id).classList.remove("hidden");
 };
 
-// --- MOTOR DE ALEATORIEDADE ---
-function startLesson() {
-    const modKey = "M" + userData.mod;
-    const pool = courseData[userData.lang][modKey] || courseData[userData.lang]["M1"];
-    // Sorteia 5 perguntas do banco para que a lição nunca seja idêntica
-    currentLessonQuestions = [...pool].sort(() => Math.random() - 0.5).slice(0, 5);
-    qIdx = 0;
-    showStudyStep();
+// SALVAR PROGRESSO POR IDIOMA
+async function switchLanguage(lang) {
+    userData.currentLang = lang;
+    if (!userData.progress[lang]) userData.progress[lang] = { mod: 1, task: 1 };
+    await update(ref(db, 'users/' + auth.currentUser.uid), userData);
+    showSection("appSection");
+    updateUI();
 }
 
-function showStudyStep() {
-    if(qIdx < 5) {
+function updateUI() {
+    const lang = userData.currentLang;
+    const prog = userData.progress[lang] || { mod: 1, task: 1 };
+    
+    document.getElementById("userXpDisplay").innerText = `${userData.xp || 0} XP`;
+    document.getElementById("currentLangLabel").innerText = lang || "---";
+    document.getElementById("comboLabel").innerText = userData.combo || 0;
+    document.getElementById("moduleLabel").innerText = `Módulo ${prog.mod}`;
+    document.getElementById("mainProgress").style.width = `${(prog.mod - 1) * 10}%`;
+}
+
+// LIÇÃO DINÂMICA
+function startLesson() {
+    const lang = userData.currentLang;
+    const modKey = "M" + userData.progress[lang].mod;
+    const pool = courseData[lang][modKey] || courseData[lang]["M1"];
+    activeLesson = [...pool].sort(() => Math.random() - 0.5).slice(0, 5);
+    qIdx = 0;
+    showStudy();
+}
+
+function showStudy() {
+    if(qIdx < activeLesson.length) {
         showSection("studyModal");
-        const q = currentLessonQuestions[qIdx];
+        const q = activeLesson[qIdx];
         document.getElementById("studyWord").innerText = q.q;
         document.getElementById("studyTranslation").innerText = q.a[0].toUpperCase();
     } else {
-        qIdx = 0;
-        showSection("taskModal");
-        renderTask();
+        qIdx = 0; showSection("taskModal"); renderTask();
     }
 }
 
 function renderTask() {
-    const q = currentLessonQuestions[qIdx];
+    const q = activeLesson[qIdx];
     const area = document.getElementById("exerciseArea");
-    area.innerHTML = "";
-    document.getElementById("feedback").innerText = "";
+    area.innerHTML = ""; document.getElementById("feedback").innerText = "";
     document.getElementById("taskProgress").style.width = `${(qIdx / 5) * 100}%`;
     document.getElementById("questionDisplay").innerText = q.q;
 
     if(q.type === "input") {
-        area.innerHTML = `<input type="text" id="ansInput" placeholder="Sua resposta...">`;
+        area.innerHTML = `<input type="text" id="ansInput" placeholder="Resposta...">`;
         document.getElementById("ansInput").focus();
     } else if(q.type === "choice") {
-        q.options.sort(()=>Math.random()-0.5).forEach(opt => {
-            const b = document.createElement("button");
-            b.className = "btn-option"; b.innerText = opt;
-            b.onclick = () => { 
-                document.querySelectorAll(".btn-option").forEach(x=>x.style.borderColor="#444");
-                b.style.borderColor="var(--primary)"; b.dataset.selected="true";
-            };
+        q.options.forEach(opt => {
+            const b = document.createElement("button"); b.className = "btn-ghost"; b.innerText = opt;
+            b.onclick = () => { document.querySelectorAll("#exerciseArea button").forEach(x=>x.style.borderColor="#444"); b.style.borderColor="var(--primary)"; b.dataset.selected="true"; };
             area.appendChild(b);
         });
     } else if(q.type === "phrase") {
-        phraseParts = [];
+        phraseBuilder = [];
         const drop = document.createElement("div"); drop.className = "word-area"; area.appendChild(drop);
-        q.words.sort(()=>Math.random()-0.5).forEach(w => {
+        q.words.forEach(w => {
             const b = document.createElement("button"); b.className = "btn-word"; b.innerText = w;
-            b.onclick = () => { if(!b.classList.contains("used")){ phraseParts.push(w); drop.innerHTML += `<span>${w} </span>`; b.classList.add("used"); }};
+            b.onclick = () => { phraseBuilder.push(w); drop.innerHTML += `<span>${w} </span>`; b.classList.add("used"); };
             area.appendChild(b);
         });
     }
 }
 
 function checkAnswer() {
-    const q = currentLessonQuestions[qIdx];
+    const q = activeLesson[qIdx];
     let userAns = "";
     if(q.type === "input") userAns = document.getElementById("ansInput").value.trim().toLowerCase();
-    else if(q.type === "choice") userAns = (document.querySelector(".btn-option[data-selected='true']")?.innerText || "").toLowerCase();
-    else if(q.type === "phrase") userAns = phraseParts.join(" ").toLowerCase();
+    else if(q.type === "choice") userAns = (document.querySelector("[data-selected='true']")?.innerText || "").toLowerCase();
+    else if(q.type === "phrase") userAns = phraseBuilder.join(" ").toLowerCase();
 
     if(q.a.includes(userAns)) {
-        document.getElementById("feedback").innerText = "CORRETO!";
+        document.getElementById("feedback").innerText = "✨ EXCELENTE!";
         document.getElementById("feedback").style.color = "var(--secondary)";
         userData.xp += 10; userData.combo++;
         spawnParticles(window.innerWidth/2, window.innerHeight/2, "#10B981");
         qIdx++;
-        setTimeout(() => { if(qIdx < 5) renderTask(); else finishLesson(); }, 1200);
+        setTimeout(() => { if(qIdx < 5 && qIdx < activeLesson.length) renderTask(); else finishLesson(); }, 1200);
     } else {
         document.getElementById("feedback").innerText = "ERROU! FOCO!";
-        document.getElementById("feedback").style.color = "var(--ads)";
+        document.getElementById("feedback").style.color = "var(--danger)";
         userData.combo = 0;
     }
     updateUI();
 }
 
 async function finishLesson() {
-    userData.mod++; 
-    if(userData.mod > 10) userData.mod = 1;
-    await set(ref(db, 'users/' + auth.currentUser.uid), userData);
-    showSection("appSection");
+    const lang = userData.currentLang;
+    userData.progress[lang].mod++;
+    await update(ref(db, 'users/' + auth.currentUser.uid), userData);
+    showSection("appSection"); updateUI();
 }
 
-const updateUI = () => {
-    document.getElementById("userXpDisplay").innerText = `${userData.xp || 0} XP`;
-    document.getElementById("currentLangLabel").innerText = userData.lang || "---";
-    document.getElementById("comboLabel").innerText = userData.combo || 0;
-    document.getElementById("moduleLabel").innerText = `Módulo ${userData.mod || 1}`;
-    document.getElementById("mainProgress").style.width = `${(userData.mod - 1) * 10}%`;
-};
-
-window.setInitialLang = async (l) => { userData.lang = l; userData.mod = 1; await set(ref(db, 'users/'+auth.currentUser.uid), userData); showSection("appSection"); updateUI(); };
+// LISTENERS
 document.getElementById("loginBtn").onclick = () => signInWithEmailAndPassword(auth, email.value, password.value);
 document.getElementById("registerBtn").onclick = () => createUserWithEmailAndPassword(auth, email.value, password.value);
+document.getElementById("logoutBtn").onclick = () => signOut(auth);
 document.getElementById("startBtn").onclick = startLesson;
 document.getElementById("checkBtn").onclick = checkAnswer;
-document.getElementById("nextStudyBtn").onclick = () => { qIdx++; showStudyStep(); };
+document.getElementById("nextStudyBtn").onclick = () => { qIdx++; showStudy(); };
 document.getElementById("configBtn").onclick = () => showSection("langOnboarding");
+document.getElementById("closeTask").onclick = () => showSection("appSection");
 
 onAuthStateChanged(auth, async (u) => {
     if(u) {
-        const s = await get(ref(db, 'users/'+u.uid));
-        if(s.exists()){ userData = s.val(); if(!userData.lang) showSection("langOnboarding"); else showSection("appSection"); }
-        else showSection("langOnboarding");
+        const s = await get(ref(db, 'users/' + u.uid));
+        if(s.exists()) { 
+            userData = s.val(); 
+            userData.progress = userData.progress || {};
+            if(!userData.currentLang) showSection("langOnboarding"); 
+            else showSection("appSection"); 
+        } else showSection("langOnboarding");
         document.getElementById("userMenu").classList.remove("hidden"); updateUI();
     } else showSection("authSection");
 });
 
-// CANVAS FX
+// FX
 const canvas = document.getElementById("fxCanvas"), ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth; canvas.height = window.innerHeight;
 let parts = [];
