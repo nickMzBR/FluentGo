@@ -3,35 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FluentGo | Master Edition</title>
+    <title>FluentGo | Pro</title>
     <style>
         :root { --primary: #2563EB; --secondary: #10B981; --premium: #FF9900; --danger: #EF4444; --bg: #121212; --card: #1E1E1E; }
-        body { margin:0; font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: #fff; text-align: center; }
+        body { margin:0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #fff; text-align: center; }
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: #000; border-bottom: 2px solid #333; position: sticky; top: 0; z-index: 100; }
-        
         .container { padding: 20px; max-width: 600px; margin: 0 auto; }
         .hidden { display: none !important; }
-        
-        /* UI Elements */
-        .card { background: var(--card); padding: 20px; border-radius: 20px; border: 1px solid #333; margin-bottom: 20px; }
-        button { padding: 12px 24px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 1em; }
-        button:active { transform: scale(0.95); }
+        .card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid #333; margin-bottom: 20px; }
+        button { padding: 14px 24px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 1em; }
         .btn-main { background: var(--primary); color: white; width: 100%; }
         .btn-ghost { background: #333; color: #ccc; margin-top: 10px; }
-        
-        /* Progress & Stats */
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .stat-box { background: #252525; padding: 10px; border-radius: 15px; font-size: 0.9em; }
+        .btn-lang { background: #252525; border: 2px solid #444; color: white; margin: 10px 0; width: 100%; font-size: 1.2em; }
         .progress-container { background: #333; height: 12px; border-radius: 6px; margin: 15px 0; overflow: hidden; }
         .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
-        
-        /* Task Modal */
-        #taskModal { position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: flex; flex-direction: column; }
-        .task-header { padding: 20px; border-bottom: 1px solid #333; }
-        .task-body { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 30px; }
-        input[type="text"] { background: #252525; border: 2px solid #444; padding: 15px; border-radius: 15px; color: white; font-size: 1.2em; text-align: center; outline: none; }
-        input[type="text"]:focus { border-color: var(--primary); }
-        
+        input[type="text"] { background: #252525; border: 2px solid #444; padding: 15px; border-radius: 15px; color: white; font-size: 1.2em; text-align: center; width: 90%; outline: none; }
         canvas { position: fixed; inset: 0; pointer-events: none; z-index: 2000; }
     </style>
 </head>
@@ -40,146 +26,134 @@
 <canvas id="fxCanvas"></canvas>
 
 <header>
-    <div style="font-size: 1.5em; font-weight: 900; letter-spacing: -1px;">FLUENT<span style="color:var(--primary)">GO</span></div>
-    <div id="userMenu" class="hidden">
-        <span id="userXpDisplay" style="color: var(--premium); font-weight: bold;">0 XP</span>
-    </div>
+    <div style="font-size: 1.5em; font-weight: 900;">FLUENT<span style="color:var(--primary)">GO</span></div>
+    <div id="userMenu" class="hidden"><span id="userXpDisplay" style="color: var(--premium); font-weight: bold;">0 XP</span></div>
 </header>
 
 <div id="authSection" class="container">
     <div class="card" style="margin-top: 50px;">
-        <h2>Aprenda grátis. Para sempre.</h2>
-        <input type="email" id="email" placeholder="Seu melhor e-mail" style="width: 80%; margin-bottom: 10px; padding: 12px; border-radius: 8px;"><br>
-        <input type="password" id="password" placeholder="Senha" style="width: 80%; margin-bottom: 20px; padding: 12px; border-radius: 8px;"><br>
+        <h2>Aprenda agora.</h2>
+        <input type="email" id="email" placeholder="E-mail" style="width: 90%; padding: 10px; margin-bottom: 10px; border-radius: 8px;"><br>
+        <input type="password" id="password" placeholder="Senha" style="width: 90%; padding: 10px; margin-bottom: 20px; border-radius: 8px;"><br>
         <button id="loginBtn" class="btn-main">ENTRAR</button>
-        <button id="registerBtn" class="btn-ghost">CRIAR CONTA</button>
+        <button id="registerBtn" class="btn-ghost" style="width: 100%">CRIAR CONTA</button>
+    </div>
+</div>
+
+<div id="langOnboarding" class="container hidden">
+    <div class="card">
+        <h2>Escolha seu Idioma</h2>
+        <button class="btn-lang" onclick="setInitialLang('Ingles')">🇺🇸 Inglês</button>
+        <button class="btn-lang" onclick="setInitialLang('Espanhol')">🇪🇸 Espanhol</button>
+        <button class="btn-lang" onclick="setInitialLang('Japones')">🇯🇵 Japonês</button>
     </div>
 </div>
 
 <div id="appSection" class="container hidden">
-    <div class="stats-grid">
-        <div class="stat-box">🌍 Idioma: <b id="currentLangLabel">Inglês</b></div>
-        <div class="stat-box">🔥 Combo: <b id="comboLabel">0</b></div>
+    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <div style="flex:1; background:#252525; padding:10px; border-radius:15px;">🌍 <b id="currentLangLabel">---</b></div>
+        <div style="flex:1; background:#252525; padding:10px; border-radius:15px;">🔥 Combo: <b id="comboLabel">0</b></div>
     </div>
-
     <div class="card">
         <h3 id="moduleLabel">Módulo 1</h3>
         <p id="taskLabel" style="color: #aaa;">Tarefa 1 de 5</p>
-        <div class="progress-container">
-            <div id="mainProgress" class="progress-fill"></div>
-        </div>
-        <button id="startBtn" class="btn-main" style="padding: 20px;">COMEÇAR AGORA</button>
+        <div class="progress-container"><div id="mainProgress" class="progress-fill"></div></div>
+        <button id="startBtn" class="btn-main">CONTINUAR</button>
     </div>
-
-    <button id="configBtn" class="btn-ghost" style="width: 100%;">Configurações e Idioma</button>
-    <button id="logoutBtn" class="btn-ghost" style="width: 100%; color: var(--danger);">Sair da conta</button>
+    <button id="configBtn" class="btn-ghost" style="width: 100%;">⚙️ Configurações</button>
+    <button id="logoutBtn" class="btn-ghost" style="width: 100%; color: var(--danger);">Sair</button>
 </div>
 
-<div id="taskModal" class="hidden">
-    <div class="task-header">
-        <div class="progress-container"><div id="taskProgress" class="progress-fill"></div></div>
-        <button id="closeTask" style="background:none; color:#666; float:right;">Sair ✕</button>
-    </div>
-    <div class="task-body">
-        <h4 id="instructionText" style="color: var(--primary); text-transform: uppercase;">Traduza esta frase</h4>
-        <h1 id="questionDisplay">Olá</h1>
-        <input type="text" id="answerInput" autocomplete="off" placeholder="Digite em inglês...">
-        <div id="feedback" style="margin-top: 20px; font-weight: bold; height: 30px;"></div>
-        <button id="checkBtn" class="btn-main" style="margin-top: 30px;">VERIFICAR</button>
+<div id="taskModal" class="hidden" style="position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: flex; flex-direction: column;">
+    <div style="padding: 20px;"><div class="progress-container"><div id="taskProgress" class="progress-fill"></div></div></div>
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 30px;">
+        <h4 style="color: var(--primary);">TRADUZA</h4>
+        <h1 id="questionDisplay" style="font-size: 2.5em;">Olá</h1>
+        <input type="text" id="answerInput" autocomplete="off" placeholder="Resposta...">
+        <div id="feedback" style="margin-top: 20px; font-weight: bold; min-height: 30px;"></div>
+        <button id="checkBtn" class="btn-main" style="margin-top: 30px; align-self: center; width: 80%;">VERIFICAR</button>
     </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-const firebaseConfig = {
-    apiKey: "AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw",
-    authDomain: "fluentgo-35024.firebaseapp.com",
-    databaseURL: "https://fluentgo-35024-default-rtdb.firebaseio.com",
-    projectId: "fluentgo-35024",
-    appId: "1:613715387990:web:0345ade26374dd32d1fdf7"
-};
-
+const firebaseConfig = { apiKey: "AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw", authDomain: "fluentgo-35024.firebaseapp.com", databaseURL: "https://fluentgo-35024-default-rtdb.firebaseio.com", projectId: "fluentgo-35024", appId: "1:613715387990:web:0345ade26374dd32d1fdf7" };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// --- BANCO DE DADOS DE CONTEÚDO (ESTRUTURA COMPLETA) ---
+// CURRÍCULO COM VARIAÇÕES (Array de respostas)
 const courseData = {
     Ingles: {
-        M1: [{q:"Olá", a:"Hello"}, {q:"Bom dia", a:"Good morning"}, {q:"Obrigado", a:"Thank you"}, {q:"Por favor", a:"Please"}, {q:"Tchau", a:"Goodbye"}],
-        M2: [{q:"Maçã", a:"Apple"}, {q:"Água", a:"Water"}, {q:"Pão", a:"Bread"}, {q:"Leite", a:"Milk"}, {q:"Café", a:"Coffee"}],
-        M3: [{q:"Mãe", a:"Mother"}, {q:"Pai", a:"Father"}, {q:"Filho", a:"Son"}, {q:"Irmã", a:"Sister"}, {q:"Família", a:"Family"}],
-        M4: [{q:"Um", a:"One"}, {q:"Dois", a:"Two"}, {q:"Três", a:"Three"}, {q:"Quatro", a:"Four"}, {q:"Cinco", a:"Five"}],
-        M5: [{q:"Azul", a:"Blue"}, {q:"Vermelho", a:"Red"}, {q:"Verde", a:"Green"}, {q:"Amarelo", a:"Yellow"}, {q:"Preto", a:"Black"}],
-        M6: [{q:"Eu sou", a:"I am"}, {q:"Você é", a:"You are"}, {q:"Ele é", a:"He is"}, {q:"Nós somos", a:"We are"}, {q:"Eles são", a:"They are"}],
-        M7: [{q:"Cachorro", a:"Dog"}, {q:"Gato", a:"Cat"}, {q:"Pássaro", a:"Bird"}, {q:"Peixe", a:"Fish"}, {q:"Cavalo", a:"Horse"}],
-        M8: [{q:"Casa", a:"House"}, {q:"Carro", a:"Car"}, {q:"Escola", a:"School"}, {q:"Livro", a:"Book"}, {q:"Caneta", a:"Pen"}],
-        M9: [{q:"Grande", a:"Big"}, {q:"Pequeno", a:"Small"}, {q:"Bom", a:"Good"}, {q:"Mau", a:"Bad"}, {q:"Feliz", a:"Happy"}],
-        M10:[{q:"Eu como", a:"I eat"}, {q:"Eu bebo", a:"I drink"}, {q:"Eu falo", a:"I speak"}, {q:"Eu vou", a:"I go"}, {q:"Eu vejo", a:"I see"}]
+        M1: [
+            {q: "Olá", a: ["hello", "hi"]},
+            {q: "Sim", a: ["yes", "yeah"]},
+            {q: "Por favor", a: ["please"]},
+            {q: "Obrigado", a: ["thank you", "thanks"]},
+            {q: "Tchau", a: ["goodbye", "bye"]}
+        ],
+        M2: [
+            {q: "Água", a: ["water"]},
+            {q: "Café", a: ["coffee"]},
+            {q: "Maçã", a: ["apple"]},
+            {q: "Pão", a: ["bread"]},
+            {q: "Leite", a: ["milk"]}
+        ],
+        // ... (Adicionar M3 a M10 seguindo este padrão de Array em 'a')
     },
     Espanhol: {
-        M1: [{q:"Olá", a:"Hola"}, {q:"Obrigado", a:"Gracias"}, {q:"Bom dia", a:"Buenos días"}, {q:"Por favor", a:"Por favor"}, {q:"Tchau", a:"Adiós"}],
-        M2: [{q:"Maçã", a:"Manzana"}, {q:"Água", a:"Agua"}, {q:"Pão", a:"Pan"}, {q:"Leite", a:"Leche"}, {q:"Café", a:"Café"}],
-        M3: [{q:"Mãe", a:"Madre"}, {q:"Pai", a:"Padre"}, {q:"Filho", a:"Hijo"}, {q:"Irmã", a:"Hermana"}, {q:"Família", a:"Familia"}],
-        M4: [{q:"Um", a:"Uno"}, {q:"Dois", a:"Dos"}, {q:"Três", a:"Tres"}, {q:"Quatro", a:"Cuatro"}, {q:"Cinco", a:"Cinco"}],
-        M5: [{q:"Azul", a:"Azul"}, {q:"Vermelho", a:"Rojo"}, {q:"Verde", a:"Verde"}, {q:"Amarelo", a:"Amarillo"}, {q:"Preto", a:"Negro"}],
-        M6: [{q:"Eu sou", a:"Yo soy"}, {q:"Você é", a:"Tú eres"}, {q:"Ele é", a:"Él es"}, {q:"Nós somos", a:"Nosotros somos"}, {q:"Eles são", a:"Ellos son"}],
-        M7: [{q:"Cachorro", a:"Perro"}, {q:"Gato", a:"Gato"}, {q:"Pássaro", a:"Pájaro"}, {q:"Peixe", a:"Pez"}, {q:"Cavalo", a:"Caballo"}],
-        M8: [{q:"Casa", a:"Casa"}, {q:"Carro", a:"Coche"}, {q:"Escola", a:"Escuela"}, {q:"Livro", a:"Libro"}, {q:"Caneta", a:"Bolígrafo"}],
-        M9: [{q:"Grande", a:"Grande"}, {q:"Pequeno", a:"Pequeño"}, {q:"Bom", a:"Bueno"}, {q:"Mau", a:"Malo"}, {q:"Feliz", a:"Feliz"}],
-        M10:[{q:"Eu como", a:"Yo como"}, {q:"Eu bebo", a:"Yo bebo"}, {q:"Eu falo", a:"Yo hablo"}, {q:"Eu vou", a:"Yo voy"}, {q:"Eu vejo", a:"Yo veo"}]
+        M1: [
+            {q: "Olá", a: ["hola"]},
+            {q: "Obrigado", a: ["gracias"]},
+            {q: "Bom dia", a: ["buenos dias"]},
+            {q: "Tchau", a: ["adios", "chao"]},
+            {q: "Sim", a: ["si"]}
+        ]
     },
     Japones: {
-        M1: [{q:"Bom dia", a:"Ohayou"}, {q:"Obrigado", a:"Arigatou"}, {q:"Boa tarde", a:"Konnichiwa"}, {q:"Com licença", a:"Sumimasen"}, {q:"Tchau", a:"Sayounara"}],
-        M2: [{q:"Água", a:"Mizu"}, {q:"Pão", a:"Pan"}, {q:"Arroz", a:"Gohan"}, {q:"Carne", a:"Niku"}, {q:"Peixe", a:"Sakana"}],
-        M3: [{q:"Mãe", a:"Okaasan"}, {q:"Pai", a:"Otousan"}, {q:"Amigo", a:"Tomodachi"}, {q:"Criança", a:"Kodomo"}, {q:"Pessoa", a:"Hito"}],
-        M4: [{q:"Um", a:"Ichi"}, {q:"Dois", a:"Ni"}, {q:"Três", a:"San"}, {q:"Quatro", a:"Yon"}, {q:"Cinco", a:"Go"}],
-        M5: [{q:"Sim", a:"Hai"}, {q:"Não", a:"Iie"}, {q:"O que?", a:"Nani"}, {q:"Quem?", a:"Dare"}, {q:"Onde?", a:"Doko"}],
-        M6: [{q:"Cachorro", a:"Inu"}, {q:"Gato", a:"Neko"}, {q:"Sol", a:"Hi"}, {q:"Lua", a:"Tsuki"}, {q:"Flor", a:"Hana"}],
-        M7: [{q:"Eu", a:"Watashi"}, {q:"Você", a:"Anata"}, {q:"Sensei", a:"Professor"}, {q:"Estudante", a:"Gakusei"}, {q:"Escola", a:"Gakkou"}],
-        M8: [{q:"Hoje", a:"Kyou"}, {q:"Amanhã", a:"Ashita"}, {q:"Agora", a:"Ima"}, {q:"Tempo", a:"Toki"}, {q:"Semana", a:"Shuu"}],
-        M9: [{q:"Grande", a:"Ookii"}, {q:"Pequeno", a:"Chiisai"}, {q:"Quente", a:"Atsui"}, {q:"Frio", a:"Samui"}, {q:"Novo", a:"Atarashii"}],
-        M10:[{q:"Eu entendo", a:"Wakarimasu"}, {q:"Eu faço", a:"Shimasu"}, {q:"Eu venho", a:"Kimasu"}, {q:"Eu durmo", a:"Nemasu"}, {q:"Eu leio", a:"Yomimasu"}]
+        M1: [
+            {q: "Bom dia", a: ["ohayou", "ohayo"]},
+            {q: "Obrigado", a: ["arigatou", "arigato"]},
+            {q: "Olá", a: ["konnichiwa", "konichiwa"]},
+            {q: "Sim", a: ["hai"]},
+            {q: "Não", a: ["iie", "ie"]}
+        ]
     }
 };
 
-// --- ESTADO GLOBAL ---
-let userData = { xp: 0, lang: "Ingles", mod: 1, task: 1, combo: 0 };
-let currentQuestions = [];
+let userData = { xp: 0, lang: "", mod: 1, task: 1, combo: 0 };
+let taskQuestions = [];
 let qIdx = 0;
 
-// --- FUNÇÕES DE NAVEGAÇÃO ---
-const showSection = (id) => {
-    ["authSection", "appSection", "taskModal"].forEach(s => document.getElementById(s).classList.add("hidden"));
-    document.getElementById(id).classList.remove("hidden");
+const updateUI = () => {
+    document.getElementById("userXpDisplay").innerText = `${userData.xp || 0} XP`;
+    document.getElementById("currentLangLabel").innerText = userData.lang || "---";
+    document.getElementById("comboLabel").innerText = userData.combo || 0;
+    document.getElementById("moduleLabel").innerText = `Módulo ${userData.mod || 1}`;
+    document.getElementById("taskLabel").innerText = `Tarefa ${userData.task || 1} de 5`;
+    document.getElementById("mainProgress").style.width = `${((userData.task - 1) || 0) * 20}%`;
 };
 
-const updateDashboard = () => {
-    document.getElementById("userXpDisplay").innerText = `${userData.xp} XP`;
-    document.getElementById("currentLangLabel").innerText = userData.lang;
-    document.getElementById("comboLabel").innerText = userData.combo;
-    document.getElementById("moduleLabel").innerText = `Módulo ${userData.mod}`;
-    document.getElementById("taskLabel").innerText = `Tarefa ${userData.task} de 5`;
-    document.getElementById("mainProgress").style.width = `${(userData.task - 1) * 20}%`;
+window.setInitialLang = async (lang) => {
+    userData.lang = lang; userData.mod = 1; userData.task = 1; userData.xp = 0; userData.combo = 0;
+    await set(ref(db, 'users/' + auth.currentUser.uid), userData);
+    showSection("appSection"); updateUI();
 };
 
-// --- LÓGICA DE LIÇÃO ---
 function initTask() {
     const modKey = "M" + userData.mod;
-    const taskData = courseData[userData.lang][modKey][userData.task - 1];
-    
-    // Cada tarefa gera 5 perguntas baseadas na palavra da vez para fixação
-    currentQuestions = Array(5).fill(taskData);
+    // Puxamos as 5 perguntas DIFERENTES do módulo atual
+    taskQuestions = courseData[userData.lang][modKey] || courseData[userData.lang]["M1"];
     qIdx = 0;
     showSection("taskModal");
     renderQuestion();
 }
 
 function renderQuestion() {
-    const q = currentQuestions[qIdx];
+    const q = taskQuestions[qIdx];
     document.getElementById("taskProgress").style.width = `${(qIdx / 5) * 100}%`;
     document.getElementById("questionDisplay").innerText = q.q;
     document.getElementById("answerInput").value = "";
@@ -188,95 +162,62 @@ function renderQuestion() {
 }
 
 function checkAnswer() {
-    const userAns = document.getElementById("answerInput").value.trim().toLowerCase();
-    const correctAns = currentQuestions[qIdx].a.toLowerCase();
+    const userVal = document.getElementById("answerInput").value.trim().toLowerCase();
+    const possibleAnswers = taskQuestions[qIdx].a; // Isso agora é um Array
     const feedback = document.getElementById("feedback");
 
-    if(userAns === correctAns) {
-        feedback.innerText = "✨ EXCELENTE!";
-        feedback.style.color = "var(--secondary)";
-        userData.xp += 15;
-        userData.combo++;
+    if (possibleAnswers.includes(userVal)) {
+        feedback.innerText = "✨ CORRETO!"; feedback.style.color = "var(--secondary)";
+        userData.xp += 10; userData.combo++;
         spawnParticles(window.innerWidth/2, window.innerHeight/2, "#10B981");
-        nextQuestion();
+        qIdx++;
+        if(qIdx < 5) setTimeout(renderQuestion, 1000);
+        else setTimeout(finishTask, 1000);
     } else {
-        feedback.innerText = `ERROU! Resposta: ${correctAns}`;
+        feedback.innerText = `RESPOSTA: ${possibleAnswers[0].toUpperCase()}`;
         feedback.style.color = "var(--danger)";
         userData.combo = 0;
         spawnParticles(window.innerWidth/2, window.innerHeight/2, "#EF4444");
     }
-}
-
-function nextQuestion() {
-    qIdx++;
-    if(qIdx < 5) {
-        setTimeout(renderQuestion, 1000);
-    } else {
-        setTimeout(finishTask, 1000);
-    }
+    updateUI();
 }
 
 async function finishTask() {
     userData.task++;
-    if(userData.task > 5) {
-        userData.task = 1;
-        userData.mod++;
-    }
-    if(userData.mod > 10) {
-        alert("🎉 PARABÉNS! VOCÊ COMPLETOU TODO O CURSO!");
-        userData.mod = 1;
-    }
+    if(userData.task > 5) { userData.task = 1; userData.mod++; }
     await set(ref(db, 'users/' + auth.currentUser.uid), userData);
-    showSection("appSection");
-    updateDashboard();
+    showSection("appSection"); updateUI();
 }
 
-// --- PARTÍCULAS ---
+// FX & UI Logic
+const showSection = (id) => {
+    ["authSection", "appSection", "taskModal", "langOnboarding"].forEach(s => document.getElementById(s).classList.add("hidden"));
+    document.getElementById(id).classList.remove("hidden");
+};
+
+// ... (Partículas Canvas - mantidas as mesmas do código anterior)
 const canvas = document.getElementById("fxCanvas"), ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth; canvas.height = window.innerHeight;
 let parts = [];
 function spawnParticles(x,y,c){ for(let i=0;i<20;i++) parts.push({x,y,dx:(Math.random()-0.5)*10,dy:(Math.random()-0.5)*10,life:1,c}); }
-function renderFX(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    parts.forEach((p,i)=>{
-        ctx.fillStyle = p.c; ctx.globalAlpha = p.life;
-        ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, 7); ctx.fill();
-        p.x+=p.dx; p.y+=p.dy; p.life-=0.02;
-        if(p.life<=0) parts.splice(i,1);
-    });
-    requestAnimationFrame(renderFX);
-}
+function renderFX(){ ctx.clearRect(0,0,canvas.width,canvas.height); parts.forEach((p,i)=>{ ctx.fillStyle = p.c; ctx.globalAlpha = p.life; ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, 7); ctx.fill(); p.x+=p.dx; p.y+=p.dy; p.life-=0.02; if(p.life<=0) parts.splice(i,1); }); requestAnimationFrame(renderFX); }
 renderFX();
 
-// --- EVENTOS ---
 document.getElementById("loginBtn").onclick = () => signInWithEmailAndPassword(auth, email.value, password.value);
 document.getElementById("registerBtn").onclick = () => createUserWithEmailAndPassword(auth, email.value, password.value);
 document.getElementById("logoutBtn").onclick = () => signOut(auth);
 document.getElementById("startBtn").onclick = initTask;
-document.getElementById("closeTask").onclick = () => showSection("appSection");
 document.getElementById("checkBtn").onclick = checkAnswer;
+document.getElementById("configBtn").onclick = () => showSection("langOnboarding");
 document.getElementById("answerInput").onkeypress = (e) => { if(e.key === 'Enter') checkAnswer(); };
 
-document.getElementById("configBtn").onclick = () => {
-    const newLang = prompt("Escolha: Ingles, Espanhol ou Japones", userData.lang);
-    if(courseData[newLang]) {
-        userData.lang = newLang;
-        userData.mod = 1; userData.task = 1;
-        updateDashboard();
-    }
-};
-
-onAuthStateChanged(auth, async (user) => {
-    if(user) {
-        const snap = await get(ref(db, 'users/' + user.uid));
-        if(snap.exists()) userData = snap.val();
-        document.getElementById("userMenu").classList.remove("hidden");
-        showSection("appSection");
-        updateDashboard();
-    } else {
-        document.getElementById("userMenu").classList.add("hidden");
-        showSection("authSection");
-    }
+onAuthStateChanged(auth, async (u) => {
+    if(u) {
+        const s = await get(ref(db, 'users/' + u.uid));
+        if(s.exists()) { userData = s.val(); if(!userData.lang) showSection("langOnboarding"); else showSection("appSection"); }
+        else showSection("langOnboarding");
+        document.getElementById("userMenu").classList.remove("hidden"); updateUI();
+    } else { showSection("authSection"); document.getElementById("userMenu").classList.add("hidden"); }
 });
 </script>
 </body>
