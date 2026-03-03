@@ -2,29 +2,20 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>FluentGo - Overdrive</title>
+<title>FluentGo - FX</title>
 <style>
-body { margin:0; font-family: Arial, sans-serif; background:#222; color:#fff; text-align:center; overflow:hidden;}
-header { display:flex; justify-content:space-between; padding:15px 25px; background:#1a1a1a; z-index:100;}
-button, select, input { padding:8px; border-radius:8px; border:none; margin:5px; font-size:1em;}
-button { background:#2563EB; color:white; cursor:pointer; transition:0.2s; }
-button:hover { transform:scale(1.05);}
-select, input { background:#333; color:white; }
-.hidden { display:none; }
-#lessonSection, #taskModal, #congratsModal { position:fixed; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px; z-index:50; }
-#lessonSection { background:#222; color:#fff; display:none; }
-#lessonContent { background:#333; padding:20px; border-radius:10px; width:80%; max-width:600px; animation:fadeIn 0.5s; }
-#progressBar { width:80%; background:#555; border-radius:10px; margin:10px auto; height:20px; overflow:hidden; }
-#progressFill { width:0%; height:100%; background:#2563EB; transition:width 0.5s; }
-#taskModal { background:#222; color:#fff; display:none; flex-direction:column; align-items:center; animation:fadeIn 0.5s; }
-#taskTitle { margin-bottom:10px; }
-#exerciseContainer button { display:block; width:200px; margin:10px auto; }
-#congratsModal { background:rgba(0,0,0,0.95); color:#fff; font-size:1.5em; display:none; flex-direction:column; justify-content:center; align-items:center; animation:fadeIn 0.5s;}
-#congratsModal h1 { color:#2563EB; margin-bottom:20px; }
-.highlight { color:#2563EB; font-weight:bold; }
-@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
-@keyframes blink { 0%,50%,100% {opacity:1;} 25%,75% {opacity:0;} }
-canvas { position:fixed; top:0; left:0; pointer-events:none; z-index:10;}
+body{margin:0; font-family:Arial;background:#222; color:#fff; text-align:center; overflow:hidden;}
+header{display:flex; justify-content:space-between; padding:15px 25px; background:#1a1a1a; z-index:100;}
+button,select,input{padding:8px; border-radius:8px; border:none; margin:5px; font-size:1em;}
+button{background:#2563EB; color:white; cursor:pointer; transition:0.2s;}
+button:hover{transform:scale(1.05);}
+.hidden{display:none;}
+#lessonSection,#taskModal,#congratsModal{position:fixed; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px; z-index:50;}
+#lessonContent,#taskModalContent{background:#333; padding:20px; border-radius:10px; width:80%; max-width:600px; animation:fadeIn 0.5s;}
+#progressBar{width:80%; background:#555; border-radius:10px; margin:10px auto; height:20px; overflow:hidden;}
+#progressFill{width:0%; height:100%; background:#2563EB; transition:width 0.5s;}
+canvas{position:fixed; top:0; left:0; pointer-events:none; z-index:10;}
+@keyframes fadeIn{from{opacity:0;} to{opacity:1;}}
 </style>
 </head>
 <body>
@@ -60,25 +51,26 @@ canvas { position:fixed; top:0; left:0; pointer-events:none; z-index:10;}
     <option value="Ingles">Inglês</option>
     <option value="Espanhol">Espanhol</option>
     <option value="Japones">Japonês</option>
-  </select>
-  <br>
+  </select><br>
   <button onclick="saveLanguage()">Salvar</button>
   <button onclick="closeSettings()">Fechar</button>
 </div>
 
 <div id="lessonSection">
   <div id="lessonContent">
-    <h3 id="lessonTitle"></h3>
-    <p id="lessonText"></p>
+    <h3 id="lessonTitle">Placeholder Lição</h3>
+    <p id="lessonText">Aprendendo novas palavras...</p>
     <button onclick="startNextTask()">Começar Tarefa</button>
   </div>
 </div>
 
 <div id="taskModal">
-  <h3 id="taskTitle"></h3>
-  <div id="exerciseContainer"></div>
-  <button id="nextQuestionBtn" onclick="nextQuestion()">Próxima Pergunta</button>
-  <button onclick="exitTask()">Sair da Tarefa</button>
+  <div id="taskModalContent">
+    <h3 id="taskTitle"></h3>
+    <div id="exerciseContainer"></div>
+    <button id="nextQuestionBtn" onclick="nextQuestion()">Próxima Pergunta</button>
+    <button onclick="exitTask()">Sair da Tarefa</button>
+  </div>
 </div>
 
 <div id="congratsModal">
@@ -91,11 +83,11 @@ canvas { position:fixed; top:0; left:0; pointer-events:none; z-index:10;}
 <audio id="wrongSound" src="https://actions.google.com/sounds/v1/cartoon/boing.ogg"></audio>
 
 <script type="module">
+// Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw",
   authDomain: "fluentgo-35024.firebaseapp.com",
@@ -105,118 +97,75 @@ const firebaseConfig = {
   messagingSenderId: "613715387990",
   appId: "1:613715387990:web:0345ade26374dd32d1fdf7"
 };
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-const authSection = document.getElementById("authSection");
-const appSection = document.getElementById("appSection");
-const settingsSection = document.getElementById("settingsSection");
-const settingsBtn = document.getElementById("settingsBtn");
-const logoutBtn = document.getElementById("logoutBtn");
-const xpDisplay = document.getElementById("xpDisplay");
-const lessonSection = document.getElementById("lessonSection");
-const lessonTitle = document.getElementById("lessonTitle");
-const lessonText = document.getElementById("lessonText");
-const taskModal = document.getElementById("taskModal");
-const taskTitle = document.getElementById("taskTitle");
-const exerciseContainer = document.getElementById("exerciseContainer");
-const progressFill = document.getElementById("progressFill");
-const congratsModal = document.getElementById("congratsModal");
-const congratsLanguage = document.getElementById("congratsLanguage");
-const correctSound = document.getElementById("correctSound");
-const wrongSound = document.getElementById("wrongSound");
+// DOM
+const authSection=document.getElementById("authSection"), appSection=document.getElementById("appSection"),
+settingsSection=document.getElementById("settingsSection"), settingsBtn=document.getElementById("settingsBtn"),
+logoutBtn=document.getElementById("logoutBtn"), xpDisplay=document.getElementById("xpDisplay"),
+lessonSection=document.getElementById("lessonSection"), lessonTitle=document.getElementById("lessonTitle"),
+lessonText=document.getElementById("lessonText"), taskModal=document.getElementById("taskModal"),
+taskTitle=document.getElementById("taskTitle"), exerciseContainer=document.getElementById("exerciseContainer"),
+progressFill=document.getElementById("progressFill"), congratsModal=document.getElementById("congratsModal"),
+congratsLanguage=document.getElementById("congratsLanguage"), correctSound=document.getElementById("correctSound"),
+wrongSound=document.getElementById("wrongSound");
 
-settingsBtn.style.display="none";
-logoutBtn.style.display="none";
+settingsBtn.style.display="none"; logoutBtn.style.display="none";
 
 let user=null, currentLanguage="Ingles", currentModule=null, currentTask=null, currentQuestion=null, xp=0;
-const questionsPerTask=5, totalModules=10, totalTasks=10;
+const questionsPerTask=5,totalModules=10,totalTasks=10;
 
 const exercises={Ingles:[],Espanhol:[],Japones:[]};
 const lessons={Ingles:[],Espanhol:[],Japones:[]};
-const words={
-  Ingles:["Hello","Goodbye","Thank you","Please","Yes","No","How are you?","I am Nick","Good morning","Sorry"],
-  Espanhol:["Hola","Adiós","Gracias","Por favor","Sí","No","¿Cómo estás?","Soy Nick","Buenos días","Lo siento"],
-  Japones:["こんにちは","さようなら","ありがとう","お願いします","はい","いいえ","お元気ですか","私はニックです","おはよう","ごめんなさい"]
-};
+const words={Ingles:["Hello","Goodbye","Thank you","Please","Yes","No","How are you?","I am Nick","Good morning","Sorry"],
+              Espanhol:["Hola","Adiós","Gracias","Por favor","Sí","No","¿Cómo estás?","Soy Nick","Buenos días","Lo siento"],
+              Japones:["こんにちは","さようなら","ありがとう","お願いします","はい","いいえ","お元気ですか","私はニックです","おはよう","ごめんなさい"]};
 
 function generateTasks(lang){
-  for(let m=0;m<10;m++){
-    exercises[lang][m]=[];
-    lessons[lang][m]=`Mini lição do módulo ${m+1} em <span class="highlight">${words[lang][m]}</span>`;
-    for(let t=0;t<10;t++){
-      let task=[];
-      for(let q=0;q<5;q++){
-        const w = words[lang][q%words[lang].length];
-        if(q%2===0) task.push({type:"translate", question:w, answer:w});
-        else task.push({type:"multiple", question:w, options:["Errado1","Errado2",w], answer:w});
-      }
+  for(let m=0;m<10;m++){ exercises[lang][m]=[]; lessons[lang][m]=`Mini lição do módulo ${m+1} em <span style="color:#2563EB">${words[lang][m]}</span>`;
+    for(let t=0;t<10;t++){ let task=[];
+      for(let q=0;q<5;q++){ const w=words[lang][q%words[lang].length]; if(q%2===0) task.push({type:"translate",question:w,answer:w}); else task.push({type:"multiple",question:w,options:["Errado1","Errado2",w],answer:w}); }
       exercises[lang][m].push(task);
     }
   }
 }
 ["Ingles","Espanhol","Japones"].forEach(generateTasks);
 
-// FX canvas
-const canvas = document.getElementById("fxCanvas");
-const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-let particles=[];
-
-function spawnParticles(x,y,color){
-  for(let i=0;i<20;i++){
-    particles.push({x:x,y:y,dx:(Math.random()-0.5)*4,dy:(Math.random()-2)*4,r:Math.random()*4+2,color:color,life:50});
-  }
-}
-function drawParticles(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  particles.forEach((p,index)=>{
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle=p.color;
-    ctx.fill();
-    p.x+=p.dx; p.y+=p.dy; p.life--;
-    if(p.life<=0) particles.splice(index,1);
-  });
-  requestAnimationFrame(drawParticles);
-}
+// Canvas FX
+const canvas=document.getElementById("fxCanvas"), ctx=canvas.getContext("2d"); canvas.width=window.innerWidth; canvas.height=window.innerHeight; let particles=[];
+function spawnParticles(x,y,color){ for(let i=0;i<20;i++){ particles.push({x:x,y:y,dx:(Math.random()-0.5)*4,dy:(Math.random()-2)*4,r:Math.random()*4+2,color:color,life:50}); } }
+function drawParticles(){ ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach((p,index)=>{ ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle=p.color; ctx.fill(); p.x+=p.dx; p.y+=p.dy; p.life--; if(p.life<=0) particles.splice(index,1); }); requestAnimationFrame(drawParticles); }
 drawParticles();
 
-// Funções principais
-function startLesson(){ if(!user) return alert("Entre para começar!"); if(currentModule===null) currentModule=1;
-lessonTitle.innerHTML=`Módulo ${currentModule} - ${currentLanguage}`; lessonText.innerHTML=lessons[currentLanguage][currentModule-1]; lessonSection.style.display="flex"; }
+// Lesson / Task Functions
+function startLesson(){ if(!user) return alert("Entre para começar!"); currentModule=currentModule||1; currentTask=1; currentQuestion=0; lessonTitle.innerHTML=`Módulo ${currentModule} - ${currentLanguage}`; lessonText.innerHTML=lessons[currentLanguage][currentModule-1]; lessonSection.style.display="flex"; }
+function startNextTask(){ lessonSection.style.display="none"; taskModal.style.display="flex"; showExercise(); }
+function showExercise(){ const ex=exercises[currentLanguage][currentModule-1][currentTask-1][currentQuestion]; if(!ex)return; exerciseContainer.innerHTML=""; taskTitle.innerText=`${currentLanguage} - Módulo ${currentModule} Tarefa ${currentTask} Pergunta ${currentQuestion+1}`;
+if(ex.type==="translate"){ const input=document.createElement("input"); input.id="answerInput"; input.placeholder="Sua resposta"; exerciseContainer.appendChild(document.createTextNode(ex.question)); exerciseContainer.appendChild(document.createElement("br")); exerciseContainer.appendChild(input);}
+else{ exerciseContainer.appendChild(document.createTextNode(ex.question)); exerciseContainer.appendChild(document.createElement("br")); ex.options.forEach(opt=>{const btn=document.createElement("button"); btn.innerText=opt; btn.onclick=()=>checkAnswer(opt); exerciseContainer.appendChild(btn); exerciseContainer.appendChild(document.createElement("br"));});}
+updateProgress();
+}
+function nextQuestion(){ const ex=exercises[currentLanguage][currentModule-1][currentTask-1][currentQuestion]; let ans=ex.type==="translate"?document.getElementById("answerInput").value:null; checkAnswer(ans);}
+function checkAnswer(ans){ const ex=exercises[currentLanguage][currentModule-1][currentTask-1][currentQuestion]; let correct=false; if(ex.type==="translate") correct=ans.toLowerCase()===ex.answer.toLowerCase(); else correct=ans===ex.answer;
+if(correct){ xp+=10; xpDisplay.innerText=xp; correctSound.play(); spawnParticles(window.innerWidth/2,200,"#00FF00"); } else { wrongSound.play(); spawnParticles(window.innerWidth/2,200,"#FF0000"); wrongSound.play();}
+currentQuestion++; if(currentQuestion<questionsPerTask){ showExercise();} else{ currentTask++; currentQuestion=0; if(currentTask>totalTasks){ currentModule++; currentTask=1; if(currentModule>totalModules){ congratsLanguage.innerText=currentLanguage; congratsModal.style.display="flex"; taskModal.style.display="none"; lessonSection.style.display="none"; spawnParticles(window.innerWidth/2,window.innerHeight/2,"#2563EB"); return;} } taskModal.style.display="none"; } updateProgress();}
+function updateProgress(){ const total=totalModules*totalTasks; const completed=(currentModule-1)*totalTasks + (currentTask-1) + (currentQuestion/questionsPerTask); progressFill.style.width=(completed/total)*100+"%";}
+function exitTask(){ taskModal.style.display="none"; lessonSection.style.display="flex";}
+function closeCongrats(){ congratsModal.style.display="none";}
 
-function startNextTask(){ lessonSection.style.display="none"; if(currentTask===null) currentTask=1; if(currentQuestion===null) currentQuestion=0; taskModal.style.display="flex"; showExercise(); }
-
-function showExercise(){ const ex = exercises[currentLanguage][currentModule-1][currentTask-1][currentQuestion]; if(!ex) return; exerciseContainer.innerHTML=""; taskTitle.innerText=`${currentLanguage} - Módulo ${currentModule} Tarefa ${currentTask} Pergunta ${currentQuestion+1}`;
-if(ex.type==="translate"){ const input=document.createElement("input"); input.id="answerInput"; input.placeholder="Sua resposta"; exerciseContainer.appendChild(document.createTextNode(ex.question)); exerciseContainer.appendChild(document.createElement("br")); exerciseContainer.appendChild(input);} else{ exerciseContainer.appendChild(document.createTextNode(ex.question)); exerciseContainer.appendChild(document.createElement("br")); ex.options.forEach(opt=>{const btn=document.createElement("button"); btn.innerText=opt; btn.onclick=()=>checkAnswer(opt); exerciseContainer.appendChild(btn); exerciseContainer.appendChild(document.createElement("br"));}); } updateProgress(); }
-
-function nextQuestion(){ const ex = exercises[currentLanguage][currentModule-1][currentTask-1][currentQuestion]; let ans = ex.type==="translate"? document.getElementById("answerInput").value : null; checkAnswer(ans); }
-
-function checkAnswer(ans){ const ex = exercises[currentLanguage][currentModule-1][currentTask-1][currentQuestion]; let correct=false; if(ex.type==="translate") correct = ans.toLowerCase()===ex.answer.toLowerCase(); else correct = ans===ex.answer;
-if(correct){ xp+=10; xpDisplay.innerText=xp; correctSound.play(); spawnParticles(window.innerWidth/2,200,"#00FF00");} else{ wrongSound.play(); spawnParticles(window.innerWidth/2,200,"#FF0000"); }
-if(user) set(ref(db, `users/${user.uid}/tasks/${currentLanguage}-module${currentModule}-task${currentTask}-q${currentQuestion+1}`), ans);
-currentQuestion++; if(currentQuestion<questionsPerTask){ showExercise();} else{ currentTask++; currentQuestion=0; if(currentTask>totalTasks){ currentModule++; currentTask=1; if(currentModule>totalModules){ congratsLanguage.innerText=currentLanguage; congratsModal.style.display="flex"; taskModal.style.display="none"; lessonSection.style.display="none"; spawnParticles(window.innerWidth/2,window.innerHeight/2,"#2563EB"); return;} } taskModal.style.display="none"; } updateProgress(); }
-
-function updateProgress(){ const total=totalModules*totalTasks; const completed=(currentModule-1)*totalTasks + (currentTask-1) + (currentQuestion/questionsPerTask); progressFill.style.width=(completed/total)*100+"%"; }
-
-function exitTask(){ taskModal.style.display="none"; lessonSection.style.display="flex"; }
-function closeCongrats(){ congratsModal.style.display="none"; }
-
+// Auth
 window.register=function(){ createUserWithEmailAndPassword(auth,document.getElementById("email").value,document.getElementById("password").value).catch(e=>alert(e.message)); }
 window.login=function(){ signInWithEmailAndPassword(auth,document.getElementById("email").value,document.getElementById("password").value).catch(e=>alert(e.message)); }
 window.logout=function(){ signOut(auth); }
+
 window.openSettings=function(){ settingsSection.classList.remove("hidden"); appSection.classList.add("hidden"); }
 window.closeSettings=function(){ settingsSection.classList.add("hidden"); appSection.classList.remove("hidden"); }
 window.saveLanguage=function(){ currentLanguage=document.getElementById("languageSelect").value; if(user) set(ref(db,"users/"+user.uid+"/language"), currentLanguage).then(()=>closeSettings()); }
 
-onAuthStateChanged(auth,u=>{
-  if(u){ user=u; authSection.classList.add("hidden"); appSection.classList.remove("hidden"); settingsBtn.style.display="inline-block"; logoutBtn.style.display="inline-block"; currentModule=null; currentTask=null; currentQuestion=null;
-  if(user) get(ref(db,"users/"+user.uid)).then(snapshot=>{ const data=snapshot.exists()? snapshot.val():{}; currentLanguage=data.language||"Ingles"; document.getElementById("languageSelect").value=currentLanguage; document.getElementById("currentLanguage").innerText=currentLanguage;});} 
-  else{ user=null; authSection.classList.remove("hidden"); appSection.classList.add("hidden"); settingsBtn.style.display="none"; logoutBtn.style.display="none"; currentModule=null; currentTask=null; currentQuestion=null; }});
+onAuthStateChanged(auth,u=>{ if(u){ user=u; authSection.classList.add("hidden"); appSection.classList.remove("hidden"); settingsBtn.style.display="inline-block"; logoutBtn.style.display="inline-block"; currentModule=null; currentTask=null; currentQuestion=null;
+if(user) get(ref(db,"users/"+user.uid)).then(snapshot=>{ const data=snapshot.exists()? snapshot.val():{}; currentLanguage=data.language||"Ingles"; document.getElementById("languageSelect").value=currentLanguage; document.getElementById("currentLanguage").innerText=currentLanguage;}); } else{ user=null; authSection.classList.remove("hidden"); appSection.classList.add("hidden"); settingsBtn.style.display="none"; logoutBtn.style.display="none"; currentModule=null; currentTask=null; currentQuestion=null; }});
 </script>
 </body>
 </html>
