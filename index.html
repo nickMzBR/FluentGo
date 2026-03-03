@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FluentGo | Aprender</title>
+    <title>FluentGo</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #2563EB; --secondary: #10B981; --bg: #0F172A; --card: #1E293B; --text: #F8FAFC; --gold: #F59E0B; --error: #EF4444; }
@@ -24,23 +24,12 @@
         .word-area { min-height: 120px; border: 2px dashed #475569; border-radius: 20px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 15px; background: rgba(255,255,255,0.02); margin: 15px 0; }
         .chip { background: #334155; padding: 12px 16px; border-radius: 14px; font-weight: 700; color: white; border: 1px solid #475569; }
         .chip.used { opacity: 0.1; pointer-events: none; }
-        #tutorialView { position: fixed; inset: 0; background: var(--bg); z-index: 10001; display: flex; flex-direction: column; padding: 20px; justify-content: center; }
-        .tip-box { background: var(--card); padding: 30px; border-radius: 30px; border: 2px solid var(--primary); }
     </style>
 </head>
 <body>
 
-<div id="tutorialView" class="hidden">
-    <div class="tip-box">
-        <div style="font-size: 40px; margin-bottom: 15px;">💡</div>
-        <h2 id="tutorialTitle" style="color: var(--primary); margin-bottom: 10px;">Lição</h2>
-        <p id="tutorialText" style="line-height: 1.6; color: #cbd5e1; margin-bottom: 25px;"></p>
-        <button id="confirmTutorialBtn" class="btn-check">ENTENDI, VAMOS LÁ!</button>
-    </div>
-</div>
-
 <header id="appHeader" class="hidden">
-    <div style="font-weight:900;"><span id="userNameHeader" style="font-size:11px; display:block; opacity:0.7;">Olá</span>FLUENTGO <span id="langTag" style="color:var(--primary); font-size:10px;">...</span></div>
+    <div style="font-weight:900;"><span id="userNameHeader" style="font-size:11px; display:block; opacity:0.7;">Olá</span>FLUENTGO <span id="langTag" style="color:var(--primary); font-size:10px;">EN</span></div>
     <div style="font-weight: 800; color: var(--secondary);">🔥 <span id="userXP">0</span></div>
 </header>
 
@@ -61,19 +50,18 @@
 <main id="settingsView" class="container hidden">
     <div class="card">
         <h3 style="text-align:left; font-size: 14px; color: var(--primary);">👤 PERFIL</h3>
-        <input type="text" id="usernameInput">
+        <input type="text" id="usernameInput" placeholder="Seu nome">
         <button id="saveUserBtn" class="btn-check" style="padding: 10px; font-size: 12px;">SALVAR NOME</button>
     </div>
     
     <div class="card">
-        <h3 style="text-align:left; margin-bottom:15px; font-size: 14px;">🌍 IDIOMA DE ESTUDO</h3>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom: 20px;">
+        <h3 style="text-align:left; margin-bottom:15px; font-size: 14px;">🌍 IDIOMA</h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
             <button class="btn-lang" id="btn-English" style="background:#0F172A; color:white; border-radius:12px; padding:12px;">English</button>
             <button class="btn-lang" id="btn-Spanish" style="background:#0F172A; color:white; border-radius:12px; padding:12px;">Español</button>
             <button class="btn-lang" id="btn-French" style="background:#0F172A; color:white; border-radius:12px; padding:12px;">Français</button>
             <button class="btn-lang" id="btn-Italian" style="background:#0F172A; color:white; border-radius:12px; padding:12px;">Italiano</button>
         </div>
-        
         <hr style="border:0; border-top:1px solid #334155; margin: 15px 0;">
         <button id="logoutBtn" style="background: rgba(239, 68, 68, 0.1); color: var(--error); border: 1px solid var(--error); padding: 12px; font-size: 12px; width: 100%;">SAIR DA CONTA</button>
     </div>
@@ -88,15 +76,11 @@
             </div>
         </div>
         <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
-            <p id="qStatus" style="text-align:center; font-weight:900; color:var(--primary); font-size:12px;"></p>
             <h2 id="targetPhrase" style="text-align:center; font-size: 1.8rem; font-weight:900; margin:15px 0;">...</h2>
             <div id="dropZone" class="word-area"></div>
             <div id="wordBank" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;"></div>
         </div>
-        <div style="padding-bottom: 25px;">
-            <div id="feedbackText" style="text-align:center; margin-bottom:15px; font-weight:800; min-height:24px;"></div>
-            <button id="actionBtn" class="btn-check">VERIFICAR</button>
-        </div>
+        <button id="actionBtn" class="btn-check">VERIFICAR</button>
     </div>
 </div>
 
@@ -109,126 +93,77 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, onValue, update, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = { apiKey: "AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw", authDomain: "fluentgo-35024.firebaseapp.com", databaseURL: "https://fluentgo-35024-default-rtdb.firebaseio.com", projectId: "fluentgo-35024", appId: "1:613715387990:web:0345ade26374dd32d1fdf7" };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// DICIONÁRIO COMPLETO
-const DATA = {
-    LIVING: { 
-        PT: ["O gato", "O médico", "A menina", "O cachorro", "O irmão", "O professor"],
-        EN: ["The cat", "The doctor", "The girl", "The dog", "The brother", "The teacher"],
-        ES: ["El gato", "El médico", "La niña", "El perro", "El hermano", "El profesor"],
-        FR: ["Le chat", "Le médecin", "La fille", "Le chien", "Le frère", "Le professeur"],
-        IT: ["Il gatto", "Il medico", "La ragazza", "Il cane", "Il fratello", "Il professore"]
-    },
-    VERBS: {
-        PT: ["bebe", "corre", "come", "dorme", "estuda", "fala"],
-        EN: ["drinks", "runs", "eats", "sleeps", "studies", "speaks"],
-        ES: ["bebe", "corre", "come", "duerme", "estudia", "habla"],
-        FR: ["boit", "court", "mange", "dort", "étudie", "parle"],
-        IT: ["beve", "corre", "mangia", "dorme", "studia", "parla"]
-    }
-};
-
-const langCodes = { "English": "EN", "Spanish": "ES", "French": "FR", "Italian": "IT" };
-let user = { username: "Player", xp: 0, lvl: 1, task: 1, lang: "English" };
+let user = { username: "Estudante", xp: 0, lvl: 1, task: 1, lang: "English" };
 let currentQs = [], qIdx = 0, selection = [], state = "CHECK";
 
-// AUTH E CARREGAMENTO
-onAuthStateChanged(auth, (u) => {
+// PROTEÇÃO CONTRA UNDEFINED
+onAuthStateChanged(auth, async (u) => {
     if(u) {
-        onValue(ref(db, 'users/'+u.uid), (snap) => {
-            const d = snap.val(); if(d) user = { ...user, ...d };
-            updateUI();
-            ['appHeader', 'homeView', 'bottomNav'].forEach(id => document.getElementById(id).classList.remove('hidden'));
+        const userRef = ref(db, 'users/' + u.uid);
+        onValue(userRef, (snap) => {
+            const data = snap.val();
+            if(data) {
+                user = { ...user, ...data };
+                updateUI();
+                showApp();
+            } else {
+                // Se o usuário existe no Auth mas não no DB, cria o perfil inicial
+                update(userRef, user);
+            }
         });
         onValue(ref(db, 'users'), (snap) => { if(snap.exists()) buildRanking(snap.val()); });
     } else {
-        // Redireciona para o login se não houver usuário (caso use um index separado)
-        console.log("Deslogado");
+        // Se deslogar, limpa a tela e pode redirecionar para o login
+        document.body.innerHTML = '<div style="height:100vh; display:flex; align-items:center; justify-content:center; flex-direction:column;"><h1>Até logo!</h1><p>Redirecionando...</p></div>';
+        setTimeout(() => location.reload(), 1000);
     }
 });
 
-function updateUI() {
-    document.getElementById('userNameHeader').innerText = `Olá, ${user.username}`;
-    document.getElementById('usernameInput').value = user.username;
-    document.getElementById('userXP').innerText = user.xp;
-    document.getElementById('levelDisplay').innerText = user.lvl;
-    document.getElementById('levelTxt').innerText = `Nível ${user.lvl}`;
-    document.getElementById('taskTxt').innerText = `Tarefa ${user.task} de 10`;
-    document.getElementById('langTag').innerText = langCodes[user.lang] || "EN";
-    
-    // Marcar idioma selecionado
-    document.querySelectorAll('.btn-lang').forEach(b => b.style.border = "none");
-    const activeBtn = document.getElementById('btn-' + user.lang);
-    if(activeBtn) activeBtn.style.border = "2px solid var(--primary)";
+function showApp() {
+    ['appHeader', 'homeView', 'bottomNav'].forEach(id => document.getElementById(id).classList.remove('hidden'));
 }
 
-// LOGOUT CORRIGIDO
+function updateUI() {
+    document.getElementById('userNameHeader').innerText = `Olá, ${user.username || 'Estudante'}`;
+    document.getElementById('usernameInput').value = user.username || '';
+    document.getElementById('userXP').innerText = user.xp || 0;
+    document.getElementById('levelDisplay').innerText = user.lvl || 1;
+    document.getElementById('levelTxt').innerText = `Nível ${user.lvl || 1}`;
+    document.getElementById('taskTxt').innerText = `Tarefa ${user.task || 1} de 10`;
+    document.getElementById('langTag').innerText = (user.lang || 'English').substring(0,2).toUpperCase();
+}
+
+// BOTÃO SAIR CORRIGIDO (Evita tela preta)
 document.getElementById('logoutBtn').onclick = () => {
-    signOut(auth).then(() => {
-        location.reload(); 
-    }).catch((error) => alert("Erro ao sair: " + error));
+    signOut(auth).catch(err => console.log(err));
 };
 
-// IDIOMAS
-["English", "Spanish", "French", "Italian"].forEach(l => {
-    document.getElementById('btn-'+l).onclick = () => {
-        user.lang = l;
-        update(ref(db, 'users/'+auth.currentUser.uid), { lang: l });
-    };
-});
+// --- LOGICA DE QUESTÕES (SIMPLIFICADA PARA TESTE) ---
+const DATA = {
+    PT: ["O gato bebe", "O médico corre", "A menina come", "O cachorro dorme"],
+    EN: ["the cat drinks", "the doctor runs", "the girl eats", "the dog sleeps"]
+};
 
-// TUTORIAL E JOGO
 document.getElementById('startBtn').onclick = () => {
-    const tips = {
-        "English": "Em Inglês, animais e pessoas ganham 'S' no verbo. Ex: The cat drinks.",
-        "Spanish": "Em Espanhol, 'O' é 'El' e 'A' é 'La'. Ex: El gato bebe.",
-        "French": "Em Francês, usamos 'Le' para masculino e 'La' para feminino. Ex: Le chat boit.",
-        "Italian": "Em Italiano, os verbos são bem musicais! Ex: Il gatto beve."
-    };
-    document.getElementById('tutorialText').innerText = tips[user.lang] || tips["English"];
-    document.getElementById('tutorialView').classList.remove('hidden');
-};
-
-document.getElementById('confirmTutorialBtn').onclick = () => {
-    document.getElementById('tutorialView').classList.add('hidden');
     document.getElementById('practiceView').classList.remove('hidden');
     qIdx = 0;
-    currentQs = generateQs();
     loadQ();
 };
 
-function generateQs() {
-    let list = [];
-    let code = langCodes[user.lang] || "EN";
-    for(let i=0; i<10; i++) {
-        let idx = Math.floor(Math.random() * DATA.LIVING.PT.length);
-        list.push({
-            pt: `${DATA.LIVING.PT[idx]} ${DATA.VERBS.PT[idx]}`,
-            target: `${DATA.LIVING[code][idx]} ${DATA.VERBS[code][idx]}`.toLowerCase()
-        });
-    }
-    return list;
-}
-
 function loadQ() {
     state = "CHECK"; selection = [];
-    const q = currentQs[qIdx];
-    document.getElementById('qStatus').innerText = `QUESTÃO ${qIdx + 1}/10`;
-    document.getElementById('targetPhrase').innerText = q.pt;
+    document.getElementById('targetPhrase').innerText = DATA.PT[qIdx % DATA.PT.length];
     document.getElementById('dropZone').innerHTML = "";
-    document.getElementById('feedbackText').innerText = "";
     document.getElementById('innerBar').style.width = `${(qIdx / 10) * 100}%`;
-    document.getElementById('actionBtn').innerText = "VERIFICAR";
-    document.getElementById('actionBtn').style.background = "var(--primary)";
-    
     const bank = document.getElementById('wordBank'); bank.innerHTML = "";
-    let words = [...q.target.split(" "), "non", "the"].sort(() => Math.random() - 0.5);
+    let words = [...DATA.EN[qIdx % DATA.EN.length].split(" "), "is", "a"].sort(() => Math.random() - 0.5);
     words.forEach(w => {
         const b = document.createElement('button'); b.className = "chip"; b.innerText = w;
         b.onclick = () => {
@@ -245,27 +180,22 @@ function loadQ() {
 
 document.getElementById('actionBtn').onclick = async () => {
     if(state === "CHECK") {
-        if(selection.join(" ").toLowerCase() === currentQs[qIdx].target) {
+        if(selection.join(" ").toLowerCase() === DATA.EN[qIdx % DATA.EN.length]) {
             state = "NEXT";
             document.getElementById('actionBtn').innerText = "PRÓXIMA";
-            document.getElementById('actionBtn').style.background = "var(--secondary)";
-            document.getElementById('feedbackText').innerText = "CORRETO! ✨";
         } else {
-            document.getElementById('feedbackText').innerText = "OPS! TENTE DE NOVO";
-            setTimeout(() => {
-                document.getElementById('dropZone').innerHTML = ""; selection = [];
-                document.querySelectorAll('.chip').forEach(c => c.classList.remove('used'));
-            }, 600);
+            alert("Tente de novo!");
+            document.getElementById('dropZone').innerHTML = ""; selection = [];
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('used'));
         }
     } else {
         qIdx++;
-        if(qIdx < 10) loadQ();
-        else {
-            let nextTask = user.task + 1;
-            let nextLvl = user.lvl;
-            if(nextTask > 10) { nextTask = 1; nextLvl++; }
-            user.xp += 100; user.task = nextTask; user.lvl = nextLvl;
-            await update(ref(db, 'users/'+auth.currentUser.uid), user);
+        if(qIdx < 10) {
+            loadQ();
+            document.getElementById('actionBtn').innerText = "VERIFICAR";
+        } else {
+            user.xp += 50;
+            await update(ref(db, 'users/' + auth.currentUser.uid), { xp: user.xp });
             document.getElementById('practiceView').classList.add('hidden');
         }
     }
@@ -283,18 +213,13 @@ function showTab(id) {
     document.getElementById('nav-' + id.replace('View','')).classList.add('active');
 }
 
-document.getElementById('saveUserBtn').onclick = () => {
-    const n = document.getElementById('usernameInput').value.trim();
-    if(n) update(ref(db, 'users/'+auth.currentUser.uid), { username: n });
-};
-
 document.getElementById('closePracticeBtn').onclick = () => document.getElementById('practiceView').classList.add('hidden');
 
 function buildRanking(all) {
-    const sorted = Object.values(all).sort((a,b) => (b.xp || 0) - (a.xp || 0)).slice(0, 10);
+    const sorted = Object.values(all).sort((a,b) => (b.xp || 0) - (a.xp || 0)).slice(0, 5);
     document.getElementById('leaderboardList').innerHTML = sorted.map((u, i) => `
-        <div style="display:flex; justify-content:space-between; padding:12px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:5px; border: 1px solid ${u.username === user.username ? 'var(--primary)' : 'transparent'}">
-            <span>${i+1}º ${u.username || 'Player'}</span>
+        <div style="display:flex; justify-content:space-between; padding:12px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:5px;">
+            <span>${i+1}º ${u.username || 'Estudante'}</span>
             <span style="color:var(--gold)">${u.xp || 0} XP</span>
         </div>
     `).join('');
