@@ -3,42 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FluentGo Pro | Ranking & Menus</title>
+    <title>FluentGo Ultra | 100 Levels Final</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #2563EB; --secondary: #10B981; --bg: #0F172A; --card: #1E293B; --text: #F8FAFC; --gold: #F59E0B; --error: #EF4444; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
-        
         body { background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         .container { flex: 1; padding: 15px; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; width: 100%; overflow-y: auto; padding-bottom: 90px; }
         .hidden { display: none !important; }
-        
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #0F172A; border-bottom: 1px solid #334155; }
         .card { background: var(--card); padding: 25px; border-radius: 24px; border: 1px solid #334155; text-align: center; margin-bottom: 15px; }
-        
-        button { padding: 16px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; width: 100%; font-size: 15px; text-transform: uppercase; }
+        button { padding: 16px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; width: 100%; font-size: 15px; text-transform: uppercase; transition: 0.2s; }
         .btn-check { background: var(--primary); color: white; box-shadow: 0 5px 0 #1D4ED8; }
-        .btn-lang { background: #334155; color: white; border: 1px solid #475569; margin-top: 8px; font-size: 11px; }
-        .btn-lang.active { border: 2px solid var(--primary); background: rgba(37, 99, 235, 0.1); }
-
-        /* RANKING LIST */
-        .rank-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 15px; margin-bottom: 8px; border: 1px solid #334155; }
-        .rank-pos { font-weight: 900; color: var(--gold); margin-right: 10px; }
-
-        /* NAV FIXA - ESSENCIAL */
-        nav { 
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: #1E293B; display: flex; justify-content: space-around; 
-            padding: 10px 0; border-top: 1px solid #334155; z-index: 100;
-            height: 75px; box-shadow: 0 -5px 15px rgba(0,0,0,0.3);
-        }
+        .btn-check:active { transform: translateY(3px); box-shadow: 0 2px 0 #1D4ED8; }
+        
+        nav { position: fixed; bottom: 0; left: 0; right: 0; background: #1E293B; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #334155; z-index: 100; height: 75px; }
         nav div { display: flex; flex-direction: column; align-items: center; font-size: 20px; cursor: pointer; opacity: 0.4; flex: 1; }
-        nav span { font-size: 9px; font-weight: 700; margin-top: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+        nav span { font-size: 9px; font-weight: 700; margin-top: 5px; text-transform: uppercase; }
         nav div.active { opacity: 1; color: var(--primary); }
 
-        /* JOGO */
         .word-area { min-height: 110px; border: 2px dashed #475569; border-radius: 20px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 15px; background: rgba(255,255,255,0.02); margin: 15px 0; }
-        .chip { background: #334155; padding: 12px 16px; border-radius: 14px; font-weight: 700; color: white; border: 1px solid #475569; box-shadow: 0 3px 0 #0F172A; }
+        .chip { background: #334155; padding: 12px 16px; border-radius: 14px; font-weight: 700; color: white; border: 1px solid #475569; cursor: pointer; }
+        .chip.used { opacity: 0.1; pointer-events: none; }
     </style>
 </head>
 <body>
@@ -49,147 +35,175 @@
 </header>
 
 <main id="homeView" class="container hidden">
-    <div class="card" style="margin-top: 10px;">
-        <h2 id="levelTxt">Nível 1</h2>
-        <p id="taskTxt" style="color: #94a3b8; margin-bottom: 20px;">Tarefa 1 de 10</p>
-        <button id="startBtn" class="btn-check">PRATICAR TAREFA</button>
-    </div>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-        <button onclick="changeLang('English')" id="ln-English" class="btn-lang">🇺🇸 Inglês</button>
-        <button onclick="changeLang('Spanish')" id="ln-Spanish" class="btn-lang">🇪🇸 Espanhol</button>
-        <button onclick="changeLang('French')" id="ln-French" class="btn-lang">🇫🇷 Francês</button>
-        <button onclick="changeLang('Italian')" id="ln-Italian" class="btn-lang">🇮🇹 Italiano</button>
+    <div class="card" style="margin-top: 40px;">
+        <div style="font-size: 12px; font-weight: 900; color: var(--primary); letter-spacing: 2px;">PROGRESSO ATUAL</div>
+        <h1 id="levelDisplay" style="font-size: 4rem; font-weight: 900; margin: 10px 0; color: var(--gold);">1</h1>
+        <h2 id="levelTxt" style="margin-bottom: 5px;">Nível 1</h2>
+        <p id="taskTxt" style="color: #94a3b8; margin-bottom: 30px;">Tarefa 1 de 10</p>
+        <button id="startBtn" class="btn-check">PRATICAR AGORA</button>
     </div>
 </main>
 
 <main id="rankingView" class="container hidden">
-    <h3 style="margin: 10px 0 20px; text-align: center;">🏆 LÍDERES MUNDIAIS</h3>
-    <div id="leaderboardList">
-        </div>
-</main>
-
-<main id="shopView" class="container hidden">
-    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
-        <div class="card" style="border: 2px solid var(--gold);">
-            <div style="font-size: 40px; margin-bottom: 10px;">💎</div>
-            <h3 style="color:var(--gold)">LOJA PREMIUM</h3>
-            <p style="margin: 10px 0; font-size: 14px; color: #94a3b8;">Vidas Infinitas + Sem Anúncios</p>
-            <button class="btn-check" style="background:var(--gold); color:black; box-shadow: 0 4px 0 #b45309;">COMPRAR R$ 4,99</button>
-        </div>
-    </div>
+    <h3 style="text-align:center; margin-bottom:20px;">🏆 RANKING MUNDIAL (TOP 100)</h3>
+    <div id="leaderboardList"></div>
 </main>
 
 <main id="settingsView" class="container hidden">
     <div class="card">
-        <h3 style="margin-bottom: 20px; text-align: left;">⚙️ AJUSTES</h3>
-        <div style="display:flex; justify-content:space-between; padding:15px; background:rgba(255,255,255,0.05); border-radius:15px; margin-bottom: 10px;">
-            <span>Efeitos Sonoros</span>
-            <input type="checkbox" checked>
+        <h3 style="text-align:left; margin-bottom:15px;">🌍 IDIOMA DE ESTUDO</h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:25px;">
+            <button onclick="changeLang('English')" class="btn-lang" id="ln-English" style="background:#334155; color:white; border-radius:12px; padding:10px;">English</button>
+            <button onclick="changeLang('Spanish')" class="btn-lang" id="ln-Spanish" style="background:#334155; color:white; border-radius:12px; padding:10px;">Español</button>
+            <button onclick="changeLang('French')" class="btn-lang" id="ln-French" style="background:#334155; color:white; border-radius:12px; padding:10px;">Français</button>
+            <button onclick="changeLang('Italian')" class="btn-lang" id="ln-Italian" style="background:#334155; color:white; border-radius:12px; padding:10px;">Italiano</button>
         </div>
-        <button onclick="auth.signOut().then(() => location.reload())" style="background:none; color:var(--error); margin-top:20px; border:1px solid var(--error);">SAIR DA CONTA</button>
+        <hr style="border:0; border-top:1px solid #334155; margin-bottom:20px;">
+        <button onclick="auth.signOut().then(()=>location.reload())" style="color:var(--error); background:none; border:1px solid var(--error);">DESCONECTAR</button>
     </div>
 </main>
 
 <div id="practiceView" class="hidden" style="position:fixed; inset:0; background:var(--bg); z-index:9999; display: flex; flex-direction: column;">
-    <div class="container" style="padding-bottom: 20px;">
+    <div class="container">
         <div style="display:flex; align-items:center; gap:15px; margin-bottom: 20px;">
-            <button onclick="closePractice()" style="width:40px; background:none; font-size:24px;">✕</button>
-            <div style="background:#334155; flex:1; height:10px; border-radius:10px; overflow:hidden;">
+            <button onclick="closePractice()" style="width:40px; background:none; font-size:24px; color:white; border:none;">✕</button>
+            <div style="background:#334155; flex:1; height:12px; border-radius:10px; overflow:hidden;">
                 <div id="innerBar" style="width:0%; height:100%; background:var(--secondary); transition:0.4s;"></div>
             </div>
         </div>
         <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
-            <h2 id="targetPhrase" style="text-align:center; font-size:1.8rem; font-weight:900;">...</h2>
+            <p id="qStatus" style="text-align:center; font-weight:900; color:var(--primary); font-size:12px; margin-bottom:5px;"></p>
+            <h2 id="targetPhrase" style="text-align:center; font-size:1.8rem; font-weight:900; margin-bottom:20px;">...</h2>
             <div id="dropZone" class="word-area"></div>
             <div id="wordBank" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;"></div>
         </div>
-        <div>
-            <div id="feedbackText" style="text-align:center; margin-bottom:10px; font-weight:800; min-height:24px;"></div>
+        <div style="padding-bottom: 30px;">
+            <div id="feedbackText" style="text-align:center; margin-bottom:15px; font-weight:800; min-height:24px; font-size:1.1rem;"></div>
             <button id="actionBtn" class="btn-check">VERIFICAR</button>
         </div>
     </div>
 </div>
 
 <nav id="bottomNav" class="hidden">
-    <div onclick="showTab('homeView')" id="nv-home" class="active">🏠<span>Início</span></div>
+    <div onclick="showTab('homeView')" id="nv-home" class="active">🏠<span>Home</span></div>
     <div onclick="showTab('rankingView')" id="nv-ranking">🏆<span>Ranking</span></div>
-    <div onclick="showTab('shopView')" id="nv-shop">💎<span>Loja</span></div>
     <div onclick="showTab('settingsView')" id="nv-settings">⚙️<span>Ajustes</span></div>
 </nav>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getDatabase, ref, onValue, update, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = { apiKey: "AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw", authDomain: "fluentgo-35024.firebaseapp.com", databaseURL: "https://fluentgo-35024-default-rtdb.firebaseio.com", projectId: "fluentgo-35024", appId: "1:613715387990:web:0345ade26374dd32d1fdf7" };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-const phrases = [{pt: "O carro é azul", en: "the car is blue"}, {pt: "Eu bebo leite", en: "i drink milk"}];
+// --- MOTOR DE CONTEÚDO GIGANTE (PREDEFINIDO POR LÓGICA) ---
+const DIC = {
+    PT: ["O gato", "A casa", "O carro", "O amigo", "A maçã", "O sol", "A água", "O livro", "O café", "O cachorro", "O menino", "A menina", "A porta", "O céu", "O pão", "A rua"],
+    EN: ["the cat", "the house", "the car", "the friend", "the apple", "the sun", "the water", "the book", "the coffee", "the dog", "the boy", "the girl", "the door", "the sky", "the bread", "the street"],
+    ES: ["el gato", "la casa", "el coche", "el amigo", "la manzana", "el sol", "el agua", "el libro", "el café", "el perro", "el niño", "la niña", "la puerta", "el cielo", "el pan", "la calle"],
+    FR: ["le chat", "la maison", "la voiture", "l'ami", "la pomme", "le soleil", "l'eau", "le livre", "le café", "le chien", "le garçon", "la fille", "la porte", "le ciel", "le pain", "la rue"],
+    IT: ["il gatto", "la casa", "la macchina", "l'amico", "la mela", "il sole", "l'acqua", "il libro", "il caffè", "il cane", "il ragazzo", "la ragazza", "la porta", "il cielo", "il pane", "la strada"],
+    ADJ_PT: ["é azul", "é grande", "é bom", "é novo", "dorme", "corre", "bebe", "fala"],
+    ADJ_EN: ["is blue", "is big", "is good", "is new", "sleeps", "runs", "drinks", "speaks"],
+    ADJ_ES: ["es azul", "es grande", "es bueno", "es nuevo", "duerme", "corre", "bebe", "habla"],
+    ADJ_FR: ["est bleu", "est grand", "est bon", "est neuf", "dort", "court", "boit", "parle"],
+    ADJ_IT: ["è blu", "è grande", "è buono", "è nuovo", "dorme", "corre", "beve", "parla"]
+};
+
+// Gera 10 questões predefinidas para qualquer combinação de Nível/Tarefa/Língua
+function getTaskQuestions(lang, level, task) {
+    let list = [];
+    const langKey = lang.substring(0,2).toUpperCase();
+    for(let i=1; i<=10; i++) {
+        // Fórmula determinística para selecionar palavras baseado nos IDs
+        const seed = (level * 100) + (task * 10) + i;
+        const sub1 = DIC.PT[seed % DIC.PT.length];
+        const subTarget = DIC[langKey][seed % DIC[langKey].length];
+        const adj1 = DIC.ADJ_PT[seed % DIC.ADJ_PT.length];
+        const adjTarget = DIC["ADJ_"+langKey][seed % DIC["ADJ_"+langKey].length];
+        
+        list.push({
+            pt: `${sub1} ${adj1}`,
+            target: `${subTarget} ${adjTarget}`.toLowerCase()
+        });
+    }
+    return list;
+}
+
 let user = { xp: 0, lvl: 1, task: 1, lang: "English" };
+let currentQuestions = [];
 let qIdx = 0, selection = [], state = "CHECK";
 
 onAuthStateChanged(auth, (u) => {
     if(u) {
-        // Monitora o usuário logado
         onValue(ref(db, 'users/'+u.uid), (snap) => {
             user = snap.exists() ? snap.val() : user;
             updateUI();
             ['appHeader', 'homeView', 'bottomNav'].forEach(id => document.getElementById(id).classList.remove('hidden'));
         });
-        // Monitora todos os usuários para o ranking
-        onValue(ref(db, 'users'), (snap) => {
-            if(snap.exists()) buildRanking(snap.val());
-        });
+        onValue(ref(db, 'users'), (snap) => { if(snap.exists()) buildRanking(snap.val()); });
     }
 });
 
 function updateUI() {
-    document.getElementById('userXP').innerText = user.xp || 0;
-    document.getElementById('levelTxt').innerText = `Nível ${user.lvl || 1}`;
-    document.getElementById('taskTxt').innerText = `Tarefa ${user.task || 1} de 10`;
-    document.getElementById('langTag').innerText = (user.lang || "EN").substring(0,2).toUpperCase();
+    document.getElementById('userXP').innerText = user.xp;
+    document.getElementById('levelDisplay').innerText = user.lvl;
+    document.getElementById('levelTxt').innerText = `Nível ${user.lvl}`;
+    document.getElementById('taskTxt').innerText = `Tarefa ${user.task} de 10`;
+    document.getElementById('langTag').innerText = user.lang.substring(0,2).toUpperCase();
+    document.querySelectorAll('.btn-lang').forEach(b => b.style.border = "none");
+    document.getElementById('ln-'+user.lang).style.border = "2px solid var(--primary)";
 }
 
-function buildRanking(allUsers) {
+function buildRanking(all) {
     const list = document.getElementById('leaderboardList');
-    const sorted = Object.values(allUsers).sort((a,b) => b.xp - a.xp).slice(0, 10);
+    const sorted = Object.values(all).sort((a,b) => b.xp - a.xp).slice(0, 100);
     list.innerHTML = sorted.map((u, i) => `
-        <div class="rank-item">
-            <span><span class="rank-pos">${i+1}º</span> ${u.email?.split('@')[0] || 'Aluno'}</span>
-            <span style="font-weight:700;">${u.xp} XP</span>
+        <div style="display:flex; justify-content:space-between; padding:15px; background:rgba(255,255,255,0.05); border-radius:15px; margin-bottom:8px; border:1px solid #334155;">
+            <span><b>${i+1}º</b> ${u.email?.split('@')[0]}</span>
+            <span style="color:var(--gold)">${u.xp} XP</span>
         </div>
     `).join('');
 }
-
-window.showTab = (id) => {
-    ['homeView', 'rankingView', 'shopView', 'settingsView'].forEach(v => document.getElementById(v).classList.add('hidden'));
-    document.querySelectorAll('nav div').forEach(d => d.classList.remove('active'));
-    document.getElementById(id).classList.remove('hidden');
-    document.getElementById('nv-' + id.replace('View','')).classList.add('active');
-};
 
 window.changeLang = (l) => {
     user.lang = l;
     update(ref(db, 'users/'+auth.currentUser.uid), {lang: l});
 };
 
-document.getElementById('startBtn').onclick = () => { qIdx = 0; document.getElementById('practiceView').classList.remove('hidden'); loadQ(); };
+window.showTab = (id) => {
+    ['homeView', 'rankingView', 'settingsView'].forEach(v => document.getElementById(v).classList.add('hidden'));
+    document.querySelectorAll('nav div').forEach(d => d.classList.remove('active'));
+    document.getElementById(id).classList.remove('hidden');
+    document.getElementById('nv-' + id.replace('View','')).classList.add('active');
+};
+
+document.getElementById('startBtn').onclick = () => {
+    qIdx = 0;
+    currentQuestions = getTaskQuestions(user.lang, user.lvl, user.task);
+    document.getElementById('practiceView').classList.remove('hidden');
+    loadQ();
+};
 
 function loadQ() {
     state = "CHECK"; selection = [];
-    const q = phrases[qIdx % phrases.length];
-    const btn = document.getElementById('actionBtn');
-    btn.innerText = "VERIFICAR"; btn.className = "btn-check";
-    document.getElementById('feedbackText').innerText = "";
-    document.getElementById('dropZone').innerHTML = "";
+    const q = currentQuestions[qIdx];
+    document.getElementById('qStatus').innerText = `QUESTÃO ${qIdx + 1}/10`;
     document.getElementById('targetPhrase').innerText = q.pt;
-    document.getElementById('innerBar').style.width = `${(qIdx / 5) * 100}%`;
+    document.getElementById('dropZone').innerHTML = "";
+    document.getElementById('feedbackText').innerText = "";
+    document.getElementById('innerBar').style.width = `${(qIdx / 10) * 100}%`;
+    document.getElementById('actionBtn').innerText = "VERIFICAR";
+    document.getElementById('actionBtn').style.background = "var(--primary)";
+    
     const bank = document.getElementById('wordBank');
     bank.innerHTML = "";
-    [...q.en.split(" "), "is"].sort(() => Math.random() - 0.5).forEach(w => {
+    const options = [...q.target.split(" "), "the", "is", "a"].sort(() => Math.random() - 0.5);
+    options.forEach(w => {
         const b = document.createElement('button'); b.className = "chip"; b.innerText = w;
         b.onclick = () => {
             if(state !== "CHECK") return;
@@ -201,31 +215,36 @@ function loadQ() {
     });
 }
 
-document.getElementById('actionBtn').onclick = function() {
+document.getElementById('actionBtn').onclick = async function() {
     if(state === "CHECK") {
         const guess = selection.join(" ").toLowerCase().trim();
-        const correct = phrases[qIdx % phrases.length].en.toLowerCase().trim();
+        const correct = currentQuestions[qIdx].target.toLowerCase().trim();
         if(guess === correct) {
-            this.innerText = "CONTINUAR"; this.style.background = "var(--secondary)";
+            this.innerText = "PRÓXIMA"; this.style.background = "var(--secondary)";
             document.getElementById('feedbackText').innerText = "Excelente! ✨";
+            document.getElementById('feedbackText').style.color = "var(--secondary)";
+            state = "NEXT";
         } else {
-            this.innerText = "ENTENDI"; this.style.background = "var(--error)";
-            document.getElementById('feedbackText').innerText = "Resposta: " + correct;
+            document.getElementById('feedbackText').innerText = "Tente novamente!";
+            document.getElementById('feedbackText').style.color = "var(--error)";
+            setTimeout(() => {
+                document.getElementById('dropZone').innerHTML = "";
+                selection = [];
+                document.querySelectorAll('.chip').forEach(c => c.classList.remove('used'));
+            }, 600);
         }
-        state = "NEXT";
     } else {
         qIdx++;
-        if(qIdx < 5) loadQ();
-        else finish();
+        if(qIdx < 10) {
+            loadQ();
+        } else {
+            user.xp += 100; user.task += 1;
+            if(user.task > 10) { user.task = 1; user.lvl += 1; }
+            await update(ref(db, 'users/'+auth.currentUser.uid), user);
+            document.getElementById('practiceView').classList.add('hidden');
+        }
     }
 };
-
-async function finish() {
-    user.xp += 50; user.task += 1;
-    if(user.task > 10) { user.task = 1; user.lvl += 1; }
-    await update(ref(db, 'users/'+auth.currentUser.uid), user);
-    document.getElementById('practiceView').classList.add('hidden');
-}
 
 window.closePractice = () => document.getElementById('practiceView').classList.add('hidden');
 </script>
