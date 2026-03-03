@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FluentGo Pro | v3.0</title>
-    
+    <title>FluentGo Pro | Tradução Real</title>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6478620932842773" crossorigin="anonymous"></script>
-
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #2563EB; --secondary: #10B981; --bg: #0F172A; --card: #1E293B; --text: #F8FAFC; }
@@ -14,10 +12,8 @@
         body { margin:0; background: var(--bg); color: var(--text); overflow: hidden; height: 100vh; }
         .container { padding: 20px; max-width: 500px; margin: 0 auto; }
         .hidden { display: none !important; }
-        
         header { display: flex; justify-content: space-between; padding: 15px 20px; background: #0F172A; border-bottom: 1px solid #334155; }
-        .stat { font-weight: 800; color: var(--secondary); display: flex; align-items: center; gap: 5px; }
-
+        
         /* ADS */
         #adOverlay { position: fixed; inset: 0; background: #000; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; }
         .ad-box { width: 90%; height: 400px; background: #1e293b; border-radius: 24px; display: flex; align-items: center; justify-content: center; border: 1px solid #475569; position: relative; }
@@ -26,28 +22,24 @@
 
         .card { background: var(--card); padding: 25px; border-radius: 24px; border: 1px solid #334155; margin-bottom: 15px; }
         input { width: 100%; padding: 15px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #334155; background: #0F172A; color: white; font-size: 16px; }
-        
         button { padding: 18px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; width: 100%; transition: 0.2s; }
         .btn-main { background: var(--primary); color: white; box-shadow: 0 4px 0 #1D4ED8; }
-        .btn-main:active { transform: translateY(2px); box-shadow: 0 2px 0 #1D4ED8; }
 
         .progress-bar { background: #334155; height: 12px; border-radius: 10px; overflow: hidden; margin: 15px 0; }
         .progress-fill { height: 100%; background: var(--secondary); width: 0%; transition: 0.4s; }
         
-        .word-area { min-height: 100px; border: 2px dashed #475569; border-radius: 20px; margin: 15px 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 10px; background: rgba(0,0,0,0.1); }
-        .chip { background: #334155; padding: 12px 16px; border-radius: 14px; font-weight: 700; cursor: pointer; color: white; border: 1px solid #475569; }
+        .word-area { min-height: 110px; border: 2px dashed #475569; border-radius: 20px; margin: 20px 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 15px; background: rgba(0,0,0,0.2); }
+        .chip { background: #334155; padding: 12px 16px; border-radius: 14px; font-weight: 700; cursor: pointer; color: white; border: 1px solid #475569; font-size: 1.1rem; }
         .chip.used { opacity: 0.1; pointer-events: none; }
         
-        .lang-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .lang-btn { background: #334155; color: white; font-size: 12px; padding: 12px; }
-        .lang-btn.active { border: 2px solid var(--primary); }
+        .q-label { text-align: center; color: #94a3b8; font-size: 0.9rem; font-weight: 800; margin-bottom: 5px; }
     </style>
 </head>
 <body>
 
 <header class="hidden" id="mainHeader">
-    <div style="font-weight:900;">FLUENTGO <span id="langDisplay" style="color:var(--primary)">EN</span></div>
-    <div class="stat">🔥 <span id="userXP">0</span></div>
+    <div style="font-weight:900; letter-spacing: -1px;">FLUENTGO <span id="langTag" style="color:var(--primary); font-size: 0.7rem; background: rgba(37, 99, 235, 0.2); padding: 2px 6px; border-radius: 4px;">EN</span></div>
+    <div style="font-weight: 800; color: var(--secondary);">⭐ <span id="userXP">0</span></div>
 </header>
 
 <div id="adOverlay">
@@ -60,12 +52,11 @@
 </div>
 
 <main id="authView" class="container">
-    <h1 style="text-align:center; font-size:3.5rem; font-weight:900; letter-spacing:-2px; margin: 60px 0 20px;">Fluent<span style="color:var(--primary)">Go</span></h1>
+    <h1 style="text-align:center; font-size:3.5rem; font-weight: 900; margin: 60px 0 20px;">Fluent<span style="color:var(--primary)">Go</span></h1>
     <div class="card">
-        <input type="email" id="email" placeholder="Seu melhor e-mail">
-        <input type="password" id="password" placeholder="Sua senha secreta">
-        <button id="loginBtn" class="btn-main">ENTRAR</button>
-        <button id="registerBtn" style="background:none; color:#94a3b8; font-size:12px; margin-top:10px; text-decoration: underline;">Não tenho conta, quero criar</button>
+        <input type="email" id="email" placeholder="E-mail">
+        <input type="password" id="password" placeholder="Senha">
+        <button id="loginBtn" class="btn-main">ENTRAR / CADASTRAR</button>
     </div>
 </main>
 
@@ -74,13 +65,13 @@
         <h2 id="levelTxt" style="margin:0;">Nível 1</h2>
         <p id="taskTxt" style="color:#94a3b8; margin: 5px 0 15px;">Tarefa 1 de 10</p>
         <div class="progress-bar"><div id="mainProgress" class="progress-fill"></div></div>
-        <button id="startBtn" class="btn-main" style="margin-top:10px;">COMEÇAR TAREFA (20 Questões)</button>
+        <button id="startBtn" class="btn-main">PRATICAR TAREFA (20 Questões)</button>
         
-        <div class="lang-grid">
-            <button onclick="changeLang('English')" class="lang-btn" id="btnEN">🇺🇸 Inglês</button>
-            <button onclick="changeLang('Spanish')" class="lang-btn" id="btnES">🇪🇸 Espanhol</button>
-            <button onclick="changeLang('French')" class="lang-btn" id="btnFR">🇫🇷 Francês</button>
-            <button onclick="changeLang('Italian')" class="lang-btn" id="btnIT">🇮🇹 Italiano</button>
+        <div style="margin-top:20px; display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <button onclick="changeLang('English')" class="chip" style="font-size: 0.8rem;">🇺🇸 Inglês</button>
+            <button onclick="changeLang('Spanish')" class="chip" style="font-size: 0.8rem;">🇪🇸 Espanhol</button>
+            <button onclick="changeLang('French')" class="chip" style="font-size: 0.8rem;">🇫🇷 Francês</button>
+            <button onclick="changeLang('Italian')" class="chip" style="font-size: 0.8rem;">🇮🇹 Italiano</button>
         </div>
     </div>
 </main>
@@ -88,11 +79,13 @@
 <main id="practiceView" class="hidden" style="position:fixed; inset:0; background:var(--bg); z-index:2000; padding:20px; display:flex; flex-direction:column;">
     <div class="progress-bar"><div id="taskProgress" class="progress-fill"></div></div>
     <div class="container" style="flex:1; display:flex; flex-direction:column; justify-content:center;">
-        <p style="text-align:center; color:#94a3b8; font-weight:900; margin:0;">PERGUNTA <span id="qIdxTxt">1</span> / 20</p>
-        <h2 id="targetPhrase" style="text-align:center; font-size:1.8rem; margin: 20px 0;">...</h2>
+        <div class="q-label">TRADUZA PARA <span id="targetLangName" style="color:var(--primary)">INGLÊS</span>:</div>
+        <h2 id="targetPhrase" style="text-align:center; font-size:2.2rem; margin: 15px 0; font-weight: 900;">...</h2>
+        <p style="text-align: center; color: #64748b; font-size: 0.8rem; margin-bottom: 10px;">Toque nas palavras abaixo:</p>
         <div id="dropZone" class="word-area"></div>
         <div id="wordBank" style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px;"></div>
         <button id="checkBtn" class="btn-main" style="margin-top:30px;">VERIFICAR RESPOSTA</button>
+        <p style="text-align: center; color: #475569; font-size: 0.7rem; margin-top: 15px;">Questão <span id="qIdxTxt">1</span> de 20</p>
     </div>
 </main>
 
@@ -106,28 +99,30 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// BANCO DE DADOS DINÂMICO (10 NÍVEIS)
+// BANCO DE DADOS CORRIGIDO: PERGUNTA EM PT -> RESPOSTA EM LÍNGUA ALVO
 const database = {
     English: [
-        ["i eat", "you drink", "the bread", "water", "apple", "i drink", "the house", "milk", "coffee", "hello"], // Nível 1
-        ["i eat bread", "the red apple", "i drink water", "my big house", "a hot coffee", "she drinks milk", "he eats apples", "the blue car", "good morning", "my friend"], // Nível 2
-        ["i have a dog", "the house is big", "i like coffee", "he has a book", "she is happy", "the water is cold", "i drink hot milk", "we eat bread", "it is a car", "they like music"] // Nível 3... segue lógica
+        {p: "Isso é um carro", a: "it is a car"}, {p: "Eu como pão", a: "i eat bread"}, {p: "Eu bebo água", a: "i drink water"},
+        {p: "A maçã é vermelha", a: "the apple is red"}, {p: "Bom dia", a: "good morning"}, {p: "Eu tenho um gato", a: "i have a cat"},
+        {p: "Onde está você?", a: "where are you"}, {p: "Eu gosto de café", a: "i like coffee"}, {p: "A casa é grande", a: "the house is big"},
+        {p: "Ela é minha amiga", a: "she is my friend"}, {p: "Nós bebemos leite", a: "we drink milk"}, {p: "Um livro azul", a: "a blue book"}
     ],
-    Spanish: [ ["yo como", "agua", "pan", "hola", "casa"], ["yo como pan", "la casa roja"], ["yo tengo un perro"] ],
-    French: [ ["je mange", "eau", "pain", "bonjour", "maison"], ["je mange du pain"], ["j'ai un chien"] ],
-    Italian: [ ["io mangio", "acqua", "pane", "ciao", "casa"], ["io mangio pane"], ["io ho un cane"] ]
+    Spanish: [
+        {p: "Isso é um carro", a: "esto es un coche"}, {p: "Eu como pão", a: "yo como pan"}, {p: "Eu bebo água", a: "yo bebo agua"},
+        {p: "Bom dia", a: "buenos dias"}, {p: "A casa é grande", a: "la casa es grande"}
+    ],
+    French: [
+        {p: "Isso é um carro", a: "c'est une voiture"}, {p: "Eu como pão", a: "je mange du pain"}, {p: "Eu bebo água", a: "je bois de l'eau"}
+    ],
+    Italian: [
+        {p: "Isso é um carro", a: "questa è un'auto"}, {p: "Eu como pão", a: "io mangio pane"}, {p: "Eu bebo água", a: "io bevo acqua"}
+    ]
 };
 
 let userData = { xp: 0, lvl: 1, task: 1, lang: "English" };
 let currentQuestions = [];
 let qIdx = 0;
 let userPhrase = [];
-
-function showView(id) {
-    ['authView', 'dashboardView', 'practiceView'].forEach(v => document.getElementById(v).classList.add('hidden'));
-    document.getElementById(id).classList.remove('hidden');
-    document.getElementById('mainHeader').classList.toggle('hidden', id === 'authView');
-}
 
 function runAd(callback) {
     const overlay = document.getElementById('adOverlay');
@@ -149,31 +144,27 @@ function updateDash() {
     document.getElementById('taskTxt').innerText = `Tarefa ${userData.task} de 10`;
     document.getElementById('mainProgress').style.width = `${(userData.task - 1) * 10}%`;
     document.getElementById('userXP').innerText = userData.xp;
-    document.getElementById('langDisplay').innerText = userData.lang.slice(0,2).toUpperCase();
-    
-    // Marcar botão ativo
-    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('btn' + userData.lang.slice(0,2).toUpperCase()).classList.add('active');
+    document.getElementById('langTag').innerText = userData.lang.slice(0,2).toUpperCase();
 }
 
-async function save() { await update(ref(db, 'users/'+auth.currentUser.uid), userData); }
-
-window.changeLang = (l) => { userData.lang = l; save(); updateDash(); };
+window.changeLang = (l) => { userData.lang = l; updateDash(); update(ref(db, 'users/'+auth.currentUser.uid), userData); };
 
 function startTask() {
     currentQuestions = [];
-    // Pega o vocabulário do nível atual (ou o último disponível)
-    const langData = database[userData.lang];
-    const levelPool = langData[userData.lvl - 1] || langData[langData.length - 1];
-    
+    const pool = database[userData.lang];
+    // Gera 20 questões aleatórias do banco
     for(let i=0; i<20; i++) {
-        let text = levelPool[Math.floor(Math.random()*levelPool.length)];
-        let words = text.split(" ");
-        let parts = [...words, "is", "the", "a", "not", "my", "to"].sort(() => Math.random() - 0.5);
-        currentQuestions.push({ q: text, parts: [...new Set(parts)] });
+        let item = pool[Math.floor(Math.random()*pool.length)];
+        let words = item.a.split(" ");
+        // Adiciona "distratores" (palavras erradas para dificultar)
+        let distractors = ["not", "my", "to", "the", "is", "a", "it", "with", "no"];
+        let parts = [...words, distractors[Math.floor(Math.random()*distractors.length)], distractors[Math.floor(Math.random()*distractors.length)]];
+        currentQuestions.push({ p: item.p, a: item.a, parts: parts.sort(() => Math.random() - 0.5) });
     }
     qIdx = 0;
-    showView('practiceView');
+    document.getElementById('dashboardView').classList.add('hidden');
+    document.getElementById('practiceView').classList.remove('hidden');
+    document.getElementById('targetLangName').innerText = userData.lang.toUpperCase();
     renderQ();
 }
 
@@ -182,32 +173,44 @@ function renderQ() {
     userPhrase = [];
     document.getElementById('qIdxTxt').innerText = qIdx + 1;
     document.getElementById('taskProgress').style.width = `${(qIdx / 20) * 100}%`;
-    document.getElementById('targetPhrase').innerText = q.q.toUpperCase();
+    document.getElementById('targetPhrase').innerText = q.p; // Exibe em PORTUGUÊS
     document.getElementById('dropZone').innerHTML = "";
     const bank = document.getElementById('wordBank'); bank.innerHTML = "";
-    q.parts.forEach(w => {
+    
+    // Filtra palavras únicas para o banco
+    [...new Set(q.parts)].forEach(w => {
         const c = document.createElement('div'); c.className = "chip"; c.innerText = w;
-        c.onclick = () => { if(!c.classList.contains('used')) { userPhrase.push(w); document.getElementById('dropZone').innerHTML += `<span>${w} </span>`; c.classList.add('used'); }};
+        c.onclick = () => {
+            if(!c.classList.contains('used')) {
+                userPhrase.push(w);
+                const span = document.createElement('span');
+                span.innerText = w + " ";
+                document.getElementById('dropZone').appendChild(span);
+                c.classList.add('used');
+            }
+        };
         bank.appendChild(c);
     });
 }
 
-document.getElementById('checkBtn').onclick = () => {
-    const guess = userPhrase.join(" ").toLowerCase().trim();
-    const answer = currentQuestions[qIdx].q.toLowerCase().trim();
-    
-    if(guess === answer) {
+document.getElementById('checkBtn').onclick = async () => {
+    const answer = userPhrase.join(" ").toLowerCase().trim();
+    if(answer === currentQuestions[qIdx].a.toLowerCase().trim()) {
         qIdx++;
         if(qIdx < 20) renderQ();
         else {
             userData.xp += 150;
             userData.task++;
             if(userData.task > 10) { userData.task = 1; userData.lvl++; }
-            save();
-            runAd(() => { showView('dashboardView'); updateDash(); });
+            await update(ref(db, 'users/'+auth.currentUser.uid), userData);
+            runAd(() => {
+                document.getElementById('practiceView').classList.add('hidden');
+                document.getElementById('dashboardView').classList.remove('hidden');
+                updateDash();
+            });
         }
     } else {
-        alert("Resposta incorreta. Tente novamente!");
+        alert("Resposta incorreta! Tente montar a frase novamente.");
         renderQ();
     }
 };
@@ -216,21 +219,21 @@ onAuthStateChanged(auth, async (u) => {
     if(u) {
         const s = await get(ref(db, 'users/'+u.uid));
         if(s.exists()) userData = s.val();
-        showView('dashboardView');
+        document.getElementById('authView').classList.add('hidden');
+        document.getElementById('mainHeader').classList.remove('hidden');
+        document.getElementById('dashboardView').classList.remove('hidden');
         updateDash();
-    } else showView('authView');
+    }
 });
 
-document.getElementById('loginBtn').onclick = () => {
+document.getElementById('loginBtn').onclick = async () => {
     const e = document.getElementById('email').value, p = document.getElementById('password').value;
-    if(!e || !p) return alert("Preencha tudo!");
-    signInWithEmailAndPassword(auth, e, p).catch(err => alert("Erro ao entrar: Verifique e-mail e senha."));
-};
-
-document.getElementById('registerBtn').onclick = () => {
-    const e = document.getElementById('email').value, p = document.getElementById('password').value;
-    if(!e || p.length < 6) return alert("E-mail válido e senha de 6 dígitos!");
-    createUserWithEmailAndPassword(auth, e, p).then(r => set(ref(db, 'users/'+r.user.uid), userData)).catch(err => alert("Erro ao criar conta."));
+    try {
+        await signInWithEmailAndPassword(auth, e, p);
+    } catch {
+        const r = await createUserWithEmailAndPassword(auth, e, p);
+        await set(ref(db, 'users/'+r.user.uid), userData);
+    }
 };
 
 document.getElementById('startBtn').onclick = startTask;
