@@ -3,24 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FluentGo | Pro</title>
+    <title>FluentGo Master | Ultimate Edition</title>
     <style>
         :root { --primary: #2563EB; --secondary: #10B981; --premium: #FF9900; --danger: #EF4444; --bg: #121212; --card: #1E1E1E; }
         body { margin:0; font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: #fff; text-align: center; overflow-x: hidden; }
-        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: #000; border-bottom: 2px solid #333; position: sticky; top: 0; z-index: 100; }
-        .container { padding: 20px; max-width: 600px; margin: 0 auto; }
+        
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: #000; border-bottom: 2px solid #333; position: sticky; top: 0; z-index: 1000; }
+        .container { padding: 20px; max-width: 600px; margin: 0 auto; position: relative; z-index: 10; }
         .hidden { display: none !important; }
-        .card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid #333; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        button { padding: 14px 24px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 1em; }
-        button:active { transform: scale(0.95); }
-        .btn-main { background: var(--primary); color: white; width: 100%; margin-top: 10px; box-shadow: 0 4px 0 #1D4ED8; }
-        .btn-main:active { box-shadow: none; transform: translateY(4px); }
-        .btn-ghost { background: #333; color: #ccc; width: 100%; margin-top: 10px; border: 1px solid #444; }
+        
+        /* UI Estilo 3D */
+        .card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid #333; margin-bottom: 20px; box-shadow: 0 8px 0 #000; }
+        button { padding: 14px 24px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: 0.1s; font-size: 1em; position: relative; }
+        button:active { transform: translateY(4px); box-shadow: none !important; }
+        
+        .btn-main { background: var(--primary); color: white; width: 100%; box-shadow: 0 5px 0 #1D4ED8; margin-top: 10px; }
+        .btn-ghost { background: #333; color: #ccc; width: 100%; margin-top: 10px; border-bottom: 4px solid #111; }
+        .btn-option { background: #252525; color: white; width: 100%; margin: 8px 0; text-align: left; border: 2px solid #444; border-bottom: 5px solid #000; }
+        .btn-word { background: #444; color: white; margin: 5px; display: inline-block; padding: 10px 18px; border-radius: 10px; border-bottom: 4px solid #222; }
+        .btn-word.used { opacity: 0.2; pointer-events: none; }
+
+        /* Loja e Stats */
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .stat-box { background: #252525; padding: 12px; border-radius: 15px; border: 1px solid #333; font-size: 0.9em; }
+        .stat-box { background: #252525; padding: 12px; border-radius: 15px; border: 1px solid #333; font-weight: bold; }
+        .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .btn-ads { background: transparent; border: 2px solid var(--danger); color: var(--danger); font-size: 0.8em; }
+        .btn-premium { background: transparent; border: 2px solid var(--premium); color: var(--premium); font-size: 0.8em; }
+
+        /* Progress Bar */
         .progress-container { background: #333; height: 12px; border-radius: 6px; margin: 15px 0; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
-        input[type="text"] { background: #252525; border: 2px solid #444; padding: 15px; border-radius: 15px; color: white; font-size: 1.2em; text-align: center; width: 85%; outline: none; margin-bottom: 15px; }
+        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+        /* Inputs e Areas */
+        input[type="text"] { background: #252525; border: 2px solid #444; padding: 18px; border-radius: 15px; color: white; font-size: 1.2em; text-align: center; width: 85%; outline: none; margin-bottom: 15px; border-bottom: 5px solid #000; }
+        .word-area { min-height: 80px; border: 2px dashed #444; border-radius: 15px; margin-bottom: 25px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 10px; background: rgba(255,255,255,0.02); }
+        
         canvas { position: fixed; inset: 0; pointer-events: none; z-index: 2000; }
     </style>
 </head>
@@ -29,15 +46,15 @@
 <canvas id="fxCanvas"></canvas>
 
 <header>
-    <div style="font-size: 1.4em; font-weight: 900;">FLUENT<span style="color:var(--primary)">GO</span></div>
+    <div style="font-size: 1.4em; font-weight: 900; letter-spacing: -1px;">FLUENT<span style="color:var(--primary)">GO</span></div>
     <div id="userMenu" class="hidden"><span id="userXpDisplay" style="color: var(--premium); font-weight: bold;">0 XP</span></div>
 </header>
 
 <div id="authSection" class="container">
     <div class="card" style="margin-top: 50px;">
-        <h2>Aprenda grátis. Para sempre.</h2>
-        <input type="email" id="email" placeholder="E-mail" style="width: 85%; padding: 12px; margin-bottom: 10px; border-radius: 8px; background: #222; border: 1px solid #444; color: white;">
-        <input type="password" id="password" placeholder="Senha" style="width: 85%; padding: 12px; margin-bottom: 20px; border-radius: 8px; background: #222; border: 1px solid #444; color: white;">
+        <h2>Bem-vindo de volta!</h2>
+        <input type="email" id="email" placeholder="E-mail">
+        <input type="password" id="password" placeholder="Senha">
         <button id="loginBtn" class="btn-main">ENTRAR</button>
         <button id="registerBtn" class="btn-ghost">CRIAR CONTA</button>
     </div>
@@ -45,7 +62,7 @@
 
 <div id="langOnboarding" class="container hidden">
     <div class="card">
-        <h2>Escolha um curso:</h2>
+        <h2>Escolha o seu curso:</h2>
         <button class="btn-ghost" style="border-color: var(--primary)" onclick="switchLanguage('Ingles')">🇺🇸 Inglês</button>
         <button class="btn-ghost" style="border-color: var(--secondary)" onclick="switchLanguage('Espanhol')">🇪🇸 Espanhol</button>
         <button class="btn-ghost" style="border-color: #FF0055" onclick="switchLanguage('Japones')">🇯🇵 Japonês</button>
@@ -54,34 +71,42 @@
 
 <div id="appSection" class="container hidden">
     <div class="stats-grid">
-        <div class="stat-box">🌍 <b id="currentLangLabel">---</b></div>
-        <div class="stat-box">🔥 Combo: <b id="comboLabel">0</b></div>
+        <div class="stat-box">🌍 <span id="currentLangLabel">---</span></div>
+        <div class="stat-box">🔥 Combo: <span id="comboLabel">0</span></div>
     </div>
     <div class="card">
         <h3 id="moduleLabel">Módulo 1</h3>
         <div class="progress-container"><div id="mainProgress" class="progress-fill"></div></div>
-        <button id="startBtn" class="btn-main">CONTINUAR ESTUDO</button>
+        <button id="startBtn" class="btn-main" style="padding: 20px; font-size: 1.2em;">ESTUDAR AGORA</button>
+        <div class="shop-grid">
+            <button class="btn-ads" onclick="alert('Loja indisponível')">Remover Ads R$4,99</button>
+            <button class="btn-premium" onclick="alert('Loja indisponível')">Premium R$9,99</button>
+        </div>
     </div>
     <button id="configBtn" class="btn-ghost">⚙️ Trocar de Curso</button>
     <button id="logoutBtn" class="btn-ghost" style="color: var(--danger)">Sair da Conta</button>
 </div>
 
 <div id="studyModal" class="container hidden">
-    <div class="card" style="margin-top: 50px;">
-        <h4 style="color:var(--premium)">ESTUDE</h4>
-        <h1 id="studyWord">...</h1>
+    <div class="card" style="margin-top: 50px; padding: 50px 20px;">
+        <h4 style="color:var(--premium); letter-spacing: 2px;">MEMORIZE</h4>
+        <h1 id="studyWord" style="font-size: 3em; margin: 20px 0;">...</h1>
         <h2 id="studyTranslation" style="color:var(--secondary)">...</h2>
-        <button id="nextStudyBtn" class="btn-main">ESTUDEI</button>
+        <button id="nextStudyBtn" class="btn-main">PRÓXIMO</button>
     </div>
 </div>
 
 <div id="taskModal" class="hidden" style="position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: flex; flex-direction: column;">
-    <div style="padding: 20px;"><div class="progress-container"><div id="taskProgress" class="progress-fill"></div></div></div>
-    <div class="container" style="flex:1; display:flex; flex-direction:column; justify-content:center;">
-        <h1 id="questionDisplay">...</h1>
+    <div style="padding: 20px; display: flex; align-items: center; gap: 15px;">
+        <div class="progress-container" style="flex:1;"><div id="taskProgress" class="progress-fill"></div></div>
+        <button id="closeTask" style="background:none; color:#666; font-size: 1.5em;">✕</button>
+    </div>
+    <div class="container" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+        <h4 id="taskTypeLabel" style="color: var(--primary); text-transform: uppercase; font-weight: 900;">TRADUZA</h4>
+        <h1 id="questionDisplay" style="margin: 20px 0;">...</h1>
         <div id="exerciseArea"></div>
-        <div id="feedback" style="margin-top:20px; font-weight:bold;"></div>
-        <button id="checkBtn" class="btn-main">VERIFICAR</button>
+        <div id="feedback" style="margin-top: 20px; font-weight: bold; min-height: 30px; font-size: 1.2em;"></div>
+        <button id="checkBtn" class="btn-main" style="width: 80%; align-self: center;">VERIFICAR</button>
     </div>
 </div>
 
@@ -95,21 +120,34 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
+// BANCO DE DADOS COMPLETO
+const courseData = {
+    Ingles: {
+        M1: [{q:"Olá", a:["hello", "hi"], type:"input"}, {q:"Sim", a:["yes"], type:"choice", options:["Yes", "No", "Please"]}, {q:"Tchau", a:["bye", "goodbye"], type:"phrase", words:["bye", "hi", "goodbye"]}],
+        M2: [{q:"Água", a:["water"], type:"input"}, {q:"Café", a:["coffee"], type:"choice", options:["Coffee", "Milk", "Tea"]}]
+    },
+    Espanhol: {
+        M1: [{q:"Olá", a:["hola"], type:"input"}, {q:"Obrigado", a:["gracias"], type:"choice", options:["Gracias", "Si", "No"]}]
+    },
+    Japones: {
+        M1: [{q:"Olá", a:["konnichiwa"], type:"input"}, {q:"Sim", a:["hai"], type:"choice", options:["Hai", "Iie", "Desu"]}]
+    }
+};
+
 let userData = { xp: 0, combo: 0, currentLang: "", progress: {} };
 let activeLesson = [];
 let qIdx = 0;
+let phraseParts = [];
 
 const showSection = (id) => {
     ["authSection", "appSection", "taskModal", "langOnboarding", "studyModal"].forEach(s => document.getElementById(s).classList.add("hidden"));
     document.getElementById(id).classList.remove("hidden");
 };
 
-// --- FIX: TROCA DE LINGUA SEM BUG ---
 window.switchLanguage = async (lang) => {
     userData.currentLang = lang;
     if (!userData.progress) userData.progress = {};
     if (!userData.progress[lang]) userData.progress[lang] = { mod: 1 };
-    
     await update(ref(db, 'users/' + auth.currentUser.uid), userData);
     updateUI();
     showSection("appSection");
@@ -118,7 +156,6 @@ window.switchLanguage = async (lang) => {
 function updateUI() {
     const lang = userData.currentLang;
     const mod = (userData.progress && userData.progress[lang]) ? userData.progress[lang].mod : 1;
-    
     document.getElementById("userXpDisplay").innerText = `${userData.xp || 0} XP`;
     document.getElementById("currentLangLabel").innerText = lang || "---";
     document.getElementById("comboLabel").innerText = userData.combo || 0;
@@ -126,56 +163,92 @@ function updateUI() {
     document.getElementById("mainProgress").style.width = `${(mod - 1) * 10}%`;
 }
 
-// (Lógica de curso simplificada para exemplo, mantenha a sua anterior se preferir)
-const courseData = { 
-    Ingles: { M1: [{q:"Olá", a:["hello"], type:"input"}] },
-    Espanhol: { M1: [{q:"Olá", a:["hola"], type:"input"}] },
-    Japones: { M1: [{q:"Olá", a:["konnichiwa"], type:"input"}] }
-};
-
+// LIÇÃO COM TAREFAS VARIADAS
 window.startLesson = () => {
     const lang = userData.currentLang;
-    const mod = userData.progress[lang].mod;
-    activeLesson = courseData[lang]["M"+mod] || courseData[lang]["M1"];
+    const modKey = "M" + userData.progress[lang].mod;
+    const pool = courseData[lang][modKey] || courseData[lang]["M1"];
+    activeLesson = [...pool].sort(() => Math.random() - 0.5);
     qIdx = 0;
     showStudy();
 };
 
 function showStudy() {
-    showSection("studyModal");
-    const q = activeLesson[qIdx];
-    document.getElementById("studyWord").innerText = q.q;
-    document.getElementById("studyTranslation").innerText = q.a[0].toUpperCase();
+    if(qIdx < activeLesson.length) {
+        showSection("studyModal");
+        const q = activeLesson[qIdx];
+        document.getElementById("studyWord").innerText = q.q;
+        document.getElementById("studyTranslation").innerText = q.a[0].toUpperCase();
+    } else {
+        qIdx = 0; showSection("taskModal"); renderTask();
+    }
 }
 
-document.getElementById("nextStudyBtn").onclick = () => { showSection("taskModal"); renderTask(); };
+document.getElementById("nextStudyBtn").onclick = () => { qIdx++; showStudy(); };
 
 function renderTask() {
     const q = activeLesson[qIdx];
+    const area = document.getElementById("exerciseArea");
+    area.innerHTML = ""; document.getElementById("feedback").innerText = "";
+    document.getElementById("taskProgress").style.width = `${(qIdx / activeLesson.length) * 100}%`;
     document.getElementById("questionDisplay").innerText = q.q;
-    document.getElementById("exerciseArea").innerHTML = `<input type="text" id="ansInput" placeholder="Resposta...">`;
-    document.getElementById("ansInput").focus();
+    document.getElementById("taskTypeLabel").innerText = q.type;
+
+    if(q.type === "input") {
+        area.innerHTML = `<input type="text" id="ansInput" placeholder="Sua resposta...">`;
+        document.getElementById("ansInput").focus();
+    } else if(q.type === "choice") {
+        q.options.forEach(opt => {
+            const b = document.createElement("button"); b.className = "btn-option"; b.innerText = opt;
+            b.onclick = () => { document.querySelectorAll(".btn-option").forEach(x=>x.style.borderColor="#444"); b.style.borderColor="var(--primary)"; b.dataset.selected="true"; };
+            area.appendChild(b);
+        });
+    } else if(q.type === "phrase") {
+        phraseParts = [];
+        const drop = document.createElement("div"); drop.className = "word-area"; area.appendChild(drop);
+        q.words.sort(()=>Math.random()-0.5).forEach(w => {
+            const b = document.createElement("button"); b.className = "btn-word"; b.innerText = w;
+            b.onclick = () => { if(!b.classList.contains("used")){ phraseParts.push(w); drop.innerHTML += `<span>${w} </span>`; b.classList.add("used"); }};
+            area.appendChild(b);
+        });
+    }
 }
 
 document.getElementById("checkBtn").onclick = async () => {
-    const ans = document.getElementById("ansInput").value.toLowerCase();
-    if(activeLesson[qIdx].a.includes(ans)) {
-        userData.xp += 10;
-        userData.progress[userData.currentLang].mod++;
-        await update(ref(db, 'users/' + auth.currentUser.uid), userData);
-        updateUI();
-        showSection("appSection");
+    const q = activeLesson[qIdx];
+    let userAns = "";
+    if(q.type === "input") userAns = document.getElementById("ansInput").value.trim().toLowerCase();
+    else if(q.type === "choice") userAns = (document.querySelector("[data-selected='true']")?.innerText || "").toLowerCase();
+    else if(q.type === "phrase") userAns = phraseParts.join(" ").toLowerCase();
+
+    if(q.a.includes(userAns)) {
+        document.getElementById("feedback").innerText = "✨ EXCELENTE!";
+        document.getElementById("feedback").style.color = "var(--secondary)";
+        userData.xp += 10; userData.combo++;
         spawnParticles(window.innerWidth/2, window.innerHeight/2, "#10B981");
+        qIdx++;
+        setTimeout(() => { if(qIdx < activeLesson.length) renderTask(); else finishLesson(); }, 1200);
     } else {
-        alert("Errado!");
+        document.getElementById("feedback").innerText = `ERRADO! Resposta: ${q.a[0]}`;
+        document.getElementById("feedback").style.color = "var(--danger)";
+        userData.combo = 0;
     }
+    updateUI();
 };
 
+async function finishLesson() {
+    userData.progress[userData.currentLang].mod++;
+    await update(ref(db, 'users/' + auth.currentUser.uid), userData);
+    showSection("appSection"); updateUI();
+}
+
+// EVENTOS
 document.getElementById("loginBtn").onclick = () => signInWithEmailAndPassword(auth, email.value, password.value);
 document.getElementById("registerBtn").onclick = () => createUserWithEmailAndPassword(auth, email.value, password.value);
 document.getElementById("logoutBtn").onclick = () => signOut(auth);
 document.getElementById("configBtn").onclick = () => showSection("langOnboarding");
 document.getElementById("startBtn").onclick = startLesson;
+document.getElementById("closeTask").onclick = () => showSection("appSection");
 
 onAuthStateChanged(auth, async (u) => {
     if(u) {
@@ -184,19 +257,12 @@ onAuthStateChanged(auth, async (u) => {
             userData = s.val();
             if(!userData.currentLang) showSection("langOnboarding");
             else showSection("appSection");
-        } else {
-            userData = { xp: 0, combo: 0, currentLang: "", progress: {} };
-            showSection("langOnboarding");
-        }
-        document.getElementById("userMenu").classList.remove("hidden");
-        updateUI();
-    } else {
-        showSection("authSection");
-        document.getElementById("userMenu").classList.add("hidden");
-    }
+        } else { showSection("langOnboarding"); }
+        document.getElementById("userMenu").classList.remove("hidden"); updateUI();
+    } else showSection("authSection");
 });
 
-// FX Simples
+// EFEITOS CANVAS
 const canvas = document.getElementById("fxCanvas"), ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth; canvas.height = window.innerHeight;
 let parts = [];
