@@ -3,279 +3,237 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FluentGo</title>
+    <title>FluentGo Pro | v3.0</title>
     
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6478620932842773" crossorigin="anonymous"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #2563EB; --secondary: #10B981; --bg: #0F172A; --card: #1E293B; --text: #F8FAFC; --premium: #F59E0B; }
+        :root { --primary: #2563EB; --secondary: #10B981; --bg: #0F172A; --card: #1E293B; --text: #F8FAFC; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; }
-        body { margin:0; background: var(--bg); color: var(--text); overflow-x: hidden; }
+        body { margin:0; background: var(--bg); color: var(--text); overflow: hidden; height: 100vh; }
         .container { padding: 20px; max-width: 500px; margin: 0 auto; }
         .hidden { display: none !important; }
         
-        /* HEADER */
-        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: rgba(15, 23, 42, 0.95); border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 1000; }
-        .stat-badge { background: #000; padding: 5px 12px; border-radius: 12px; font-weight: 800; display: flex; align-items: center; gap: 5px; color: #FF4500; }
+        header { display: flex; justify-content: space-between; padding: 15px 20px; background: #0F172A; border-bottom: 1px solid #334155; }
+        .stat { font-weight: 800; color: var(--secondary); display: flex; align-items: center; gap: 5px; }
 
-        /* ADS OVERLAY (TRAVA OBRIGATÓRIA) */
+        /* ADS */
         #adOverlay { position: fixed; inset: 0; background: #000; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; }
-        .ad-content { width: 90%; max-width: 350px; height: 450px; background: #1e293b; border-radius: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #334155; position: relative; }
-        #closeAdBtn { margin-top: 20px; width: 85%; padding: 20px; border-radius: 18px; border: none; font-weight: 900; background: #334155; color: #94a3b8; pointer-events: none; transition: 0.3s; }
-        #closeAdBtn.ready { background: var(--primary); color: white; pointer-events: auto; box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4); }
+        .ad-box { width: 90%; height: 400px; background: #1e293b; border-radius: 24px; display: flex; align-items: center; justify-content: center; border: 1px solid #475569; position: relative; }
+        #closeAdBtn { margin-top: 20px; width: 80%; padding: 20px; border-radius: 15px; border: none; font-weight: 900; background: #334155; color: #94a3b8; pointer-events: none; }
+        #closeAdBtn.ready { background: var(--primary); color: white; pointer-events: auto; }
 
-        /* ESTILOS GERAIS */
-        .card { background: var(--card); padding: 20px; border-radius: 24px; border: 1px solid #475569; margin-bottom: 15px; }
-        .progress-bar { background: #334155; height: 10px; border-radius: 10px; overflow: hidden; margin: 10px 0; }
-        .progress-fill { height: 100%; background: var(--secondary); width: 0%; transition: 0.8s; }
-        button { padding: 18px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; width: 100%; transition: 0.2s; margin-bottom: 10px; }
-        .btn-main { background: var(--primary); color: white; box-shadow: 0 4px 0 #1D4ED8; }
-        .btn-premium { background: var(--premium); color: white; box-shadow: 0 4px 0 #B45309; }
+        .card { background: var(--card); padding: 25px; border-radius: 24px; border: 1px solid #334155; margin-bottom: 15px; }
+        input { width: 100%; padding: 15px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #334155; background: #0F172A; color: white; font-size: 16px; }
         
-        /* GAMEPLAY */
-        .teach-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
-        .word-card { background: var(--bg); border-radius: 20px; border: 2px solid #334155; text-align: center; padding-bottom: 10px; transition: 0.2s; }
-        .word-img { width: 100%; height: 100px; object-fit: cover; border-radius: 18px 18px 0 0; }
-        .word-area { min-height: 100px; border: 2px dashed #475569; border-radius: 20px; margin: 20px 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 10px; background: rgba(0,0,0,0.2); }
-        .chip { background: #334155; padding: 14px 18px; border-radius: 16px; font-weight: 700; cursor: pointer; color: white; box-shadow: 0 3px 0 #1e293b; }
+        button { padding: 18px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; width: 100%; transition: 0.2s; }
+        .btn-main { background: var(--primary); color: white; box-shadow: 0 4px 0 #1D4ED8; }
+        .btn-main:active { transform: translateY(2px); box-shadow: 0 2px 0 #1D4ED8; }
+
+        .progress-bar { background: #334155; height: 12px; border-radius: 10px; overflow: hidden; margin: 15px 0; }
+        .progress-fill { height: 100%; background: var(--secondary); width: 0%; transition: 0.4s; }
+        
+        .word-area { min-height: 100px; border: 2px dashed #475569; border-radius: 20px; margin: 15px 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 10px; background: rgba(0,0,0,0.1); }
+        .chip { background: #334155; padding: 12px 16px; border-radius: 14px; font-weight: 700; cursor: pointer; color: white; border: 1px solid #475569; }
         .chip.used { opacity: 0.1; pointer-events: none; }
-        .rank-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #334155; }
+        
+        .lang-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .lang-btn { background: #334155; color: white; font-size: 12px; padding: 12px; }
+        .lang-btn.active { border: 2px solid var(--primary); }
     </style>
 </head>
 <body>
 
 <header class="hidden" id="mainHeader">
-    <div style="font-weight:900; letter-spacing:-1px;">FLUENTGO <span id="langTag" style="font-size:10px; background:var(--primary); padding:2px 6px; border-radius:5px; margin-left:5px;">EN</span></div>
-    <div style="display:flex; align-items:center; gap:12px;">
-        <div class="stat-badge">🔥 <span id="streakVal">0</span></div>
-        <div onclick="toggleSettings(true)" style="cursor:pointer; font-size: 1.4rem;">⚙️</div>
-    </div>
+    <div style="font-weight:900;">FLUENTGO <span id="langDisplay" style="color:var(--primary)">EN</span></div>
+    <div class="stat">🔥 <span id="userXP">0</span></div>
 </header>
 
 <div id="adOverlay">
-    <div class="ad-content">
-        <span style="position:absolute; top:15px; left:15px; font-size:10px; color:#94a3b8;">ANÚNCIO</span>
-        
-        <ins class="adsbygoogle"
-             style="display:block; width:300px; height:250px"
-             data-ad-client="ca-pub-6478620932842773"
-             data-ad-slot="auto"
-             data-ad-format="rectangle"
-             data-full-width-responsive="true"></ins>
+    <div class="ad-box">
+        <ins class="adsbygoogle" style="display:block; width:300px; height:250px" data-ad-client="ca-pub-6478620932842773" data-ad-slot="auto"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-
-        <div style="text-align:center; padding:20px;">
-            <div style="font-size:60px;">📺</div>
-            <p style="color:#94a3b8;">O anúncio aparecerá aqui após a aprovação do Google.</p>
-        </div>
+        <p style="color:#94a3b8; position:absolute; bottom:20px;">Publicidade Obrigatória</p>
     </div>
     <button id="closeAdBtn">Aguarde 5s...</button>
 </div>
 
-<div id="settingsModal" style="position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:3000; display:none; align-items:center; justify-content:center; backdrop-filter:blur(10px);">
-    <div style="background:var(--card); width:85%; padding:25px; border-radius:35px; text-align:center; border:1px solid #475569;">
-        <button onclick="alert('Loja em breve!')" class="btn-premium">⭐ SEJA PREMIUM</button>
-        <button onclick="alert('Funcionalidade Premium!')" style="background:#475569; color:white;">🚫 REMOVER ADS</button>
-        <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-            <button onclick="changeLanguage('English')" class="btn-main">🇺🇸 EN</button>
-            <button onclick="changeLanguage('Spanish')" class="btn-main">🇪🇸 ES</button>
-            <button onclick="changeLanguage('French')" class="btn-main">🇫🇷 FR</button>
-            <button onclick="changeLanguage('Italian')" class="btn-main">🇮🇹 IT</button>
-        </div>
-        <button onclick="toggleSettings(false)" style="background:transparent; color:white; margin-top:10px;">VOLTAR</button>
-        <button onclick="handleLogout()" style="color:#ef4444; background:none; font-size:12px; margin-top:10px;">SAIR</button>
-    </div>
-</div>
-
-<main id="landingView" class="container">
-    <h1 style="text-align:center; font-size:3.5rem; font-weight:900; margin-top:60px;">Fluent<span style="color:var(--primary)">Go</span></h1>
+<main id="authView" class="container">
+    <h1 style="text-align:center; font-size:3.5rem; font-weight:900; letter-spacing:-2px; margin: 60px 0 20px;">Fluent<span style="color:var(--primary)">Go</span></h1>
     <div class="card">
-        <div id="regOnly" class="hidden"><input type="text" id="username" placeholder="Nome" style="width:100%; padding:15px; margin-bottom:10px; border-radius:12px; border:none; background:#0f172a; color:white;"></div>
-        <input type="email" id="email" placeholder="E-mail" style="width:100%; padding:15px; margin-bottom:10px; border-radius:12px; border:none; background:#0f172a; color:white;">
-        <input type="password" id="password" placeholder="Senha" style="width:100%; padding:15px; margin-bottom:10px; border-radius:12px; border:none; background:#0f172a; color:white;">
-        <button id="authBtn" class="btn-main">ENTRAR</button>
-        <button onclick="toggleAuthMode()" style="background:none; color:#94a3b8; font-size:0.8rem; text-decoration:underline;">Criar conta</button>
+        <input type="email" id="email" placeholder="Seu melhor e-mail">
+        <input type="password" id="password" placeholder="Sua senha secreta">
+        <button id="loginBtn" class="btn-main">ENTRAR</button>
+        <button id="registerBtn" style="background:none; color:#94a3b8; font-size:12px; margin-top:10px; text-decoration: underline;">Não tenho conta, quero criar</button>
     </div>
 </main>
 
 <main id="dashboardView" class="container hidden">
-    <div class="card">
-        <h2 id="levelLabel">Carregando...</h2>
+    <div class="card" style="text-align:center;">
+        <h2 id="levelTxt" style="margin:0;">Nível 1</h2>
+        <p id="taskTxt" style="color:#94a3b8; margin: 5px 0 15px;">Tarefa 1 de 10</p>
         <div class="progress-bar"><div id="mainProgress" class="progress-fill"></div></div>
-        <p id="xpText" style="color:#94a3b8; font-size:0.9rem;">0 / 100 XP</p>
-        <button id="actionBtn" class="btn-main">CARREGANDO...</button>
-    </div>
-    <div class="card">
-        <h3 style="margin:0 0 10px 0;">🏆 Ranking</h3>
-        <div id="rankList"></div>
+        <button id="startBtn" class="btn-main" style="margin-top:10px;">COMEÇAR TAREFA (20 Questões)</button>
+        
+        <div class="lang-grid">
+            <button onclick="changeLang('English')" class="lang-btn" id="btnEN">🇺🇸 Inglês</button>
+            <button onclick="changeLang('Spanish')" class="lang-btn" id="btnES">🇪🇸 Espanhol</button>
+            <button onclick="changeLang('French')" class="lang-btn" id="btnFR">🇫🇷 Francês</button>
+            <button onclick="changeLang('Italian')" class="lang-btn" id="btnIT">🇮🇹 Italiano</button>
+        </div>
     </div>
 </main>
 
-<main id="teachingView" class="container hidden">
-    <h2 style="text-align:center;">Dicionário</h2>
-    <div class="teach-grid" id="teachGrid"></div>
-    <button id="confirmTeach" style="background:var(--secondary); color:white;">APRENDI!</button>
-</main>
-
-<main id="practiceView" class="hidden" style="position:fixed; inset:0; background:var(--bg); z-index:2000; padding:20px;">
+<main id="practiceView" class="hidden" style="position:fixed; inset:0; background:var(--bg); z-index:2000; padding:20px; display:flex; flex-direction:column;">
     <div class="progress-bar"><div id="taskProgress" class="progress-fill"></div></div>
-    <div class="container">
-        <div id="audioBtn" style="font-size:5rem; cursor:pointer; text-align:center; margin-top:20px;">🔊</div>
-        <h2 id="targetPhrase" style="text-align:center; margin:20px 0;">...</h2>
+    <div class="container" style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+        <p style="text-align:center; color:#94a3b8; font-weight:900; margin:0;">PERGUNTA <span id="qIdxTxt">1</span> / 20</p>
+        <h2 id="targetPhrase" style="text-align:center; font-size:1.8rem; margin: 20px 0;">...</h2>
         <div id="dropZone" class="word-area"></div>
-        <div id="wordBank" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;"></div>
-        <button id="checkBtn" class="btn-main" style="margin-top:30px;">VERIFICAR</button>
+        <div id="wordBank" style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px;"></div>
+        <button id="checkBtn" class="btn-main" style="margin-top:30px;">VERIFICAR RESPOSTA</button>
     </div>
 </main>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getDatabase, ref, set, get, update, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getDatabase, ref, get, update, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = { apiKey: "AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw", authDomain: "fluentgo-35024.firebaseapp.com", databaseURL: "https://fluentgo-35024-default-rtdb.firebaseio.com", projectId: "fluentgo-35024", appId: "1:613715387990:web:0345ade26374dd32d1fdf7" };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// BANCO DE DADOS GLOBAL
-const content = {
-    English: {
-        1: { name: "Nível 1: Padaria", words: { "bread": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200", "eat": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200" }, sentences: [{pt: "Eu como pão", ans: "i eat bread", parts: ["i", "eat", "bread", "the"]}] },
-        2: { name: "Nível 2: Bebida", words: { "water": "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=200", "drink": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=200" }, sentences: [{pt: "Eu bebo água", ans: "i drink water", parts: ["i", "drink", "water", "juice"]}] }
-    },
-    Spanish: {
-        1: { name: "Nivel 1: El Pan", words: { "pan": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200", "como": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200" }, sentences: [{pt: "Eu como pão", ans: "yo como pan", parts: ["yo", "como", "pan", "el"]}] }
-    },
-    French: {
-        1: { name: "Niveau 1: Le Pain", words: { "pain": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200", "mange": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200" }, sentences: [{pt: "Eu como pão", ans: "je mange du pain", parts: ["je", "mange", "du", "pain", "le"]}] },
-        2: { name: "Niveau 2: Café", words: { "café": "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200", "bois": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=200" }, sentences: [{pt: "Eu bebo café", ans: "je bois du café", parts: ["je", "bois", "du", "café", "un"]}] }
-    },
-    Italian: {
-        1: { name: "Livello 1: Il Pane", words: { "pane": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200", "mangio": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200" }, sentences: [{pt: "Eu como pão", ans: "io mangio pane", parts: ["io", "mangio", "pane", "il"]}] }
-    }
+// BANCO DE DADOS DINÂMICO (10 NÍVEIS)
+const database = {
+    English: [
+        ["i eat", "you drink", "the bread", "water", "apple", "i drink", "the house", "milk", "coffee", "hello"], // Nível 1
+        ["i eat bread", "the red apple", "i drink water", "my big house", "a hot coffee", "she drinks milk", "he eats apples", "the blue car", "good morning", "my friend"], // Nível 2
+        ["i have a dog", "the house is big", "i like coffee", "he has a book", "she is happy", "the water is cold", "i drink hot milk", "we eat bread", "it is a car", "they like music"] // Nível 3... segue lógica
+    ],
+    Spanish: [ ["yo como", "agua", "pan", "hola", "casa"], ["yo como pan", "la casa roja"], ["yo tengo un perro"] ],
+    French: [ ["je mange", "eau", "pain", "bonjour", "maison"], ["je mange du pain"], ["j'ai un chien"] ],
+    Italian: [ ["io mangio", "acqua", "pane", "ciao", "casa"], ["io mangio pane"], ["io ho un cane"] ]
 };
 
-let userData = { progress: { English:0, Spanish:0, French:0, Italian:0 }, currentLang: "English", hasLearned: false, username: "Estudante", streak: 0 };
-let currentQ = []; let qIdx = 0; let userPhrase = []; let authMode = 'login';
+let userData = { xp: 0, lvl: 1, task: 1, lang: "English" };
+let currentQuestions = [];
+let qIdx = 0;
+let userPhrase = [];
 
-// LÓGICA DE ANÚNCIO OBRIGATÓRIO
-function showAd(callback) {
+function showView(id) {
+    ['authView', 'dashboardView', 'practiceView'].forEach(v => document.getElementById(v).classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+    document.getElementById('mainHeader').classList.toggle('hidden', id === 'authView');
+}
+
+function runAd(callback) {
     const overlay = document.getElementById('adOverlay');
     const btn = document.getElementById('closeAdBtn');
     overlay.style.display = 'flex';
     let count = 5;
     btn.innerText = `Aguarde ${count}s...`;
     btn.classList.remove('ready');
-
-    const timer = setInterval(() => {
+    const t = setInterval(() => {
         count--;
         if(count > 0) btn.innerText = `Aguarde ${count}s...`;
-        else { clearInterval(timer); btn.innerText = "FECHAR ANÚNCIO ×"; btn.classList.add('ready'); }
+        else { clearInterval(t); btn.innerText = "FECHAR ANÚNCIO ×"; btn.classList.add('ready'); }
     }, 1000);
-
     btn.onclick = () => { overlay.style.display = 'none'; callback(); };
 }
 
-window.toggleSettings = (s) => document.getElementById('settingsModal').style.display = s ? 'flex' : 'none';
-window.handleLogout = () => signOut(auth);
-window.toggleAuthMode = () => { authMode = (authMode === 'login') ? 'register' : 'login'; document.getElementById('regOnly').classList.toggle('hidden', authMode === 'login'); };
-const showView = (id) => { ['landingView', 'dashboardView', 'teachingView', 'practiceView'].forEach(v => document.getElementById(v).classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); document.getElementById('mainHeader').classList.toggle('hidden', id === 'landingView'); };
-
-const speak = (t) => { 
-    const m = new SpeechSynthesisUtterance(t); 
-    const langs = {English:'en-US', Spanish:'es-ES', French:'fr-FR', Italian:'it-IT'};
-    m.lang = langs[userData.currentLang]; 
-    window.speechSynthesis.speak(m); 
-};
-
-function updateUI() {
-    const xp = userData.progress[userData.currentLang] || 0;
-    const lvl = Math.floor(xp / 100) + 1;
-    const langData = content[userData.currentLang] || content.English;
-    const c = langData[lvl] || langData[1];
+function updateDash() {
+    document.getElementById('levelTxt').innerText = `Nível ${userData.lvl}`;
+    document.getElementById('taskTxt').innerText = `Tarefa ${userData.task} de 10`;
+    document.getElementById('mainProgress').style.width = `${(userData.task - 1) * 10}%`;
+    document.getElementById('userXP').innerText = userData.xp;
+    document.getElementById('langDisplay').innerText = userData.lang.slice(0,2).toUpperCase();
     
-    document.getElementById('langTag').innerText = userData.currentLang.slice(0,2).toUpperCase();
-    document.getElementById('levelLabel').innerText = c.name;
-    document.getElementById('xpText').innerText = `${xp % 100} / 100 XP`;
-    document.getElementById('mainProgress').style.width = `${xp % 100}%`;
-    document.getElementById('streakVal').innerText = userData.streak;
-    
-    const btn = document.getElementById('actionBtn');
-    btn.innerText = userData.hasLearned ? "COMEÇAR TAREFA" : "ESTUDAR PALAVRAS";
-    btn.onclick = userData.hasLearned ? () => startPractice(c) : () => startTeaching(c);
+    // Marcar botão ativo
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('btn' + userData.lang.slice(0,2).toUpperCase()).classList.add('active');
 }
 
-function startTeaching(c) {
-    showView('teachingView');
-    const g = document.getElementById('teachGrid'); g.innerHTML = "";
-    Object.keys(c.words).forEach(w => { g.innerHTML += `<div class="word-card" onclick="speak('${w}')"><img src="${c.words[w]}" class="word-img"><b>${w}</b></div>`; });
+async function save() { await update(ref(db, 'users/'+auth.currentUser.uid), userData); }
+
+window.changeLang = (l) => { userData.lang = l; save(); updateDash(); };
+
+function startTask() {
+    currentQuestions = [];
+    // Pega o vocabulário do nível atual (ou o último disponível)
+    const langData = database[userData.lang];
+    const levelPool = langData[userData.lvl - 1] || langData[langData.length - 1];
+    
+    for(let i=0; i<20; i++) {
+        let text = levelPool[Math.floor(Math.random()*levelPool.length)];
+        let words = text.split(" ");
+        let parts = [...words, "is", "the", "a", "not", "my", "to"].sort(() => Math.random() - 0.5);
+        currentQuestions.push({ q: text, parts: [...new Set(parts)] });
+    }
+    qIdx = 0;
+    showView('practiceView');
+    renderQ();
 }
 
-document.getElementById('confirmTeach').onclick = async () => {
-    userData.hasLearned = true;
-    await update(ref(db, 'users/'+auth.currentUser.uid), { hasLearned: true });
-    updateUI(); showView('dashboardView');
-};
-
-function startPractice(c) { currentQ = c.sentences; qIdx = 0; showView('practiceView'); renderExercise(); }
-
-function renderExercise() {
-    const q = currentQ[qIdx]; userPhrase = [];
-    document.getElementById('taskProgress').style.width = `${(qIdx/currentQ.length)*100}%`;
-    document.getElementById('targetPhrase').innerText = q.pt;
+function renderQ() {
+    const q = currentQuestions[qIdx];
+    userPhrase = [];
+    document.getElementById('qIdxTxt').innerText = qIdx + 1;
+    document.getElementById('taskProgress').style.width = `${(qIdx / 20) * 100}%`;
+    document.getElementById('targetPhrase').innerText = q.q.toUpperCase();
     document.getElementById('dropZone').innerHTML = "";
-    const b = document.getElementById('wordBank'); b.innerHTML = "";
-    q.parts.sort(()=>Math.random()-0.5).forEach(w => {
+    const bank = document.getElementById('wordBank'); bank.innerHTML = "";
+    q.parts.forEach(w => {
         const c = document.createElement('div'); c.className = "chip"; c.innerText = w;
-        c.onclick = () => { if(!c.classList.contains('used')){ userPhrase.push(w); document.getElementById('dropZone').innerHTML += `<span>${w} </span>`; c.classList.add('used'); speak(w); }};
-        b.appendChild(c);
+        c.onclick = () => { if(!c.classList.contains('used')) { userPhrase.push(w); document.getElementById('dropZone').innerHTML += `<span>${w} </span>`; c.classList.add('used'); }};
+        bank.appendChild(c);
     });
 }
 
-document.getElementById('checkBtn').onclick = async () => {
-    if(userPhrase.join(" ").toLowerCase().trim() === currentQ[qIdx].ans) {
-        const xp = userData.progress[userData.currentLang] || 0;
-        const oldLvl = Math.floor(xp / 100);
-        userData.progress[userData.currentLang] += 20;
-        if(Math.floor(userData.progress[userData.currentLang]/100) > oldLvl) userData.hasLearned = false;
-        
-        await update(ref(db, 'users/'+auth.currentUser.uid), userData);
+document.getElementById('checkBtn').onclick = () => {
+    const guess = userPhrase.join(" ").toLowerCase().trim();
+    const answer = currentQuestions[qIdx].q.toLowerCase().trim();
+    
+    if(guess === answer) {
         qIdx++;
-        if(qIdx < currentQ.length) renderExercise();
-        else showAd(() => { showView('dashboardView'); updateUI(); }); // Roda o anúncio ao fim de cada tarefa
-    } else { alert("Tente novamente!"); }
+        if(qIdx < 20) renderQ();
+        else {
+            userData.xp += 150;
+            userData.task++;
+            if(userData.task > 10) { userData.task = 1; userData.lvl++; }
+            save();
+            runAd(() => { showView('dashboardView'); updateDash(); });
+        }
+    } else {
+        alert("Resposta incorreta. Tente novamente!");
+        renderQ();
+    }
 };
 
 onAuthStateChanged(auth, async (u) => {
     if(u) {
         const s = await get(ref(db, 'users/'+u.uid));
         if(s.exists()) userData = s.val();
-        showView('dashboardView'); updateUI();
-        onValue(ref(db, 'users'), snap => {
-            const list = Object.values(snap.val() || {}).sort((a,b) => (b.progress[userData.currentLang]||0) - (a.progress[userData.currentLang]||0)).slice(0,5);
-            document.getElementById('rankList').innerHTML = list.map((u, i) => `<div class="rank-item"><span>${i+1}. ${u.username}</span><b>${u.progress[userData.currentLang]||0} XP</b></div>`).join('');
-        });
-    } else showView('landingView');
+        showView('dashboardView');
+        updateDash();
+    } else showView('authView');
 });
 
-document.getElementById('authBtn').onclick = async () => {
+document.getElementById('loginBtn').onclick = () => {
     const e = document.getElementById('email').value, p = document.getElementById('password').value;
-    try {
-        if(authMode === 'register') {
-            const r = await createUserWithEmailAndPassword(auth, e, p);
-            await set(ref(db, 'users/'+r.user.uid), { ...userData, username: document.getElementById('username').value });
-        } else await signInWithEmailAndPassword(auth, e, p);
-    } catch(err) { alert(err.message); }
+    if(!e || !p) return alert("Preencha tudo!");
+    signInWithEmailAndPassword(auth, e, p).catch(err => alert("Erro ao entrar: Verifique e-mail e senha."));
 };
 
-window.changeLanguage = async (l) => {
-    userData.currentLang = l; userData.hasLearned = false;
-    await update(ref(db, 'users/'+auth.currentUser.uid), { currentLang: l, hasLearned: false });
-    updateUI(); toggleSettings(false);
+document.getElementById('registerBtn').onclick = () => {
+    const e = document.getElementById('email').value, p = document.getElementById('password').value;
+    if(!e || p.length < 6) return alert("E-mail válido e senha de 6 dígitos!");
+    createUserWithEmailAndPassword(auth, e, p).then(r => set(ref(db, 'users/'+r.user.uid), userData)).catch(err => alert("Erro ao criar conta."));
 };
+
+document.getElementById('startBtn').onclick = startTask;
 </script>
 </body>
 </html>
