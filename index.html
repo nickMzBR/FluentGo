@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>FluentGo</title>
+<title>FluentGo - Aprenda Idiomas</title>
 <style>
 body{margin:0;font-family:Arial;background:#222;color:#fff;text-align:center;overflow:hidden;}
 header{display:flex;justify-content:space-between;padding:15px 25px;background:#1a1a1a;z-index:100;}
@@ -26,27 +26,27 @@ canvas{position:fixed;top:0;left:0;pointer-events:none;z-index:10;}
 <header>
   <div>FluentGo</div>
   <div>
-    <button id="settingsBtn" class="hidden" onclick="openSettings()">Configurações</button>
-    <button id="logoutBtn" class="hidden" onclick="logout()">Sair</button>
+    <button id="settingsBtn" class="hidden">Configurações</button>
+    <button id="logoutBtn" class="hidden">Sair</button>
   </div>
 </header>
 
-<!-- LOGIN / REGISTRO -->
+<!-- LOGIN -->
 <div id="authSection">
   <h2>Entrar</h2>
   <input type="email" id="email" placeholder="Email">
   <input type="password" id="password" placeholder="Senha"><br>
-  <button onclick="register()">Criar Conta</button>
-  <button onclick="login()">Entrar</button>
+  <button id="registerBtn">Criar Conta</button>
+  <button id="loginBtn">Entrar</button>
 </div>
 
-<!-- MENU PRINCIPAL -->
+<!-- MENU -->
 <div id="appSection" class="hidden">
   <h2 id="currentLanguage"></h2>
   <h3>XP: <span id="xpDisplay">0</span></h3>
   <div id="progressBar"><div id="progressFill"></div></div>
   <div id="comboBar"><div id="comboFill"></div></div>
-  <button onclick="startLesson()">Começar Módulo</button>
+  <button id="startLessonBtn">Começar Módulo</button>
 </div>
 
 <!-- CONFIGURAÇÕES -->
@@ -57,8 +57,8 @@ canvas{position:fixed;top:0;left:0;pointer-events:none;z-index:10;}
     <option value="Espanhol">Espanhol</option>
     <option value="Japones">Japonês</option>
   </select><br>
-  <button onclick="saveLanguage()">Salvar</button>
-  <button onclick="closeSettings()">Fechar</button>
+  <button id="saveSettingsBtn">Salvar</button>
+  <button id="closeSettingsBtn">Fechar</button>
 </div>
 
 <!-- LIÇÃO -->
@@ -66,7 +66,7 @@ canvas{position:fixed;top:0;left:0;pointer-events:none;z-index:10;}
   <div id="lessonContent">
     <h3 id="lessonTitle"></h3>
     <p id="lessonText"></p>
-    <button onclick="startNextTask()">Começar Tarefa</button>
+    <button id="startTaskBtn">Começar Tarefa</button>
   </div>
 </div>
 
@@ -75,8 +75,8 @@ canvas{position:fixed;top:0;left:0;pointer-events:none;z-index:10;}
   <div id="taskModalContent">
     <h3 id="taskTitle"></h3>
     <div id="exerciseContainer"></div>
-    <button id="nextQuestionBtn" onclick="nextQuestion()">Próxima Pergunta</button>
-    <button onclick="exitTask()">Sair da Tarefa</button>
+    <button id="nextQuestionBtn">Próxima Pergunta</button>
+    <button id="exitTaskBtn">Sair da Tarefa</button>
   </div>
 </div>
 
@@ -84,7 +84,7 @@ canvas{position:fixed;top:0;left:0;pointer-events:none;z-index:10;}
 <div id="congratsModal" class="hidden">
   <h1>Parabéns! 🎉</h1>
   <p>Você concluiu o curso de <span id="congratsLanguage"></span>!</p>
-  <button onclick="closeCongrats()">Fechar</button>
+  <button id="closeCongratsBtn">Fechar</button>
 </div>
 
 <!-- SONS -->
@@ -96,6 +96,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw",
   authDomain: "fluentgo-35024.firebaseapp.com",
@@ -130,8 +131,22 @@ const authSection=document.getElementById("authSection"),
       wrongSound=document.getElementById("wrongSound"),
       comboFill=document.getElementById("comboFill");
 
+const emailInput=document.getElementById("email"),
+      passwordInput=document.getElementById("password"),
+      registerBtn=document.getElementById("registerBtn"),
+      loginBtn=document.getElementById("loginBtn"),
+      startLessonBtn=document.getElementById("startLessonBtn"),
+      startTaskBtn=document.getElementById("startTaskBtn"),
+      nextQuestionBtn=document.getElementById("nextQuestionBtn"),
+      exitTaskBtn=document.getElementById("exitTaskBtn"),
+      saveSettingsBtn=document.getElementById("saveSettingsBtn"),
+      closeSettingsBtn=document.getElementById("closeSettingsBtn"),
+      closeCongratsBtn=document.getElementById("closeCongratsBtn"),
+      languageSelect=document.getElementById("languageSelect"),
+      currentLanguageDisplay=document.getElementById("currentLanguage");
+
 // Estado
-let user=null,currentLanguage="Ingles",currentModule=null,currentTask=null,currentQuestion=null,xp=0;
+let user=null,currentLanguage="Ingles",currentModule=1,currentTask=1,currentQuestion=0,xp=0;
 let comboCount=0,maxCombo=0;
 const questionsPerTask=5,totalModules=10,totalTasks=10;
 
@@ -167,48 +182,49 @@ function spawnParticles(x,y,color){ for(let i=0;i<20;i++){ particles.push({x,y,d
 function drawParticles(){ ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach((p,i)=>{ ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle=p.color; ctx.fill(); p.x+=p.dx; p.y+=p.dy; p.life--; if(p.life<=0) particles.splice(i,1); }); requestAnimationFrame(drawParticles);}
 drawParticles();
 
-// Funções de lição/tarefa
-function startLesson(){ currentModule=currentModule||1; currentTask=1; currentQuestion=0; lessonTitle.innerHTML=`Módulo ${currentModule} - ${currentLanguage}`; lessonText.innerHTML=lessons[currentLanguage][currentModule-1]; lessonSection.style.display="flex"; appSection.style.display="none"; }
-function startNextTask(){ lessonSection.style.display="none"; taskModal.style.display="flex"; currentQuestion=0; showExercise(); }
+// Funções
+function startLesson(){ lessonTitle.innerHTML=`Módulo ${currentModule} - ${currentLanguage}`; lessonText.innerHTML=lessons[currentLanguage][currentModule-1]; lessonSection.classList.remove("hidden"); appSection.classList.add("hidden"); }
+function startNextTask(){ lessonSection.classList.add("hidden"); taskModal.classList.remove("hidden"); currentQuestion=0; showExercise(); }
 function showExercise(){ const ex=exercises[currentLanguage][currentModule-1][currentTask-1][currentQuestion]; if(!ex) return; exerciseContainer.innerHTML=""; taskTitle.innerText=`${currentLanguage} - Módulo ${currentModule} Tarefa ${currentTask} Pergunta ${currentQuestion+1}`; if(ex.type==="translate"){ const input=document.createElement("input"); input.id="answerInput"; input.placeholder="Sua resposta"; exerciseContainer.appendChild(document.createTextNode(ex.question)); exerciseContainer.appendChild(document.createElement("br")); exerciseContainer.appendChild(input);} else{ exerciseContainer.appendChild(document.createTextNode(ex.question)); exerciseContainer.appendChild(document.createElement("br")); ex.options.forEach(opt=>{ const btn=document.createElement("button"); btn.innerText=opt; btn.onclick=()=>checkAnswer(opt); exerciseContainer.appendChild(btn); exerciseContainer.appendChild(document.createElement("br")); }); } }
 function nextQuestion(){ const ex=exercises[currentLanguage][currentModule-1][currentTask-1][currentQuestion]; let ans=ex.type==="translate"?document.getElementById("answerInput").value:null; checkAnswer(ans);}
-function checkAnswer(ans){ const ex=exercises[currentLanguage][currentModule-1][currentTask-1][currentQuestion]; let correct=false; if(ex.type==="translate") correct=ans.toLowerCase()===ex.answer.toLowerCase(); else correct=ans===ex.answer; if(correct){ xp+=10; xpDisplay.innerText=xp; correctSound.play(); spawnParticles(window.innerWidth/2,200,"#00FF00"); comboCount++; comboFill.style.width=(comboCount/5*100)+"%";} else{ wrongSound.play(); spawnParticles(window.innerWidth/2,200,"#FF0000"); comboCount=0; comboFill.style.width="0%"; } currentQuestion++; if(currentQuestion<questionsPerTask){ showExercise(); } else{ currentTask++; currentQuestion=0; if(currentTask>totalTasks){ currentModule++; currentTask=1; if(currentModule>totalModules){ showCongrats(); return; } } taskModal.style.display="none"; appSection.style.display="flex"; } }
-function exitTask(){ taskModal.style.display="none"; lessonSection.style.display="flex"; }
-function showCongrats(){ lessonSection.style.display="none"; taskModal.style.display="none"; congratsModal.style.display="flex"; congratsLanguage.innerText=currentLanguage; particles=[]; const centerX=window.innerWidth/2,centerY=window.innerHeight/2; for(let i=0;i<50;i++){ particles.push({x:centerX,y:centerY,dx:(Math.random()-0.5)*6,dy:(Math.random()-1.5)*6,r:Math.random()*4+2,color:`hsl(${Math.random()*360},100%,50%)`,life:80});} const congratsSound=new Audio("https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"); congratsSound.play(); setTimeout(()=>{particles=[];},5000);}
-function closeCongrats(){ congratsModal.style.display="none"; appSection.style.display="flex"; }
+function checkAnswer(ans){ const ex=exercises[currentLanguage][currentModule-1][currentTask-1][currentQuestion]; let correct=false; if(ex.type==="translate") correct=ans.toLowerCase()===ex.answer.toLowerCase(); else correct=ans===ex.answer; if(correct){ xp+=10; xpDisplay.innerText=xp; correctSound.play(); spawnParticles(window.innerWidth/2,200,"#00FF00"); comboCount++; comboFill.style.width=(comboCount/5*100)+"%";} else{ wrongSound.play(); spawnParticles(window.innerWidth/2,200,"#FF0000"); wrongSound.play(); comboCount=0; comboFill.style.width="0%"; } currentQuestion++; if(currentQuestion<questionsPerTask){ showExercise(); } else{ currentTask++; currentQuestion=0; if(currentTask>totalTasks){ currentModule++; currentTask=1; if(currentModule>totalModules){ showCongrats(); return; } } taskModal.classList.add("hidden"); appSection.classList.remove("hidden"); } }
+function exitTask(){ taskModal.classList.add("hidden"); lessonSection.classList.remove("hidden"); }
+function showCongrats(){ lessonSection.classList.add("hidden"); taskModal.classList.add("hidden"); congratsModal.classList.remove("hidden"); congratsLanguage.innerText=currentLanguage; particles=[]; for(let i=0;i<50;i++){ particles.push({x:window.innerWidth/2,y:window.innerHeight/2,dx:(Math.random()-0.5)*6,dy:(Math.random()-1.5)*6,r:Math.random()*4+2,color:`hsl(${Math.random()*360},100%,50%)`,life:80});} const congratsSound=new Audio("https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"); congratsSound.play(); setTimeout(()=>{particles=[];},5000);}
+function closeCongrats(){ congratsModal.classList.add("hidden"); appSection.classList.remove("hidden"); }
 
 // Configurações
-window.openSettings=function(){ settingsSection.style.display="flex"; appSection.style.display="none"; }
-window.closeSettings=function(){ settingsSection.style.display="none"; appSection.style.display="flex"; }
-window.saveLanguage=function(){ currentLanguage=document.getElementById("languageSelect").value; if(user) set(ref(db,"users/"+user.uid+"/language"), currentLanguage).then(()=>closeSettings()); }
+settingsBtn.onclick = ()=>{ settingsSection.classList.remove("hidden"); appSection.classList.add("hidden"); }
+closeSettingsBtn.onclick = ()=>{ settingsSection.classList.add("hidden"); appSection.classList.remove("hidden"); }
+saveSettingsBtn.onclick = ()=>{ currentLanguage=languageSelect.value; if(user) set(ref(db,"users/"+user.uid+"/language"), currentLanguage); currentLanguageDisplay.innerText=currentLanguage; closeSettingsBtn.click(); }
 
 // Auth
-window.register=function(){ createUserWithEmailAndPassword(auth,document.getElementById("email").value,document.getElementById("password").value).catch(e=>alert(e.message)); }
-window.login=function(){ signInWithEmailAndPassword(auth,document.getElementById("email").value,document.getElementById("password").value).catch(e=>alert(e.message)); }
-window.logout=function(){ signOut(auth); }
+registerBtn.onclick = ()=>{ createUserWithEmailAndPassword(auth,emailInput.value,passwordInput.value).catch(e=>alert(e.message)); }
+loginBtn.onclick = ()=>{ signInWithEmailAndPassword(auth,emailInput.value,passwordInput.value).catch(e=>alert(e.message)); }
+logoutBtn.onclick = ()=>{ signOut(auth); }
 
-// Garantir tela limpa
-onAuthStateChanged(auth,u=>{ 
-  authSection.style.display="none";
-  appSection.style.display="none";
-  lessonSection.style.display="none";
-  taskModal.style.display="none";
-  congratsModal.style.display="none";
-  settingsSection.style.display="none";
-
-  if(u){ 
-    user=u; 
-    appSection.style.display="flex"; 
-    settingsBtn.classList.remove("hidden"); 
-    logoutBtn.classList.remove("hidden"); 
-    currentModule=null; currentTask=null; currentQuestion=null; comboCount=0; comboFill.style.width="0%";
-    if(user) get(ref(db,"users/"+user.uid)).then(snapshot=>{ const data=snapshot.exists()? snapshot.val():{}; currentLanguage=data.language||"Ingles"; document.getElementById("languageSelect").value=currentLanguage; document.getElementById("currentLanguage").innerText=currentLanguage;}); 
-  } else { 
-    authSection.style.display="flex"; 
-    settingsBtn.classList.add("hidden"); 
-    logoutBtn.classList.add("hidden"); 
+// Fluxo Auth
+onAuthStateChanged(auth,u=>{
+  [authSection,appSection,lessonSection,taskModal,congratsModal,settingsSection].forEach(s=>s.classList.add("hidden"));
+  if(u){
+    user=u;
+    appSection.classList.remove("hidden");
+    settingsBtn.classList.remove("hidden");
+    logoutBtn.classList.remove("hidden");
+    currentModule=1; currentTask=1; currentQuestion=0; comboCount=0; comboFill.style.width="0%";
+    get(ref(db,"users/"+user.uid)).then(snapshot=>{ const data=snapshot.exists()? snapshot.val():{}; currentLanguage=data.language||"Ingles"; languageSelect.value=currentLanguage; currentLanguageDisplay.innerText=currentLanguage;});
+  } else {
+    authSection.classList.remove("hidden");
+    settingsBtn.classList.add("hidden");
+    logoutBtn.classList.add("hidden");
   }
 });
+
+// Navegação
+startLessonBtn.onclick = ()=>startLesson();
+startTaskBtn.onclick = ()=>startNextTask();
+nextQuestionBtn.onclick = ()=>nextQuestion();
+exitTaskBtn.onclick = ()=>exitTask();
+closeCongratsBtn.onclick = ()=>closeCongrats();
 </script>
 </body>
 </html>
