@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FluentGo</title>
+    <title>FluentGo | Premium Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #2563EB; --secondary: #10B981; --bg: #0F172A; --card: #1E293B; --text: #F8FAFC; --gold: #F59E0B; --error: #EF4444; }
+        :root { --primary: #2563EB; --secondary: #10B981; --bg: #0F172A; --card: #1E293B; --text: #F8FAFC; --gold: #F59E0B; --error: #EF4444; --premium: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
         body { background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         .container { flex: 1; padding: 15px; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; width: 100%; overflow-y: auto; padding-bottom: 90px; }
@@ -15,28 +15,26 @@
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #0F172A; border-bottom: 1px solid #334155; }
         .card { background: var(--card); padding: 25px; border-radius: 24px; border: 1px solid #334155; text-align: center; margin-bottom: 15px; }
         
-        button { padding: 16px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; width: 100%; font-size: 15px; text-transform: uppercase; transition: 0.2s; }
-        .btn-check { background: var(--primary); color: white; box-shadow: 0 5px 0 #1D4ED8; }
-        .btn-check:active { transform: translateY(3px); box-shadow: 0 2px 0 #1D4ED8; }
-        .btn-lang { background: #0F172A; color: white; border: 1px solid #334155; border-radius: 12px; padding: 12px; font-size: 11px; }
-        .btn-lang.active { border: 2px solid var(--primary); background: rgba(37, 99, 235, 0.1); }
+        button { padding: 16px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; width: 100%; font-size: 14px; text-transform: uppercase; transition: 0.2s; }
+        .btn-check { background: var(--primary); color: white; box-shadow: 0 4px 0 #1D4ED8; }
+        .btn-check:active { transform: translateY(2px); box-shadow: 0 1px 0 #1D4ED8; }
+        .btn-premium { background: var(--premium); color: white; box-shadow: 0 4px 0 #6d28d9; }
 
         nav { position: fixed; bottom: 0; left: 0; right: 0; background: #1E293B; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #334155; z-index: 100; height: 75px; }
         nav div { display: flex; flex-direction: column; align-items: center; font-size: 20px; cursor: pointer; opacity: 0.4; flex: 1; }
         nav div.active { opacity: 1; color: var(--primary); }
-        nav span { font-size: 9px; font-weight: 700; margin-top: 5px; text-transform: uppercase; }
+        nav span { font-size: 9px; font-weight: 700; margin-top: 5px; }
 
         .word-area { min-height: 110px; border: 2px dashed #475569; border-radius: 20px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 15px; margin: 15px 0; }
-        .chip { background: #334155; padding: 12px 16px; border-radius: 14px; font-weight: 700; color: white; border: 1px solid #475569; box-shadow: 0 3px 0 #000; }
+        .chip { background: #334155; padding: 12px 16px; border-radius: 14px; font-weight: 700; border: 1px solid #475569; box-shadow: 0 3px 0 #000; }
         .chip.used { opacity: 0.1; pointer-events: none; }
 
-        #feedback-banner { position: fixed; bottom: -100px; left: 0; right: 0; padding: 30px; transition: 0.4s; z-index: 999; display: flex; justify-content: space-between; align-items: center; }
+        #feedback-banner { position: fixed; bottom: -120px; left: 0; right: 0; padding: 25px; transition: 0.4s; z-index: 999; display: flex; justify-content: space-between; align-items: center; }
         #feedback-banner.show { bottom: 0; }
-        .correct-bg { background: #065F46; }
-        .wrong-bg { background: #991B1B; }
-
-        /* Loja */
-        .shop-item { display: flex; justify-content: space-between; align-items: center; background: #1E293B; padding: 20px; border-radius: 20px; margin-bottom: 10px; border: 1px solid #334155; }
+        
+        /* Estilo Loja Premium */
+        .premium-card { background: var(--premium); border-radius: 20px; padding: 20px; text-align: left; margin-bottom: 15px; position: relative; overflow: hidden; }
+        .premium-tag { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 8px; font-size: 10px; font-weight: 900; }
     </style>
 </head>
 <body>
@@ -51,7 +49,7 @@
 <div id="view-app" class="hidden" style="height: 100%; display: flex; flex-direction: column;">
     <header>
         <div style="font-weight:900;"><span id="ui-user-head" style="font-size:10px; display:block; opacity:0.6;">...</span>FLUENTGO <span id="ui-lang-tag" style="color:var(--primary); font-size:10px;">EN</span></div>
-        <div style="font-weight: 800; color: var(--gold);">💰 <span id="ui-xp">0</span></div>
+        <div style="font-weight: 800; color: var(--secondary);">🔥 <span id="ui-xp">0</span></div>
     </header>
 
     <main id="tab-home" class="container">
@@ -63,15 +61,22 @@
         </div>
     </main>
 
-    <main id="tab-shop" class="container hidden">
-        <h3 style="margin-bottom:20px;">🛒 LOJA DE ITENS</h3>
-        <div class="shop-item">
-            <div><strong>🔥 Fogo Azul</strong><br><small style="color:#94a3b8">Sua ofensiva brilha azul</small></div>
-            <button class="btn-check" style="width:auto; padding:10px 20px;" onclick="buyItem('Fogo Azul', 500)">500 XP</button>
+    <main id="tab-premium" class="container hidden">
+        <h2 style="margin-bottom:20px; text-align:center;">Assine o <span style="color:#a855f7">Premium</span></h2>
+        
+        <div class="premium-card">
+            <span class="premium-tag">POPULAR</span>
+            <h3 style="font-size:22px;">Plano Mensal</h3>
+            <p style="margin: 10px 0; opacity: 0.9;">Sem anúncios, Vidas Infinitas e Ranking exclusivo.</p>
+            <div style="font-size:24px; font-weight:900; margin-bottom:15px;">R$ 14,90<small style="font-size:12px; opacity:0.7;">/mês</small></div>
+            <button class="btn-check" style="background:white; color:#7c3aed;" onclick="alert('Redirecionando para pagamento...')">ASSINAR AGORA</button>
         </div>
-        <div class="shop-item">
-            <div><strong>🛡️ Bloqueio</strong><br><small style="color:#94a3b8">Protege sua ofensiva</small></div>
-            <button class="btn-check" style="width:auto; padding:10px 20px;" onclick="buyItem('Escudo', 1000)">1000 XP</button>
+
+        <div class="card" style="text-align:left;">
+            <h4 style="margin-bottom:10px;">O que você ganha:</h4>
+            <p style="font-size:14px; margin-bottom:8px;">✅ Ofensiva Protegida</p>
+            <p style="font-size:14px; margin-bottom:8px;">✅ Lições Offline</p>
+            <p style="font-size:14px; margin-bottom:8px;">✅ Selo Premium no Perfil</p>
         </div>
     </main>
 
@@ -100,7 +105,7 @@
 
     <nav>
         <div id="nav-home" class="active">🏠<span>Home</span></div>
-        <div id="nav-shop">🛒<span>Loja</span></div>
+        <div id="nav-premium">💎<span>Premium</span></div>
         <div id="nav-ranking">🏆<span>Ranking</span></div>
         <div id="nav-settings">⚙️<span>Ajustes</span></div>
     </nav>
@@ -110,19 +115,19 @@
     <div class="container">
         <div id="learning-phase" style="flex:1; display:flex; flex-direction:column; justify-content:center; text-align:center;">
             <div class="card" style="border:2px solid var(--primary);">
-                <p style="color:var(--primary); font-weight:800; font-size:12px;">ANOTE O VOCABULÁRIO</p>
-                <div id="learning-list" style="margin:20px 0; text-align:left; font-size:18px;"></div>
+                <p style="color:var(--primary); font-weight:800; font-size:12px; margin-bottom:15px;">ESTUDE ESTAS FRASES</p>
+                <div id="learning-list" style="text-align:left; font-size:17px; line-height:1.6;"></div>
             </div>
-            <button id="btn-start-tasks" class="btn-check">ESTUDEI! COMEÇAR TAREFAS</button>
+            <button id="btn-start-tasks" class="btn-check">COMEÇAR TAREFAS</button>
         </div>
 
         <div id="task-phase" class="hidden" style="flex:1; display:flex; flex-direction:column; justify-content:center;">
-            <div style="background:#334155; height:12px; border-radius:10px; overflow:hidden; margin-bottom:30px;">
-                <div id="ui-prog" style="width:0%; height:100%; background:var(--secondary); transition:0.5s;"></div>
+            <div style="background:#334155; height:10px; border-radius:10px; overflow:hidden; margin-bottom:30px;">
+                <div id="ui-prog" style="width:0%; height:100%; background:var(--secondary); transition:0.4s;"></div>
             </div>
-            <h2 id="q-text" style="font-size: 2rem; font-weight:900; text-align:center; margin-bottom:20px;">...</h2>
+            <h2 id="q-text" style="font-size: 1.8rem; font-weight:900; text-align:center; margin-bottom:20px;"></h2>
             <div id="drop-zone" class="word-area"></div>
-            <div id="word-bank" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;"></div>
+            <div id="word-bank" style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px;"></div>
             <button id="btn-verify" class="btn-check" style="margin-top:20px;">VERIFICAR</button>
         </div>
     </div>
@@ -163,7 +168,7 @@ function getSentence() {
     return { pt: `${s.pt} ${v.pt} ${o.pt}`, target: `${s[k]} ${v[k]} ${o[k]}` };
 }
 
-// --- LOGICA APP ---
+// --- CORE ---
 onAuthStateChanged(auth, u => {
     if(u) {
         onValue(ref(db, 'users/'+u.uid), snap => {
@@ -195,11 +200,10 @@ document.getElementById('btn-start').onclick = () => {
     document.getElementById('learning-phase').classList.remove('hidden');
     document.getElementById('task-phase').classList.add('hidden');
     
-    // Mostra 3 exemplos no aprendizado
     let html = "";
     for(let i=0; i<3; i++){
         let temp = getSentence();
-        html += `<p><strong>${temp.pt}</strong> = <span style="color:var(--secondary)">${temp.target}</span></p>`;
+        html += `<p style='margin-bottom:10px'><strong>${temp.pt}</strong><br><span style="color:var(--secondary)">${temp.target}</span></p>`;
     }
     document.getElementById('learning-list').innerHTML = html;
 };
@@ -222,7 +226,9 @@ function nextTask() {
     words.forEach(w => {
         const b = document.createElement('button'); b.className = "chip"; b.innerText = w;
         b.onclick = () => {
-            new SpeechSynthesisUtterance(w); // Voz rápida
+            const m = new SpeechSynthesisUtterance(w);
+            m.lang = user.lang === 'Spanish' ? 'es-ES' : user.lang === 'French' ? 'fr-FR' : user.lang === 'Italian' ? 'it-IT' : 'en-US';
+            window.speechSynthesis.speak(m);
             currentSelection.push(w); b.classList.add('used');
             const s = document.createElement('span'); s.className = "chip"; s.innerText = w;
             document.getElementById('drop-zone').appendChild(s);
@@ -234,9 +240,13 @@ function nextTask() {
 document.getElementById('btn-verify').onclick = () => {
     const banner = document.getElementById('feedback-banner');
     if(currentSelection.join(" ") === currentPhrase.target) {
-        banner.className = "show correct-bg"; document.getElementById('feedback-msg').innerText = "Correto!";
+        banner.className = "show correct-bg"; 
+        banner.style.background = "#065F46";
+        document.getElementById('feedback-msg').innerText = "Excelente!";
     } else {
-        banner.className = "show wrong-bg"; document.getElementById('feedback-msg').innerText = "Resposta: " + currentPhrase.target;
+        banner.className = "show wrong-bg";
+        banner.style.background = "#991B1B";
+        document.getElementById('feedback-msg').innerText = "Resposta: " + currentPhrase.target;
     }
 };
 
@@ -250,16 +260,14 @@ document.getElementById('btn-next').onclick = async () => {
     }
 };
 
-// --- LOJA ---
-window.buyItem = async (name, price) => {
-    if(user.xp >= price) {
-        user.xp -= price;
-        await update(ref(db, 'users/'+auth.currentUser.uid), {xp: user.xp});
-        alert(`Você comprou ${name}!`);
-    } else { alert("XP insuficiente!"); }
-};
+// --- NAVEGAÇÃO ---
+const tabs = ['home', 'premium', 'ranking', 'settings'];
+tabs.forEach(t => { document.getElementById('nav-'+t).onclick = () => {
+    tabs.forEach(x => { document.getElementById('tab-'+x).classList.add('hidden'); document.getElementById('nav-'+x).classList.remove('active'); });
+    document.getElementById('tab-'+t).classList.remove('hidden'); document.getElementById('nav-'+t).classList.add('active');
+};});
 
-// --- RESTO ---
+// --- AUTH E AJUSTES ---
 document.getElementById('btn-auth').onclick = async () => {
     const e = document.getElementById('email').value, p = document.getElementById('password').value;
     try { await signInWithEmailAndPassword(auth, e, p); } catch { await createUserWithEmailAndPassword(auth,e,p); }
@@ -277,11 +285,6 @@ function renderRanking(all) {
         </div>`).join('');
 }
 document.getElementById('btn-logout').onclick = () => signOut(auth).then(() => location.reload());
-const tabs = ['home', 'shop', 'ranking', 'settings'];
-tabs.forEach(t => { document.getElementById('nav-'+t).onclick = () => {
-    tabs.forEach(x => { document.getElementById('tab-'+x).classList.add('hidden'); document.getElementById('nav-'+x).classList.remove('active'); });
-    document.getElementById('tab-'+t).classList.remove('hidden'); document.getElementById('nav-'+t).classList.add('active');
-};});
 </script>
 </body>
 </html>
