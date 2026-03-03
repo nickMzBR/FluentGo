@@ -1,200 +1,283 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>FluentGo</title>
-<style>
-body{margin:0;font-family:Arial;background:#222;color:#fff;text-align:center;overflow:hidden;}
-header{display:flex;justify-content:space-between;align-items:center;padding:10px 20px;background:#111;position:relative;z-index:100;}
-header div{display:flex;align-items:center;}
-button,select,input{padding:8px;border-radius:8px;border:none;margin:5px;font-size:1em;cursor:pointer;}
-button{background:#2563EB;color:white;transition:0.2s;}
-button:hover{transform:scale(1.05);}
-.hidden{display:none !important;}
-#lessonSection,#taskModal,#settingsSection,#congratsModal{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;z-index:50;}
-#lessonContent,#taskModalContent{background:#333;padding:20px;border-radius:10px;width:80%;max-width:600px;animation:fadeIn 0.5s;}
-#progressBar,#comboBar{width:80%;background:#555;border-radius:10px;margin:10px auto;height:20px;overflow:hidden;}
-#progressFill,#comboFill{width:0%;height:100%;transition:width 0.3s;}
-#progressFill{background:#2563EB;}
-#comboFill{background:#FFD700;}
-canvas{position:fixed;top:0;left:0;pointer-events:none;z-index:10;}
-@keyframes fadeIn{from{opacity:0;} to{opacity:1;}}
-.premium-btn{background:#FF9900;margin-left:10px;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FluentGo | Master Edition</title>
+    <style>
+        :root { --primary: #2563EB; --secondary: #10B981; --premium: #FF9900; --danger: #EF4444; --bg: #121212; --card: #1E1E1E; }
+        body { margin:0; font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: #fff; text-align: center; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: #000; border-bottom: 2px solid #333; position: sticky; top: 0; z-index: 100; }
+        
+        .container { padding: 20px; max-width: 600px; margin: 0 auto; }
+        .hidden { display: none !important; }
+        
+        /* UI Elements */
+        .card { background: var(--card); padding: 20px; border-radius: 20px; border: 1px solid #333; margin-bottom: 20px; }
+        button { padding: 12px 24px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 1em; }
+        button:active { transform: scale(0.95); }
+        .btn-main { background: var(--primary); color: white; width: 100%; }
+        .btn-ghost { background: #333; color: #ccc; margin-top: 10px; }
+        
+        /* Progress & Stats */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .stat-box { background: #252525; padding: 10px; border-radius: 15px; font-size: 0.9em; }
+        .progress-container { background: #333; height: 12px; border-radius: 6px; margin: 15px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
+        
+        /* Task Modal */
+        #taskModal { position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: flex; flex-direction: column; }
+        .task-header { padding: 20px; border-bottom: 1px solid #333; }
+        .task-body { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 30px; }
+        input[type="text"] { background: #252525; border: 2px solid #444; padding: 15px; border-radius: 15px; color: white; font-size: 1.2em; text-align: center; outline: none; }
+        input[type="text"]:focus { border-color: var(--primary); }
+        
+        canvas { position: fixed; inset: 0; pointer-events: none; z-index: 2000; }
+    </style>
 </head>
 <body>
+
 <canvas id="fxCanvas"></canvas>
 
 <header>
-  <div>
-    <span>FluentGo</span>
-  </div>
-  <div>
-    <button class="premium-btn" id="removeAdsBtn">Remova anúncios - R$9,99</button>
-    <button class="premium-btn" id="premiumBtn">FluentGo Premium - R$4,99/mês</button>
-    <button id="settingsBtn" class="hidden">Configurações</button>
-    <button id="logoutBtn" class="hidden">Sair</button>
-  </div>
+    <div style="font-size: 1.5em; font-weight: 900; letter-spacing: -1px;">FLUENT<span style="color:var(--primary)">GO</span></div>
+    <div id="userMenu" class="hidden">
+        <span id="userXpDisplay" style="color: var(--premium); font-weight: bold;">0 XP</span>
+    </div>
 </header>
 
-<!-- LOGIN -->
-<div id="authSection">
-  <h2>Entrar</h2>
-  <input type="email" id="email" placeholder="Email">
-  <input type="password" id="password" placeholder="Senha"><br>
-  <button id="registerBtn">Criar Conta</button>
-  <button id="loginBtn">Entrar</button>
+<div id="authSection" class="container">
+    <div class="card" style="margin-top: 50px;">
+        <h2>Aprenda grátis. Para sempre.</h2>
+        <input type="email" id="email" placeholder="Seu melhor e-mail" style="width: 80%; margin-bottom: 10px; padding: 12px; border-radius: 8px;"><br>
+        <input type="password" id="password" placeholder="Senha" style="width: 80%; margin-bottom: 20px; padding: 12px; border-radius: 8px;"><br>
+        <button id="loginBtn" class="btn-main">ENTRAR</button>
+        <button id="registerBtn" class="btn-ghost">CRIAR CONTA</button>
+    </div>
 </div>
 
-<!-- MENU -->
-<div id="appSection" class="hidden">
-  <h2 id="currentLanguage"></h2>
-  <h3>XP: <span id="xpDisplay">0</span></h3>
-  <div id="progressBar"><div id="progressFill"></div></div>
-  <div id="comboBar"><div id="comboFill"></div></div>
-  <button id="startLessonBtn">Começar Módulo</button>
+<div id="appSection" class="container hidden">
+    <div class="stats-grid">
+        <div class="stat-box">🌍 Idioma: <b id="currentLangLabel">Inglês</b></div>
+        <div class="stat-box">🔥 Combo: <b id="comboLabel">0</b></div>
+    </div>
+
+    <div class="card">
+        <h3 id="moduleLabel">Módulo 1</h3>
+        <p id="taskLabel" style="color: #aaa;">Tarefa 1 de 5</p>
+        <div class="progress-container">
+            <div id="mainProgress" class="progress-fill"></div>
+        </div>
+        <button id="startBtn" class="btn-main" style="padding: 20px;">COMEÇAR AGORA</button>
+    </div>
+
+    <button id="configBtn" class="btn-ghost" style="width: 100%;">Configurações e Idioma</button>
+    <button id="logoutBtn" class="btn-ghost" style="width: 100%; color: var(--danger);">Sair da conta</button>
 </div>
 
-<!-- CONFIGURAÇÕES -->
-<div id="settingsSection" class="hidden">
-  <h2>Configurações</h2>
-  <select id="languageSelect">
-    <option value="Ingles">Inglês</option>
-    <option value="Espanhol">Espanhol</option>
-    <option value="Japones">Japonês</option>
-  </select><br>
-  <label><input type="checkbox" id="soundToggle" checked> Som</label><br>
-  <label><input type="checkbox" id="effectsToggle" checked> Efeitos Visuais</label><br>
-  <button id="saveSettingsBtn">Salvar</button>
-  <button id="closeSettingsBtn">Fechar</button>
-</div>
-
-<!-- LIÇÃO -->
-<div id="lessonSection" class="hidden">
-  <div id="lessonContent">
-    <h3 id="lessonTitle"></h3>
-    <p id="lessonText"></p>
-    <button id="startTaskBtn">Começar Tarefa</button>
-  </div>
-</div>
-
-<!-- TAREFA -->
 <div id="taskModal" class="hidden">
-  <div id="taskModalContent">
-    <h3 id="taskTitle"></h3>
-    <div id="exerciseContainer"></div>
-    <button id="exitTaskBtn">Sair da Tarefa</button>
-  </div>
+    <div class="task-header">
+        <div class="progress-container"><div id="taskProgress" class="progress-fill"></div></div>
+        <button id="closeTask" style="background:none; color:#666; float:right;">Sair ✕</button>
+    </div>
+    <div class="task-body">
+        <h4 id="instructionText" style="color: var(--primary); text-transform: uppercase;">Traduza esta frase</h4>
+        <h1 id="questionDisplay">Olá</h1>
+        <input type="text" id="answerInput" autocomplete="off" placeholder="Digite em inglês...">
+        <div id="feedback" style="margin-top: 20px; font-weight: bold; height: 30px;"></div>
+        <button id="checkBtn" class="btn-main" style="margin-top: 30px;">VERIFICAR</button>
+    </div>
 </div>
-
-<!-- PARABÉNS -->
-<div id="congratsModal" class="hidden">
-  <h1>Parabéns! 🎉</h1>
-  <p>Você concluiu o curso de <span id="congratsLanguage"></span>!</p>
-  <button id="closeCongratsBtn">Fechar</button>
-</div>
-
-<!-- SONS -->
-<audio id="correctSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
-<audio id="wrongSound" src="https://actions.google.com/sounds/v1/cartoon/boing.ogg"></audio>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-// --- Firebase ---
 const firebaseConfig = {
-  apiKey: "AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw",
-  authDomain: "fluentgo-35024.firebaseapp.com",
-  databaseURL: "https://fluentgo-35024-default-rtdb.firebaseio.com",
-  projectId: "fluentgo-35024",
-  storageBucket: "fluentgo-35024.firebasestorage.app",
-  messagingSenderId: "613715387990",
-  appId: "1:613715387990:web:0345ade26374dd32d1fdf7"
+    apiKey: "AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw",
+    authDomain: "fluentgo-35024.firebaseapp.com",
+    databaseURL: "https://fluentgo-35024-default-rtdb.firebaseio.com",
+    projectId: "fluentgo-35024",
+    appId: "1:613715387990:web:0345ade26374dd32d1fdf7"
 };
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// --- DOM ---
-const authSection=document.getElementById("authSection"),
-      appSection=document.getElementById("appSection"),
-      settingsSection=document.getElementById("settingsSection"),
-      settingsBtn=document.getElementById("settingsBtn"),
-      logoutBtn=document.getElementById("logoutBtn"),
-      xpDisplay=document.getElementById("xpDisplay"),
-      lessonSection=document.getElementById("lessonSection"),
-      lessonTitle=document.getElementById("lessonTitle"),
-      lessonText=document.getElementById("lessonText"),
-      taskModal=document.getElementById("taskModal"),
-      taskTitle=document.getElementById("taskTitle"),
-      exerciseContainer=document.getElementById("exerciseContainer"),
-      progressFill=document.getElementById("progressFill"),
-      congratsModal=document.getElementById("congratsModal"),
-      congratsLanguage=document.getElementById("congratsLanguage"),
-      correctSound=document.getElementById("correctSound"),
-      wrongSound=document.getElementById("wrongSound"),
-      comboFill=document.getElementById("comboFill"),
-      languageSelect=document.getElementById("languageSelect"),
-      currentLanguageDisplay=document.getElementById("currentLanguage"),
-      soundToggle=document.getElementById("soundToggle"),
-      effectsToggle=document.getElementById("effectsToggle");
-
-// --- Inputs ---
-const emailInput=document.getElementById("email"),
-      passwordInput=document.getElementById("password"),
-      registerBtn=document.getElementById("registerBtn"),
-      loginBtn=document.getElementById("loginBtn"),
-      startLessonBtn=document.getElementById("startLessonBtn"),
-      startTaskBtn=document.getElementById("startTaskBtn"),
-      exitTaskBtn=document.getElementById("exitTaskBtn"),
-      saveSettingsBtn=document.getElementById("saveSettingsBtn"),
-      closeSettingsBtn=document.getElementById("closeSettingsBtn"),
-      closeCongratsBtn=document.getElementById("closeCongratsBtn");
-
-// --- Estado ---
-let user=null,currentLanguage="Ingles",currentModule=1,currentTask=1,xp=0;
-let comboCount=0,maxCombo=0;
-let taskData=[], currentQuestionIndex=0;
-
-// --- Perguntas exemplo ---
-const exampleQuestions = {
-  Ingles:[{question:"Como se diz 'Bom dia'?",type:"translate",answer:"Good morning"}],
-  Espanhol:[{question:"Como se diz 'Bom dia'?",type:"translate",answer:"Buenos días"}],
-  Japones:[{question:"Como se diz 'Bom dia'?",type:"translate",answer:"おはよう"}]
+// --- BANCO DE DADOS DE CONTEÚDO (ESTRUTURA COMPLETA) ---
+const courseData = {
+    Ingles: {
+        M1: [{q:"Olá", a:"Hello"}, {q:"Bom dia", a:"Good morning"}, {q:"Obrigado", a:"Thank you"}, {q:"Por favor", a:"Please"}, {q:"Tchau", a:"Goodbye"}],
+        M2: [{q:"Maçã", a:"Apple"}, {q:"Água", a:"Water"}, {q:"Pão", a:"Bread"}, {q:"Leite", a:"Milk"}, {q:"Café", a:"Coffee"}],
+        M3: [{q:"Mãe", a:"Mother"}, {q:"Pai", a:"Father"}, {q:"Filho", a:"Son"}, {q:"Irmã", a:"Sister"}, {q:"Família", a:"Family"}],
+        M4: [{q:"Um", a:"One"}, {q:"Dois", a:"Two"}, {q:"Três", a:"Three"}, {q:"Quatro", a:"Four"}, {q:"Cinco", a:"Five"}],
+        M5: [{q:"Azul", a:"Blue"}, {q:"Vermelho", a:"Red"}, {q:"Verde", a:"Green"}, {q:"Amarelo", a:"Yellow"}, {q:"Preto", a:"Black"}],
+        M6: [{q:"Eu sou", a:"I am"}, {q:"Você é", a:"You are"}, {q:"Ele é", a:"He is"}, {q:"Nós somos", a:"We are"}, {q:"Eles são", a:"They are"}],
+        M7: [{q:"Cachorro", a:"Dog"}, {q:"Gato", a:"Cat"}, {q:"Pássaro", a:"Bird"}, {q:"Peixe", a:"Fish"}, {q:"Cavalo", a:"Horse"}],
+        M8: [{q:"Casa", a:"House"}, {q:"Carro", a:"Car"}, {q:"Escola", a:"School"}, {q:"Livro", a:"Book"}, {q:"Caneta", a:"Pen"}],
+        M9: [{q:"Grande", a:"Big"}, {q:"Pequeno", a:"Small"}, {q:"Bom", a:"Good"}, {q:"Mau", a:"Bad"}, {q:"Feliz", a:"Happy"}],
+        M10:[{q:"Eu como", a:"I eat"}, {q:"Eu bebo", a:"I drink"}, {q:"Eu falo", a:"I speak"}, {q:"Eu vou", a:"I go"}, {q:"Eu vejo", a:"I see"}]
+    },
+    Espanhol: {
+        M1: [{q:"Olá", a:"Hola"}, {q:"Obrigado", a:"Gracias"}, {q:"Bom dia", a:"Buenos días"}, {q:"Por favor", a:"Por favor"}, {q:"Tchau", a:"Adiós"}],
+        M2: [{q:"Maçã", a:"Manzana"}, {q:"Água", a:"Agua"}, {q:"Pão", a:"Pan"}, {q:"Leite", a:"Leche"}, {q:"Café", a:"Café"}],
+        M3: [{q:"Mãe", a:"Madre"}, {q:"Pai", a:"Padre"}, {q:"Filho", a:"Hijo"}, {q:"Irmã", a:"Hermana"}, {q:"Família", a:"Familia"}],
+        M4: [{q:"Um", a:"Uno"}, {q:"Dois", a:"Dos"}, {q:"Três", a:"Tres"}, {q:"Quatro", a:"Cuatro"}, {q:"Cinco", a:"Cinco"}],
+        M5: [{q:"Azul", a:"Azul"}, {q:"Vermelho", a:"Rojo"}, {q:"Verde", a:"Verde"}, {q:"Amarelo", a:"Amarillo"}, {q:"Preto", a:"Negro"}],
+        M6: [{q:"Eu sou", a:"Yo soy"}, {q:"Você é", a:"Tú eres"}, {q:"Ele é", a:"Él es"}, {q:"Nós somos", a:"Nosotros somos"}, {q:"Eles são", a:"Ellos son"}],
+        M7: [{q:"Cachorro", a:"Perro"}, {q:"Gato", a:"Gato"}, {q:"Pássaro", a:"Pájaro"}, {q:"Peixe", a:"Pez"}, {q:"Cavalo", a:"Caballo"}],
+        M8: [{q:"Casa", a:"Casa"}, {q:"Carro", a:"Coche"}, {q:"Escola", a:"Escuela"}, {q:"Livro", a:"Libro"}, {q:"Caneta", a:"Bolígrafo"}],
+        M9: [{q:"Grande", a:"Grande"}, {q:"Pequeno", a:"Pequeño"}, {q:"Bom", a:"Bueno"}, {q:"Mau", a:"Malo"}, {q:"Feliz", a:"Feliz"}],
+        M10:[{q:"Eu como", a:"Yo como"}, {q:"Eu bebo", a:"Yo bebo"}, {q:"Eu falo", a:"Yo hablo"}, {q:"Eu vou", a:"Yo voy"}, {q:"Eu vejo", a:"Yo veo"}]
+    },
+    Japones: {
+        M1: [{q:"Bom dia", a:"Ohayou"}, {q:"Obrigado", a:"Arigatou"}, {q:"Boa tarde", a:"Konnichiwa"}, {q:"Com licença", a:"Sumimasen"}, {q:"Tchau", a:"Sayounara"}],
+        M2: [{q:"Água", a:"Mizu"}, {q:"Pão", a:"Pan"}, {q:"Arroz", a:"Gohan"}, {q:"Carne", a:"Niku"}, {q:"Peixe", a:"Sakana"}],
+        M3: [{q:"Mãe", a:"Okaasan"}, {q:"Pai", a:"Otousan"}, {q:"Amigo", a:"Tomodachi"}, {q:"Criança", a:"Kodomo"}, {q:"Pessoa", a:"Hito"}],
+        M4: [{q:"Um", a:"Ichi"}, {q:"Dois", a:"Ni"}, {q:"Três", a:"San"}, {q:"Quatro", a:"Yon"}, {q:"Cinco", a:"Go"}],
+        M5: [{q:"Sim", a:"Hai"}, {q:"Não", a:"Iie"}, {q:"O que?", a:"Nani"}, {q:"Quem?", a:"Dare"}, {q:"Onde?", a:"Doko"}],
+        M6: [{q:"Cachorro", a:"Inu"}, {q:"Gato", a:"Neko"}, {q:"Sol", a:"Hi"}, {q:"Lua", a:"Tsuki"}, {q:"Flor", a:"Hana"}],
+        M7: [{q:"Eu", a:"Watashi"}, {q:"Você", a:"Anata"}, {q:"Sensei", a:"Professor"}, {q:"Estudante", a:"Gakusei"}, {q:"Escola", a:"Gakkou"}],
+        M8: [{q:"Hoje", a:"Kyou"}, {q:"Amanhã", a:"Ashita"}, {q:"Agora", a:"Ima"}, {q:"Tempo", a:"Toki"}, {q:"Semana", a:"Shuu"}],
+        M9: [{q:"Grande", a:"Ookii"}, {q:"Pequeno", a:"Chiisai"}, {q:"Quente", a:"Atsui"}, {q:"Frio", a:"Samui"}, {q:"Novo", a:"Atarashii"}],
+        M10:[{q:"Eu entendo", a:"Wakarimasu"}, {q:"Eu faço", a:"Shimasu"}, {q:"Eu venho", a:"Kimasu"}, {q:"Eu durmo", a:"Nemasu"}, {q:"Eu leio", a:"Yomimasu"}]
+    }
 };
 
-// --- Partículas FX ---
-const canvas=document.getElementById("fxCanvas"), ctx=canvas.getContext("2d");
-canvas.width=window.innerWidth; canvas.height=window.innerHeight; let particles=[];
-function spawnParticles(x,y,color){ if(!effectsToggle.checked) return; for(let i=0;i<20;i++){ particles.push({x,y,dx:(Math.random()-0.5)*4,dy:(Math.random()-2)*4,r:Math.random()*4+2,color,life:50}); } }
-function drawParticles(){ ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach((p,i)=>{ ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle=p.color; ctx.fill(); p.x+=p.dx; p.y+=p.dy; p.life--; if(p.life<=0) particles.splice(i,1); }); requestAnimationFrame(drawParticles);}
-drawParticles();
+// --- ESTADO GLOBAL ---
+let userData = { xp: 0, lang: "Ingles", mod: 1, task: 1, combo: 0 };
+let currentQuestions = [];
+let qIdx = 0;
 
-// --- Salvar/Carregar ---
-function saveProgress(){ if(!user) return; set(ref(db, 'users/'+user.uid+'/progress'),{xp,currentModule,currentTask,currentLanguage,comboCount}); }
-async function loadProgress(){ if(!user) return; const snapshot = await get(ref(db,'users/'+user.uid+'/progress')); if(snapshot.exists()){ const data=snapshot.val(); xp=data.xp||0; currentModule=data.currentModule||1; currentTask=data.currentTask||1; currentLanguage=data.currentLanguage||"Ingles"; comboCount=data.comboCount||0; xpDisplay.innerText=xp; currentLanguageDisplay.innerText=currentLanguage; } else { xpDisplay.innerText=xp; currentLanguageDisplay.innerText=currentLanguage; } }
+// --- FUNÇÕES DE NAVEGAÇÃO ---
+const showSection = (id) => {
+    ["authSection", "appSection", "taskModal"].forEach(s => document.getElementById(s).classList.add("hidden"));
+    document.getElementById(id).classList.remove("hidden");
+};
 
-// --- Tarefas ---
-function startNextTask(){ taskModal.classList.remove("hidden"); appSection.classList.add("hidden"); currentQuestionIndex=0; taskData=[...exampleQuestions[currentLanguage]]; showExercise(); }
-function showExercise(){ const q=taskData[currentQuestionIndex]; exerciseContainer.innerHTML=""; taskTitle.innerText=`${currentLanguage} - Pergunta ${currentQuestionIndex+1}/${taskData.length}`; if(q.type==="translate"){ const input=document.createElement("input"); input.id="answerInput"; input.placeholder="Digite a resposta"; exerciseContainer.appendChild(document.createTextNode(q.question)); exerciseContainer.appendChild(document.createElement("br")); exerciseContainer.appendChild(input); const submitBtn=document.createElement("button"); submitBtn.innerText="Responder"; submitBtn.onclick=()=>checkAnswer(input.value); exerciseContainer.appendChild(document.createElement("br")); exerciseContainer.appendChild(submitBtn); } else { exerciseContainer.appendChild(document.createTextNode(q.question)); exerciseContainer.appendChild(document.createElement("br")); q.options.forEach(opt=>{ const btn=document.createElement("button"); btn.innerText=opt; btn.onclick=()=>checkAnswer(opt); exerciseContainer.appendChild(btn); exerciseContainer.appendChild(document.createElement("br")); }); } }
-function checkAnswer(ans){ const q=taskData[currentQuestionIndex]; const correct=(ans&&ans.toString().toLowerCase()===q.answer.toString().toLowerCase()); if(correct){ xp+=10; xpDisplay.innerText=xp; if(soundToggle.checked) correctSound.play(); spawnParticles(window.innerWidth/2,200,"#00FF00"); comboCount++; if(comboCount>5) comboCount=5; comboFill.style.width=(comboCount/5*100)+"%"; } else { if(soundToggle.checked) wrongSound.play(); spawnParticles(window.innerWidth/2,200,"#FF0000"); comboCount=0; comboFill.style.width="0%"; } saveProgress(); setTimeout(()=>{ currentQuestionIndex++; if(currentQuestionIndex<taskData.length){ showExercise(); } else { taskModal.classList.add("hidden"); appSection.classList.remove("hidden"); } },500); }
+const updateDashboard = () => {
+    document.getElementById("userXpDisplay").innerText = `${userData.xp} XP`;
+    document.getElementById("currentLangLabel").innerText = userData.lang;
+    document.getElementById("comboLabel").innerText = userData.combo;
+    document.getElementById("moduleLabel").innerText = `Módulo ${userData.mod}`;
+    document.getElementById("taskLabel").innerText = `Tarefa ${userData.task} de 5`;
+    document.getElementById("mainProgress").style.width = `${(userData.task - 1) * 20}%`;
+};
 
-// --- Botões ---
-exitTaskBtn.onclick = ()=>{ taskModal.classList.add("hidden"); appSection.classList.remove("hidden"); saveProgress(); }
-startTaskBtn.onclick = startNextTask;
-startLessonBtn.onclick = startNextTask;
-settingsBtn.onclick = ()=>{ settingsSection.classList.remove("hidden"); }
-closeSettingsBtn.onclick = ()=>{ settingsSection.classList.add("hidden"); }
-saveSettingsBtn.onclick = ()=>{ currentLanguage=languageSelect.value; currentLanguageDisplay.innerText=currentLanguage; settingsSection.classList.add("hidden"); saveProgress(); }
+// --- LÓGICA DE LIÇÃO ---
+function initTask() {
+    const modKey = "M" + userData.mod;
+    const taskData = courseData[userData.lang][modKey][userData.task - 1];
+    
+    // Cada tarefa gera 5 perguntas baseadas na palavra da vez para fixação
+    currentQuestions = Array(5).fill(taskData);
+    qIdx = 0;
+    showSection("taskModal");
+    renderQuestion();
+}
 
-// --- Auth ---
-registerBtn.onclick = ()=>{ createUserWithEmailAndPassword(auth,emailInput.value,passwordInput.value).catch(console.error) }
-loginBtn.onclick = ()=>{ signInWithEmailAndPassword(auth,emailInput.value,passwordInput.value).catch(console.error) }
-logoutBtn.onclick = ()=>{ signOut(auth).catch(console.error) }
+function renderQuestion() {
+    const q = currentQuestions[qIdx];
+    document.getElementById("taskProgress").style.width = `${(qIdx / 5) * 100}%`;
+    document.getElementById("questionDisplay").innerText = q.q;
+    document.getElementById("answerInput").value = "";
+    document.getElementById("answerInput").focus();
+    document.getElementById("feedback").innerText = "";
+}
 
-onAuthStateChanged(auth, async (u)=>{ if(u){ user=u; authSection.classList.add("hidden"); appSection.classList.remove("hidden"); settingsBtn.classList.remove("hidden"); logoutBtn.classList.remove("hidden"); await loadProgress(); } else { user=null; authSection.classList.remove("hidden"); appSection.classList.add("hidden"); settingsBtn.classList.add("hidden"); logoutBtn.classList.add("hidden"); } })
+function checkAnswer() {
+    const userAns = document.getElementById("answerInput").value.trim().toLowerCase();
+    const correctAns = currentQuestions[qIdx].a.toLowerCase();
+    const feedback = document.getElementById("feedback");
+
+    if(userAns === correctAns) {
+        feedback.innerText = "✨ EXCELENTE!";
+        feedback.style.color = "var(--secondary)";
+        userData.xp += 15;
+        userData.combo++;
+        spawnParticles(window.innerWidth/2, window.innerHeight/2, "#10B981");
+        nextQuestion();
+    } else {
+        feedback.innerText = `ERROU! Resposta: ${correctAns}`;
+        feedback.style.color = "var(--danger)";
+        userData.combo = 0;
+        spawnParticles(window.innerWidth/2, window.innerHeight/2, "#EF4444");
+    }
+}
+
+function nextQuestion() {
+    qIdx++;
+    if(qIdx < 5) {
+        setTimeout(renderQuestion, 1000);
+    } else {
+        setTimeout(finishTask, 1000);
+    }
+}
+
+async function finishTask() {
+    userData.task++;
+    if(userData.task > 5) {
+        userData.task = 1;
+        userData.mod++;
+    }
+    if(userData.mod > 10) {
+        alert("🎉 PARABÉNS! VOCÊ COMPLETOU TODO O CURSO!");
+        userData.mod = 1;
+    }
+    await set(ref(db, 'users/' + auth.currentUser.uid), userData);
+    showSection("appSection");
+    updateDashboard();
+}
+
+// --- PARTÍCULAS ---
+const canvas = document.getElementById("fxCanvas"), ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+let parts = [];
+function spawnParticles(x,y,c){ for(let i=0;i<20;i++) parts.push({x,y,dx:(Math.random()-0.5)*10,dy:(Math.random()-0.5)*10,life:1,c}); }
+function renderFX(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    parts.forEach((p,i)=>{
+        ctx.fillStyle = p.c; ctx.globalAlpha = p.life;
+        ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, 7); ctx.fill();
+        p.x+=p.dx; p.y+=p.dy; p.life-=0.02;
+        if(p.life<=0) parts.splice(i,1);
+    });
+    requestAnimationFrame(renderFX);
+}
+renderFX();
+
+// --- EVENTOS ---
+document.getElementById("loginBtn").onclick = () => signInWithEmailAndPassword(auth, email.value, password.value);
+document.getElementById("registerBtn").onclick = () => createUserWithEmailAndPassword(auth, email.value, password.value);
+document.getElementById("logoutBtn").onclick = () => signOut(auth);
+document.getElementById("startBtn").onclick = initTask;
+document.getElementById("closeTask").onclick = () => showSection("appSection");
+document.getElementById("checkBtn").onclick = checkAnswer;
+document.getElementById("answerInput").onkeypress = (e) => { if(e.key === 'Enter') checkAnswer(); };
+
+document.getElementById("configBtn").onclick = () => {
+    const newLang = prompt("Escolha: Ingles, Espanhol ou Japones", userData.lang);
+    if(courseData[newLang]) {
+        userData.lang = newLang;
+        userData.mod = 1; userData.task = 1;
+        updateDashboard();
+    }
+};
+
+onAuthStateChanged(auth, async (user) => {
+    if(user) {
+        const snap = await get(ref(db, 'users/' + user.uid));
+        if(snap.exists()) userData = snap.val();
+        document.getElementById("userMenu").classList.remove("hidden");
+        showSection("appSection");
+        updateDashboard();
+    } else {
+        document.getElementById("userMenu").classList.add("hidden");
+        showSection("authSection");
+    }
+});
 </script>
 </body>
 </html>
