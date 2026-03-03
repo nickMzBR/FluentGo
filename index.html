@@ -2,21 +2,34 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>FluentGo</title>
+<title>FluentGo - Overdrive</title>
 <style>
-body { margin:0; font-family: Arial, sans-serif; background:#222; color:#fff; text-align:center;}
-header { display:flex; justify-content:space-between; padding:15px 25px; background:#1a1a1a;}
-button, select, input { padding:8px; border-radius:8px; border:none; margin:5px;}
-button { background:#2563EB; color:white; cursor:pointer;}
-select, input { background:#333; color:white;}
+body { margin:0; font-family: Arial, sans-serif; background:#222; color:#fff; text-align:center; overflow:hidden;}
+header { display:flex; justify-content:space-between; padding:15px 25px; background:#1a1a1a; z-index:100;}
+button, select, input { padding:8px; border-radius:8px; border:none; margin:5px; font-size:1em;}
+button { background:#2563EB; color:white; cursor:pointer; transition:0.2s; }
+button:hover { transform:scale(1.05);}
+select, input { background:#333; color:white; }
 .hidden { display:none; }
-#taskModal, #congratsModal { position:fixed; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px; }
-#taskModal { background:#222; color:#fff; display:none; }
-#congratsModal { background:rgba(0,0,0,0.9); color:#fff; font-size:1.5em; display:none; }
+#lessonSection, #taskModal, #congratsModal { position:fixed; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px; z-index:50; }
+#lessonSection { background:#222; color:#fff; display:none; }
+#lessonContent { background:#333; padding:20px; border-radius:10px; width:80%; max-width:600px; animation:fadeIn 0.5s; }
+#progressBar { width:80%; background:#555; border-radius:10px; margin:10px auto; height:20px; overflow:hidden; }
+#progressFill { width:0%; height:100%; background:#2563EB; transition:width 0.5s; }
+#taskModal { background:#222; color:#fff; display:none; flex-direction:column; align-items:center; animation:fadeIn 0.5s; }
+#taskTitle { margin-bottom:10px; }
+#exerciseContainer button { display:block; width:200px; margin:10px auto; }
+#congratsModal { background:rgba(0,0,0,0.95); color:#fff; font-size:1.5em; display:none; flex-direction:column; justify-content:center; align-items:center; animation:fadeIn 0.5s;}
 #congratsModal h1 { color:#2563EB; margin-bottom:20px; }
+.highlight { color:#2563EB; font-weight:bold; }
+@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+@keyframes blink { 0%,50%,100% {opacity:1;} 25%,75% {opacity:0;} }
+canvas { position:fixed; top:0; left:0; pointer-events:none; z-index:10;}
 </style>
 </head>
 <body>
+
+<canvas id="fxCanvas"></canvas>
 
 <header>
   <div>FluentGo</div>
@@ -37,7 +50,8 @@ select, input { background:#333; color:white;}
 <div id="appSection" class="hidden">
   <h2 id="currentLanguage"></h2>
   <h3>XP: <span id="xpDisplay">0</span></h3>
-  <button onclick="startNextTask()">Começar/Continuar Tarefa</button>
+  <div id="progressBar"><div id="progressFill"></div></div>
+  <button onclick="startLesson()">Começar Módulo</button>
 </div>
 
 <div id="settingsSection" class="hidden">
@@ -50,6 +64,14 @@ select, input { background:#333; color:white;}
   <br>
   <button onclick="saveLanguage()">Salvar</button>
   <button onclick="closeSettings()">Fechar</button>
+</div>
+
+<div id="lessonSection">
+  <div id="lessonContent">
+    <h3 id="lessonTitle"></h3>
+    <p id="lessonText"></p>
+    <button onclick="startNextTask()">Começar Tarefa</button>
+  </div>
 </div>
 
 <div id="taskModal">
@@ -65,11 +87,15 @@ select, input { background:#333; color:white;}
   <button onclick="closeCongrats()">Fechar</button>
 </div>
 
+<audio id="correctSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+<audio id="wrongSound" src="https://actions.google.com/sounds/v1/cartoon/boing.ogg"></audio>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw",
   authDomain: "fluentgo-35024.firebaseapp.com",
@@ -90,39 +116,42 @@ const settingsSection = document.getElementById("settingsSection");
 const settingsBtn = document.getElementById("settingsBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 const xpDisplay = document.getElementById("xpDisplay");
+const lessonSection = document.getElementById("lessonSection");
+const lessonTitle = document.getElementById("lessonTitle");
+const lessonText = document.getElementById("lessonText");
 const taskModal = document.getElementById("taskModal");
 const taskTitle = document.getElementById("taskTitle");
 const exerciseContainer = document.getElementById("exerciseContainer");
+const progressFill = document.getElementById("progressFill");
 const congratsModal = document.getElementById("congratsModal");
 const congratsLanguage = document.getElementById("congratsLanguage");
+const correctSound = document.getElementById("correctSound");
+const wrongSound = document.getElementById("wrongSound");
 
 settingsBtn.style.display="none";
 logoutBtn.style.display="none";
 
-let user = null;
-let currentLanguage = "Ingles";
-let currentModule = null;
-let currentTask = null;
-let currentQuestion = null;
-const questionsPerTask = 5;
-const totalModules = 10, totalTasks = 10;
+let user=null, currentLanguage="Ingles", currentModule=null, currentTask=null, currentQuestion=null, xp=0;
+const questionsPerTask=5, totalModules=10, totalTasks=10;
 
-// Exercícios
-const exercises = { Ingles: [], Espanhol: [], Japones: [] };
+const exercises={Ingles:[],Espanhol:[],Japones:[]};
+const lessons={Ingles:[],Espanhol:[],Japones:[]};
+const words={
+  Ingles:["Hello","Goodbye","Thank you","Please","Yes","No","How are you?","I am Nick","Good morning","Sorry"],
+  Espanhol:["Hola","Adiós","Gracias","Por favor","Sí","No","¿Cómo estás?","Soy Nick","Buenos días","Lo siento"],
+  Japones:["こんにちは","さようなら","ありがとう","お願いします","はい","いいえ","お元気ですか","私はニックです","おはよう","ごめんなさい"]
+};
+
 function generateTasks(lang){
-  const baseWords = {
-    Ingles:[["Hello","Olá"],["Goodbye","Tchau"],["Thank you","Obrigado"],["Please","Por favor"],["Yes","Sim"],["No","Não"],["How are you?","Como vai?"],["I am Nick","Eu sou Nick"],["Good morning","Bom dia"],["Sorry","Desculpa"]],
-    Espanhol:[["Hola","Oi"],["Adiós","Tchau"],["Gracias","Obrigado"],["Por favor","Por favor"],["Sí","Sim"],["No","Não"],["¿Cómo estás?","Como vai?"],["Soy Nick","Eu sou Nick"],["Buenos días","Bom dia"],["Lo siento","Desculpa"]],
-    Japones:[["こんにちは (Konnichiwa)","Olá"],["さようなら (Sayounara)","Tchau"],["ありがとう (Arigatou)","Obrigado"],["お願いします (Onegaishimasu)","Por favor"],["はい (Hai)","Sim"],["いいえ (Iie)","Não"],["お元気ですか (Ogenki desu ka)","Como vai?"],["私はニックです (Watashi wa Nick desu)","Eu sou Nick"],["おはよう (Ohayou)","Bom dia"],["ごめんなさい (Gomen nasai)","Desculpa"]]
-  };
   for(let m=0;m<10;m++){
     exercises[lang][m]=[];
+    lessons[lang][m]=`Mini lição do módulo ${m+1} em <span class="highlight">${words[lang][m]}</span>`;
     for(let t=0;t<10;t++){
       let task=[];
       for(let q=0;q<5;q++){
-        const w = baseWords[lang][q%baseWords[lang].length];
-        if(q%2===0) task.push({type:"translate", question:w[0], answer:w[1]});
-        else task.push({type:"multiple", question:w[0], options:["Errado1","Errado2",w[1]], answer:w[1]});
+        const w = words[lang][q%words[lang].length];
+        if(q%2===0) task.push({type:"translate", question:w, answer:w});
+        else task.push({type:"multiple", question:w, options:["Errado1","Errado2",w], answer:w});
       }
       exercises[lang][m].push(task);
     }
@@ -130,76 +159,53 @@ function generateTasks(lang){
 }
 ["Ingles","Espanhol","Japones"].forEach(generateTasks);
 
-// Tarefas
-function startNextTask(){
-  if(!user) return alert("Entre para começar!");
-  if(currentModule===null){ currentModule=1; currentTask=1; currentQuestion=0; }
-  taskModal.style.display="flex";
-  showExercise();
-}
+// FX canvas
+const canvas = document.getElementById("fxCanvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+let particles=[];
 
-function showExercise(){
-  const ex = exercises[currentLanguage][currentModule-1][currentTask-1][currentQuestion];
-  exerciseContainer.innerHTML="";
-  taskTitle.innerText=`${currentLanguage} - Módulo ${currentModule} Tarefa ${currentTask} Pergunta ${currentQuestion+1}`;
-  if(ex.type==="translate"){
-    const input = document.createElement("input");
-    input.id="answerInput";
-    input.placeholder="Sua resposta";
-    exerciseContainer.appendChild(document.createTextNode(ex.question));
-    exerciseContainer.appendChild(document.createElement("br"));
-    exerciseContainer.appendChild(input);
-  } else {
-    exerciseContainer.appendChild(document.createTextNode(ex.question));
-    exerciseContainer.appendChild(document.createElement("br"));
-    ex.options.forEach(opt=>{
-      const btn=document.createElement("button");
-      btn.innerText=opt;
-      btn.onclick=()=>checkAnswer(opt);
-      exerciseContainer.appendChild(btn);
-      exerciseContainer.appendChild(document.createElement("br"));
-    });
+function spawnParticles(x,y,color){
+  for(let i=0;i<20;i++){
+    particles.push({x:x,y:y,dx:(Math.random()-0.5)*4,dy:(Math.random()-2)*4,r:Math.random()*4+2,color:color,life:50});
   }
 }
-
-function nextQuestion(){
-  const ex = exercises[currentLanguage][currentModule-1][currentTask-1][currentQuestion];
-  let ans = ex.type==="translate"? document.getElementById("answerInput").value : null;
-  checkAnswer(ans);
+function drawParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach((p,index)=>{
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=p.color;
+    ctx.fill();
+    p.x+=p.dx; p.y+=p.dy; p.life--;
+    if(p.life<=0) particles.splice(index,1);
+  });
+  requestAnimationFrame(drawParticles);
 }
+drawParticles();
 
-function checkAnswer(ans){
-  const ex = exercises[currentLanguage][currentModule-1][currentTask-1][currentQuestion];
-  let correct=false;
-  if(ex.type==="translate") correct = ans.toLowerCase()===ex.answer.toLowerCase();
-  else correct = ans===ex.answer;
-  alert(correct?"Correto!":"Errado! Resposta: "+ex.answer);
-  if(user) set(ref(db, `users/${user.uid}/tasks/${currentLanguage}-module${currentModule}-task${currentTask}-q${currentQuestion+1}`), ans);
+// Funções principais
+function startLesson(){ if(!user) return alert("Entre para começar!"); if(currentModule===null) currentModule=1;
+lessonTitle.innerHTML=`Módulo ${currentModule} - ${currentLanguage}`; lessonText.innerHTML=lessons[currentLanguage][currentModule-1]; lessonSection.style.display="flex"; }
 
-  currentQuestion++;
-  if(currentQuestion<questionsPerTask){
-    showExercise();
-  } else {
-    currentTask++;
-    currentQuestion=0;
-    if(currentTask>totalTasks){
-      currentModule++;
-      currentTask=1;
-      if(currentModule>totalModules){
-        congratsLanguage.innerText=currentLanguage;
-        congratsModal.style.display="flex";
-        taskModal.style.display="none";
-        return;
-      }
-    }
-    taskModal.style.display="none"; // fecha modal
-  }
-}
+function startNextTask(){ lessonSection.style.display="none"; if(currentTask===null) currentTask=1; if(currentQuestion===null) currentQuestion=0; taskModal.style.display="flex"; showExercise(); }
 
-function exitTask(){ taskModal.style.display="none"; }
+function showExercise(){ const ex = exercises[currentLanguage][currentModule-1][currentTask-1][currentQuestion]; if(!ex) return; exerciseContainer.innerHTML=""; taskTitle.innerText=`${currentLanguage} - Módulo ${currentModule} Tarefa ${currentTask} Pergunta ${currentQuestion+1}`;
+if(ex.type==="translate"){ const input=document.createElement("input"); input.id="answerInput"; input.placeholder="Sua resposta"; exerciseContainer.appendChild(document.createTextNode(ex.question)); exerciseContainer.appendChild(document.createElement("br")); exerciseContainer.appendChild(input);} else{ exerciseContainer.appendChild(document.createTextNode(ex.question)); exerciseContainer.appendChild(document.createElement("br")); ex.options.forEach(opt=>{const btn=document.createElement("button"); btn.innerText=opt; btn.onclick=()=>checkAnswer(opt); exerciseContainer.appendChild(btn); exerciseContainer.appendChild(document.createElement("br"));}); } updateProgress(); }
+
+function nextQuestion(){ const ex = exercises[currentLanguage][currentModule-1][currentTask-1][currentQuestion]; let ans = ex.type==="translate"? document.getElementById("answerInput").value : null; checkAnswer(ans); }
+
+function checkAnswer(ans){ const ex = exercises[currentLanguage][currentModule-1][currentTask-1][currentQuestion]; let correct=false; if(ex.type==="translate") correct = ans.toLowerCase()===ex.answer.toLowerCase(); else correct = ans===ex.answer;
+if(correct){ xp+=10; xpDisplay.innerText=xp; correctSound.play(); spawnParticles(window.innerWidth/2,200,"#00FF00");} else{ wrongSound.play(); spawnParticles(window.innerWidth/2,200,"#FF0000"); }
+if(user) set(ref(db, `users/${user.uid}/tasks/${currentLanguage}-module${currentModule}-task${currentTask}-q${currentQuestion+1}`), ans);
+currentQuestion++; if(currentQuestion<questionsPerTask){ showExercise();} else{ currentTask++; currentQuestion=0; if(currentTask>totalTasks){ currentModule++; currentTask=1; if(currentModule>totalModules){ congratsLanguage.innerText=currentLanguage; congratsModal.style.display="flex"; taskModal.style.display="none"; lessonSection.style.display="none"; spawnParticles(window.innerWidth/2,window.innerHeight/2,"#2563EB"); return;} } taskModal.style.display="none"; } updateProgress(); }
+
+function updateProgress(){ const total=totalModules*totalTasks; const completed=(currentModule-1)*totalTasks + (currentTask-1) + (currentQuestion/questionsPerTask); progressFill.style.width=(completed/total)*100+"%"; }
+
+function exitTask(){ taskModal.style.display="none"; lessonSection.style.display="flex"; }
 function closeCongrats(){ congratsModal.style.display="none"; }
 
-// Auth
 window.register=function(){ createUserWithEmailAndPassword(auth,document.getElementById("email").value,document.getElementById("password").value).catch(e=>alert(e.message)); }
 window.login=function(){ signInWithEmailAndPassword(auth,document.getElementById("email").value,document.getElementById("password").value).catch(e=>alert(e.message)); }
 window.logout=function(){ signOut(auth); }
@@ -208,31 +214,9 @@ window.closeSettings=function(){ settingsSection.classList.add("hidden"); appSec
 window.saveLanguage=function(){ currentLanguage=document.getElementById("languageSelect").value; if(user) set(ref(db,"users/"+user.uid+"/language"), currentLanguage).then(()=>closeSettings()); }
 
 onAuthStateChanged(auth,u=>{
-  if(u){
-    user=u;
-    authSection.classList.add("hidden");
-    appSection.classList.remove("hidden");
-    settingsBtn.style.display="inline-block";
-    logoutBtn.style.display="inline-block";
-    currentModule = null;
-    currentTask = null;
-    currentQuestion = null;
-    if(user) get(ref(db,"users/"+user.uid)).then(snapshot=>{
-      const data=snapshot.exists()? snapshot.val():{};
-      currentLanguage=data.language||"Ingles";
-      document.getElementById("languageSelect").value=currentLanguage;
-    });
-  } else {
-    user=null;
-    authSection.classList.remove("hidden");
-    appSection.classList.add("hidden");
-    settingsBtn.style.display="none";
-    logoutBtn.style.display="none";
-    currentModule = null;
-    currentTask = null;
-    currentQuestion = null;
-  }
-});
+  if(u){ user=u; authSection.classList.add("hidden"); appSection.classList.remove("hidden"); settingsBtn.style.display="inline-block"; logoutBtn.style.display="inline-block"; currentModule=null; currentTask=null; currentQuestion=null;
+  if(user) get(ref(db,"users/"+user.uid)).then(snapshot=>{ const data=snapshot.exists()? snapshot.val():{}; currentLanguage=data.language||"Ingles"; document.getElementById("languageSelect").value=currentLanguage; document.getElementById("currentLanguage").innerText=currentLanguage;});} 
+  else{ user=null; authSection.classList.remove("hidden"); appSection.classList.add("hidden"); settingsBtn.style.display="none"; logoutBtn.style.display="none"; currentModule=null; currentTask=null; currentQuestion=null; }});
 </script>
 </body>
 </html>
