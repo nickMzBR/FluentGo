@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+l<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FluentGo Pro | Versão Final</title>
+    <title>FluentGo Global</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #2563EB; --secondary: #10B981; --streak: #FF4500; --bg: #0F172A; --card: #1E293B; --text: #F8FAFC; }
@@ -12,40 +12,36 @@
         .container { padding: 20px; max-width: 500px; margin: 0 auto; }
         .hidden { display: none !important; }
         
-        /* Header & Config */
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: rgba(15, 23, 42, 0.95); border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 1000; }
         .stat-badge { background: #000; padding: 5px 12px; border-radius: 12px; font-weight: 800; display: flex; align-items: center; gap: 5px; }
-        #settingsModal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 3000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        
+        #settingsModal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 3000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .settings-card { background: var(--card); width: 85%; max-width: 350px; padding: 30px; border-radius: 28px; text-align: center; border: 1px solid #334155; }
 
-        /* UI Elements */
-        .card { background: var(--card); padding: 25px; border-radius: 24px; border: 1px solid #334155; margin-bottom: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .card { background: var(--card); padding: 25px; border-radius: 24px; border: 1px solid #334155; margin-bottom: 15px; }
         .progress-bar { background: #334155; height: 10px; border-radius: 10px; overflow: hidden; margin: 15px 0; }
         .progress-fill { height: 100%; background: var(--secondary); width: 0%; transition: 0.5s; }
         
-        /* Grid Ensino */
         .teach-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
-        .word-card { background: var(--card); border-radius: 22px; border: 2px solid #334155; overflow: hidden; cursor: pointer; }
-        .word-img { width: 100%; height: 115px; object-fit: cover; border-bottom: 1px solid #334155; background: #2d3748; }
+        .word-card { background: var(--card); border-radius: 22px; border: 2px solid #334155; overflow: hidden; text-align: center; padding-bottom: 10px; cursor: pointer;}
+        .word-img { width: 100%; height: 110px; object-fit: cover; background: #2d3748; pointer-events: none; }
 
-        /* Game area */
         .word-area { min-height: 110px; border: 2px dashed #334155; border-radius: 20px; margin: 20px 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 10px; background: rgba(0,0,0,0.2); }
-        .chip { background: #334155; padding: 14px 20px; border-radius: 16px; border-bottom: 4px solid #1e293b; font-weight: 700; cursor: pointer; }
+        .chip { background: #334155; padding: 14px 18px; border-radius: 16px; border-bottom: 4px solid #1e293b; font-weight: 700; cursor: pointer; }
         .chip.used { opacity: 0.2; pointer-events: none; }
 
-        /* Forms */
-        input { width: 100%; padding: 16px; border-radius: 14px; border: 1px solid #334155; background: #0F172A; color: white; margin-bottom: 12px; font-size: 1rem; }
+        input { width: 100%; padding: 16px; border-radius: 14px; border: 1px solid #334155; background: #0F172A; color: white; margin-bottom: 12px; }
         button { padding: 18px; border-radius: 18px; border: none; font-weight: 900; cursor: pointer; width: 100%; font-size: 1rem; transition: 0.2s; }
         .btn-main { background: var(--primary); color: white; box-shadow: 0 4px 0 #1D4ED8; }
         .btn-success { background: var(--secondary); color: white; box-shadow: 0 4px 0 #059669; }
-        .btn-danger { background: #ef4444; color: white; margin-top: 20px; }
-        button:active { transform: translateY(3px); box-shadow: none; }
+        .btn-danger { background: #ef4444; color: white; margin-top: 15px; }
+        .btn-outline { background: transparent; border: 1px solid #334155; color: white; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
 <header class="hidden" id="mainHeader">
-    <div style="font-weight:900; letter-spacing: -1px;">FLUENT<span style="color:var(--primary)">GO</span></div>
+    <div style="font-weight:900;">FLUENTGO <span id="currentLangLabel" style="color:var(--primary); font-size:0.75rem; border:1.5px solid; padding:2px 6px; border-radius:6px; margin-left:5px;">EN</span></div>
     <div style="display:flex; align-items:center; gap:12px;">
         <div class="stat-badge" style="color: var(--streak);">🔥 <span id="streakVal">0</span></div>
         <div onclick="toggleSettings(true)" style="cursor:pointer; font-size: 1.4rem;">⚙️</div>
@@ -54,21 +50,24 @@
 
 <div id="settingsModal">
     <div class="settings-card">
-        <h2>Ajustes</h2>
-        <p id="userEmail" style="color:#94a3b8; margin-bottom:30px;"></p>
+        <h3>Idioma do Curso</h3>
+        <button onclick="changeLanguage('English')" class="btn-outline">🇺🇸 English</button>
+        <button onclick="changeLanguage('Spanish')" class="btn-outline">🇪🇸 Spanish</button>
+        <button onclick="changeLanguage('French')" class="btn-outline">🇫🇷 French</button>
+        <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
         <button onclick="toggleSettings(false)" class="btn-main">Voltar</button>
-        <button onclick="handleLogout()" class="btn-danger">Sair da Conta</button>
+        <button onclick="handleLogout()" class="btn-danger">Sair</button>
     </div>
 </div>
 
 <main id="landingView" class="container">
-    <h1 style="text-align:center; font-size:3rem; font-weight:900; margin-top:50px;">Aprenda <span style="color:var(--secondary)">Visual</span></h1>
-    <div class="card" style="margin-top:40px;">
-        <div id="regOnly" class="hidden"><input type="text" id="username" placeholder="Seu Nome"></div>
-        <input type="email" id="email" placeholder="Seu E-mail">
-        <input type="password" id="password" placeholder="Sua Senha">
+    <h1 style="text-align:center; font-size:2.8rem; font-weight:900; margin-top:60px;">Aprenda <br><span style="color:var(--secondary)">Visualmente</span></h1>
+    <div class="card" style="margin-top:30px;">
+        <div id="regOnly" class="hidden"><input type="text" id="username" placeholder="Nome de usuário"></div>
+        <input type="email" id="email" placeholder="E-mail">
+        <input type="password" id="password" placeholder="Senha">
         <button id="authBtn" class="btn-main">ENTRAR</button>
-        <button onclick="toggleAuthMode()" id="toggleAuthBtn" style="background:none; color:#94a3b8; margin-top:15px; text-decoration:underline;">Criar conta gratuita</button>
+        <button onclick="toggleAuthMode()" id="toggleAuthBtn" style="background:none; color:#94a3b8; margin-top:12px; text-decoration:underline;">Criar conta nova</button>
     </div>
 </main>
 
@@ -76,29 +75,25 @@
     <div class="card">
         <h2 id="modLabel" style="margin:0;">Nível 1</h2>
         <div class="progress-bar"><div id="mainProgress" class="progress-fill"></div></div>
-        <p style="color:#94a3b8; font-size:0.9rem;">Acumule XP para subir de nível</p>
-        <button id="actionBtn" class="btn-main">VAMOS COMEÇAR</button>
-    </div>
-    <div class="card">
-        <h3 style="margin:0 0 15px 0;">🏆 Ranking Global</h3>
-        <div id="rankList"></div>
+        <p id="xpText" style="color:#94a3b8; font-size:0.95rem; font-weight:700;">0 XP</p>
+        <button id="actionBtn" class="btn-main" style="margin-top:10px;">COMEÇAR</button>
     </div>
 </main>
 
 <main id="teachingView" class="container hidden">
     <h2 style="text-align:center;">Dicionário</h2>
     <div class="teach-grid" id="teachGrid"></div>
-    <button id="confirmTeach" class="btn-success">ESTOU PRONTO!</button>
+    <button id="confirmTeach" class="btn-success">PRONTO PARA O TESTE</button>
 </main>
 
 <main id="practiceView" class="hidden" style="position:fixed; inset:0; background:var(--bg); z-index:2000; padding:20px;">
     <div class="progress-bar"><div id="taskProgress" class="progress-fill"></div></div>
     <div class="container">
-        <div onclick="speak(currentQ[qIdx].ans)" style="font-size:5rem; cursor:pointer; text-align:center; margin-top:30px;">🔊</div>
+        <div id="audioBtn" style="font-size:5rem; cursor:pointer; text-align:center; margin-top:40px;">🔊</div>
         <h2 id="questionTxt" style="text-align:center; margin:30px 0; font-size:1.8rem;">...</h2>
         <div id="dropZone" class="word-area"></div>
         <div id="wordBank" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;"></div>
-        <div id="feedback" style="margin-top:20px; text-align:center; font-weight:900; min-height:25px;"></div>
+        <div id="feedback" style="margin-top:20px; text-align:center; font-weight:900; height:25px;"></div>
         <button id="checkBtn" class="btn-main" style="margin-top:30px;">VERIFICAR RESPOSTA</button>
     </div>
 </main>
@@ -106,115 +101,107 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getDatabase, ref, set, get, update, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = { apiKey: "AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw", authDomain: "fluentgo-35024.firebaseapp.com", databaseURL: "https://fluentgo-35024-default-rtdb.firebaseio.com", projectId: "fluentgo-35024", appId: "1:613715387990:web:0345ade26374dd32d1fdf7" };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// Sons
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-function playSound(type) {
-    const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    if(type === 'win') {
-        osc.frequency.setValueAtTime(523, audioCtx.currentTime); 
-        osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.2);
-    } else {
-        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+// BANCO DE DADOS MULTI-LÍNGUA
+const dbLangs = {
+    English: {
+        code: "en-US", label: "EN",
+        words: { "I": "https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=200", "You": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=200", "eat": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200", "drink": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=200", "bread": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200", "water": "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=200" },
+        sentences: [{pt: "Eu como pão", ans: "i eat bread", parts: ["i", "eat", "bread", "a"]}, {pt: "Você bebe água", ans: "you drink water", parts: ["you", "drink", "water", "is"]}]
+    },
+    Spanish: {
+        code: "es-ES", label: "ES",
+        words: { "Yo": "https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=200", "Tú": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=200", "como": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200", "bebo": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=200", "pan": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200", "agua": "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=200" },
+        sentences: [{pt: "Eu como pão", ans: "yo como pan", parts: ["yo", "como", "pan", "el"]}, {pt: "Eu bebo água", ans: "yo bebo agua", parts: ["yo", "bebo", "agua", "la"]}]
+    },
+    French: {
+        code: "fr-FR", label: "FR",
+        words: { "Je": "https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=200", "Tu": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=200", "mange": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200", "bois": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=200", "pain": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200", "eau": "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=200" },
+        sentences: [{pt: "Eu como pão", ans: "je mange pain", parts: ["je", "mange", "pain", "le"]}, {pt: "Eu bebo água", ans: "je bois eau", parts: ["je", "bois", "eau", "la"]}]
     }
-}
-
-// Imagens Estáveis
-const imageLib = {
-    "I": "https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=300",
-    "You": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=300",
-    "eat": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300",
-    "drink": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=300",
-    "bread": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=300",
-    "water": "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=300",
-    "coffee": "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=300"
 };
 
-// Dicionário com Lógica de Conjugação
-const vocab = {
-    subjects: [
-        { en: "I", pt: "Eu", verbIdx: 0 },
-        { en: "You", pt: "Você", verbIdx: 1 }
-    ],
-    verbs: [
-        { en: "eat", pt: ["como", "come"] }, // [para Eu, para Você]
-        { en: "drink", pt: ["bebo", "bebe"] }
-    ],
-    objects: [
-        { en: "bread", pt: "pão", type: "food" },
-        { en: "water", pt: "água", type: "drink" },
-        { en: "coffee", pt: "café", type: "drink" }
-    ]
-};
-
-let userData = { xp: 0, mod: 1, streak: 0, lastDate: "", hasLearned: false };
+let userData = { progress: { English: 0, Spanish: 0, French: 0 }, currentLang: "English", streak: 0, lastDate: "", hasLearned: false };
 let currentQ = []; let qIdx = 0; let userPhrase = []; let authMode = 'login';
 
-// Navegação
-window.toggleSettings = (s) => { 
-    document.getElementById('settingsModal').style.display = s ? 'flex' : 'none';
-    if(s) document.getElementById('userEmail').innerText = auth.currentUser.email;
+window.changeLanguage = async (lang) => {
+    userData.currentLang = lang;
+    if(userData.progress[lang] === undefined) userData.progress[lang] = 0;
+    userData.hasLearned = false; 
+    await update(ref(db, 'users/'+auth.currentUser.uid), { currentLang: lang, progress: userData.progress, hasLearned: false });
+    toggleSettings(false);
+    updateUI();
 };
+
+window.toggleSettings = (s) => document.getElementById('settingsModal').style.display = s ? 'flex' : 'none';
 window.handleLogout = () => { toggleSettings(false); signOut(auth); };
 window.toggleAuthMode = () => {
     authMode = authMode === 'login' ? 'register' : 'login';
     document.getElementById('regOnly').classList.toggle('hidden', authMode === 'login');
     document.getElementById('authBtn').innerText = authMode === 'login' ? 'ENTRAR' : 'CRIAR CONTA';
-    document.getElementById('toggleAuthBtn').innerText = authMode === 'login' ? 'Criar conta gratuita' : 'Já tenho conta';
 };
+
 const showView = (id) => {
     ['landingView', 'dashboardView', 'teachingView', 'practiceView'].forEach(v => document.getElementById(v).classList.add('hidden'));
     document.getElementById(id).classList.remove('hidden');
     document.getElementById('mainHeader').classList.toggle('hidden', id === 'landingView');
 };
-const speak = (t) => { const m = new SpeechSynthesisUtterance(t); m.lang="en-US"; window.speechSynthesis.speak(m); };
 
-// Lógica de Geração Inteligente de Frases
-function generateSmartLesson() {
-    let qArr = [];
-    for(let i=0; i<5; i++) {
-        const s = vocab.subjects[Math.floor(Math.random()*vocab.subjects.length)];
-        const v = vocab.verbs[Math.floor(Math.random()*vocab.verbs.length)];
-        // Filtra objeto compatível
-        const typeNeeded = v.en === "eat" ? "food" : "drink";
-        const compatibleObjects = vocab.objects.filter(o => o.type === typeNeeded);
-        const o = compatibleObjects[Math.floor(Math.random()*compatibleObjects.length)];
-        
-        qArr.push({
-            pt: `${s.pt} ${v.pt[s.verbIdx]} ${o.pt}`, // "Você bebe água"
-            ans: `${s.en} ${v.en} ${o.en}`.toLowerCase(),
-            words: [s.en, v.en, o.en, "is", "a"].sort(()=>Math.random()-0.5)
-        });
-    }
-    return qArr;
+const speak = (t) => { 
+    const m = new SpeechSynthesisUtterance(t); 
+    m.lang = dbLangs[userData.currentLang].code;
+    window.speechSynthesis.speak(m); 
+};
+
+function updateUI() {
+    const lang = userData.currentLang;
+    const xp = userData.progress[lang] || 0;
+    document.getElementById('currentLangLabel').innerText = dbLangs[lang].label;
+    document.getElementById('streakVal').innerText = userData.streak;
+    document.getElementById('modLabel').innerText = `Nível ${Math.floor(xp/100)+1}`;
+    document.getElementById('xpText').innerText = `${xp} XP acumulado`;
+    document.getElementById('mainProgress').style.width = `${xp % 100}%`;
+    
+    const btn = document.getElementById('actionBtn');
+    btn.innerText = userData.hasLearned ? "COMEÇAR PRÁTICA" : "ESTUDAR PALAVRAS";
+    btn.onclick = userData.hasLearned ? startPractice : startTeaching;
 }
 
-// Prática
+function startTeaching() {
+    showView('teachingView');
+    const grid = document.getElementById('teachGrid'); grid.innerHTML = "";
+    const langData = dbLangs[userData.currentLang];
+    Object.keys(langData.words).forEach(word => {
+        grid.innerHTML += `<div class="word-card" onclick="speak('${word}')"><img src="${langData.words[word]}" class="word-img"><b>${word}</b></div>`;
+    });
+}
+
+document.getElementById('confirmTeach').onclick = async () => {
+    userData.hasLearned = true;
+    await update(ref(db, 'users/'+auth.currentUser.uid), { hasLearned: true });
+    updateUI(); showView('dashboardView');
+};
+
 function startPractice() {
-    currentQ = generateSmartLesson();
+    currentQ = dbLangs[userData.currentLang].sentences.sort(() => Math.random() - 0.5).slice(0,5);
     qIdx = 0; showView('practiceView'); renderExercise();
 }
 
 function renderExercise() {
     const q = currentQ[qIdx];
-    document.getElementById('taskProgress').style.width = `${(qIdx/5)*100}%`;
+    document.getElementById('taskProgress').style.width = `${(qIdx / currentQ.length) * 100}%`;
     document.getElementById('questionTxt').innerText = q.pt;
     document.getElementById('dropZone').innerHTML = "";
     document.getElementById('feedback').innerText = "";
     userPhrase = [];
     const bank = document.getElementById('wordBank'); bank.innerHTML = "";
-    q.words.forEach(w => {
+    q.parts.sort(() => Math.random() - 0.5).forEach(w => {
         const b = document.createElement('div'); b.className = "chip"; b.innerText = w;
         b.onclick = () => { if(!b.classList.contains('used')) { userPhrase.push(w); document.getElementById('dropZone').innerHTML += `<span>${w} </span>`; b.classList.add('used'); speak(w); }};
         bank.appendChild(b);
@@ -222,67 +209,30 @@ function renderExercise() {
 }
 
 document.getElementById('checkBtn').onclick = async () => {
-    if(userPhrase.join(" ").toLowerCase() === currentQ[qIdx].ans) {
-        playSound('win'); document.getElementById('feedback').style.color = "var(--secondary)";
-        document.getElementById('feedback').innerText = "✨ EXCELENTE!";
-        userData.xp += 20; qIdx++;
-        if(qIdx < 5) setTimeout(renderExercise, 1000);
+    if(userPhrase.join(" ").toLowerCase().trim() === currentQ[qIdx].ans) {
+        document.getElementById('feedback').innerText = "✨ MUITO BEM!";
+        userData.progress[userData.currentLang] += 20;
+        qIdx++;
+        if(qIdx < currentQ.length) setTimeout(renderExercise, 1000);
         else {
-            if(Math.floor(userData.xp/100)+1 > userData.mod) { userData.mod++; userData.hasLearned = false; }
-            await update(ref(db, 'users/'+auth.currentUser.uid), userData);
+            await update(ref(db, 'users/'+auth.currentUser.uid), { progress: userData.progress });
             showView('dashboardView'); updateUI();
         }
-    } else { 
-        playSound('lose'); document.getElementById('feedback').style.color = "var(--streak)";
-        document.getElementById('feedback').innerText = "❌ OPS, TENTE DE NOVO"; 
-    }
+    } else { document.getElementById('feedback').innerText = "❌ TENTE NOVAMENTE"; }
 };
 
-// Ensino
-function startTeaching() {
-    showView('teachingView');
-    const grid = document.getElementById('teachGrid'); grid.innerHTML = "";
-    Object.keys(imageLib).forEach(word => {
-        grid.innerHTML += `<div class="word-card" onclick="speak('${word}')"><img src="${imageLib[word]}" class="word-img" onerror="this.src='https://via.placeholder.com/300'"><div style="padding:15px; text-align:center;"><b>${word}</b></div></div>`;
-    });
-}
-document.getElementById('confirmTeach').onclick = async () => {
-    userData.hasLearned = true;
-    await update(ref(db, 'users/'+auth.currentUser.uid), { hasLearned: true });
-    showView('dashboardView'); updateUI();
-};
+document.getElementById('audioBtn').onclick = () => speak(currentQ[qIdx].ans);
 
-// Firebase Sync
 onAuthStateChanged(auth, async (u) => {
     if(u) {
         const snap = await get(ref(db, 'users/'+u.uid));
         if(snap.exists()) {
             userData = snap.val();
-            const hoje = new Date().toISOString().split('T')[0];
-            const ontem = new Date(); ontem.setDate(ontem.getDate()-1);
-            if(userData.lastDate !== hoje) {
-                userData.streak = (userData.lastDate === ontem.toISOString().split('T')[0]) ? (userData.streak + 1) : 1;
-                userData.lastDate = hoje;
-                await update(ref(db, 'users/'+u.uid), userData);
-            }
-        }
+            if(!userData.progress) userData.progress = { English: 0, Spanish: 0, French: 0 };
+        } else { await set(ref(db, 'users/'+u.uid), userData); }
         showView('dashboardView'); updateUI();
-        onValue(ref(db, 'users/'), s => {
-            const list = Object.values(s.val() || {}).sort((a,b)=>b.xp - a.xp).slice(0,5);
-            document.getElementById('rankList').innerHTML = list.map((u,i)=>`<div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #334155;"><span>${i+1}. ${u.username || 'Aluno'}</span><b>${u.xp} XP</b></div>`).join('');
-        });
     } else { showView('landingView'); }
 });
-
-function updateUI() {
-    document.getElementById('xpVal').innerText = userData.xp;
-    document.getElementById('streakVal').innerText = userData.streak;
-    document.getElementById('modLabel').innerText = `Nível ${userData.mod}`;
-    document.getElementById('mainProgress').style.width = `${userData.xp % 100}%`;
-    const btn = document.getElementById('actionBtn');
-    btn.innerText = userData.hasLearned ? "COMEÇAR PRÁTICA" : "ESTUDAR DICIONÁRIO";
-    btn.onclick = userData.hasLearned ? startPractice : startTeaching;
-}
 
 document.getElementById('authBtn').onclick = async () => {
     const e = document.getElementById('email').value, p = document.getElementById('password').value;
