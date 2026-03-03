@@ -3,41 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FluentGo Pro | v8.0 Full</title>
+    <title>FluentGo Pro | v9.0 Anti-Travamento</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #2563EB; --secondary: #10B981; --bg: #0F172A; --card: #1E293B; --text: #F8FAFC; --gold: #F59E0B; --error: #EF4444; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; }
-        body { margin:0; background: var(--bg); color: var(--text); overflow-x: hidden; padding-bottom: 80px; }
-        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
+        body { margin:0; background: var(--bg); color: var(--text); overflow-x: hidden; padding-bottom: 80px; height: 100vh; }
+        .container { padding: 20px; max-width: 500px; margin: 0 auto; height: 100%; display: flex; flex-direction: column; }
         .hidden { display: none !important; }
         
-        /* HEADER */
-        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #0F172A; border-bottom: 1px solid #334155; position: sticky; top:0; z-index:100; }
-        .card { background: var(--card); padding: 20px; border-radius: 24px; border: 1px solid #334155; margin-bottom: 15px; position: relative; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #0F172A; border-bottom: 1px solid #334155; }
+        .card { background: var(--card); padding: 20px; border-radius: 24px; border: 1px solid #334155; margin-bottom: 15px; text-align: center; }
         
-        /* BOTÕES */
         button { padding: 16px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; width: 100%; transition: 0.2s; font-size: 15px; }
         .btn-main { background: var(--primary); color: white; box-shadow: 0 4px 0 #1D4ED8; }
-        .btn-main:active { transform: translateY(2px); box-shadow: 0 2px 0 #1D4ED8; }
-        .btn-outline { background: #334155; color: white; border: 1px solid #475569; margin-top: 8px; }
-        .btn-outline.active { border: 2px solid var(--primary); background: rgba(37, 99, 235, 0.1); }
+        .btn-check { background: var(--secondary); color: white; box-shadow: 0 4px 0 #059669; }
 
-        /* NAV */
         nav { position: fixed; bottom: 0; width: 100%; background: #1E293B; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #334155; z-index: 1000; }
-        nav div { font-size: 24px; cursor: pointer; opacity: 0.4; transition: 0.3s; }
-        nav div.active { opacity: 1; color: var(--primary); transform: scale(1.1); }
+        nav div { font-size: 24px; cursor: pointer; opacity: 0.4; }
+        nav div.active { opacity: 1; color: var(--primary); }
 
-        /* RANKING */
-        .rank-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #334155; align-items: center; }
-        
-        /* PRÁTICA */
         .word-area { min-height: 120px; border: 2px dashed #475569; border-radius: 20px; margin: 20px 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 15px; background: rgba(0,0,0,0.2); }
         .chip { background: #334155; padding: 12px 18px; border-radius: 14px; font-weight: 700; cursor: pointer; color: white; border: 1px solid #475569; font-size: 16px; }
         .chip.used { opacity: 0.1; pointer-events: none; }
         
-        /* FEEDBACK */
-        #feedbackBar { position: fixed; bottom: 0; left: 0; right: 0; padding: 30px 20px; transform: translateY(100%); transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 6000; text-align: center; }
+        /* FEEDBACK CORRIGIDO - Z-INDEX 99999 */
+        #feedbackBar { position: fixed; bottom: 0; left: 0; right: 0; padding: 30px 20px; transform: translateY(100%); transition: 0.3s ease-out; z-index: 99999; text-align: center; border-top: 4px solid rgba(255,255,255,0.1); }
         #feedbackBar.correct { transform: translateY(0); background: #065F46; }
         #feedbackBar.wrong { transform: translateY(0); background: #991B1B; }
     </style>
@@ -49,65 +40,51 @@
 <audio id="sndClick" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
 
 <header id="mainHeader" class="hidden">
-    <div style="font-weight:900;">FLUENTGO <span id="langTag" style="color:var(--primary); font-size:12px; margin-left:5px;">EN</span></div>
+    <div style="font-weight:900;">FLUENTGO <span id="langTag" style="color:var(--primary); font-size:12px;">EN</span></div>
     <div style="font-weight: 800; color: var(--secondary);">🔥 <span id="userXP">0</span></div>
 </header>
 
 <main id="homeView" class="container hidden">
     <div class="card">
         <h2 id="levelTxt">Nível 1</h2>
-        <p id="taskTxt" style="color:#94a3b8;">Tarefa 1 de 10</p>
-        <div style="background:#334155; height:8px; border-radius:10px; margin:15px 0; overflow:hidden;">
-            <div id="mainProgress" style="height:100%; background:var(--secondary); width:0%;"></div>
-        </div>
-        <button id="startBtn" class="btn-main">PRATICAR AGORA</button>
+        <p id="taskTxt">Tarefa 1 de 10</p>
+        <button id="startBtn" class="btn-main">PRATICAR TAREFA</button>
     </div>
 </main>
 
 <main id="rankingView" class="container hidden">
-    <h3 style="margin-left:10px;">🏆 Ranking Global</h3>
-    <div id="leaderboard" class="card" style="padding:10px;">
-        <p style="text-align:center; color:#64748b;">Carregando...</p>
-    </div>
+    <h3 style="text-align: center;">🏆 Ranking Global</h3>
+    <div id="leaderboard" class="card"></div>
 </main>
 
 <main id="vipView" class="container hidden">
-    <h3 style="margin-left:10px;">💎 FluentGo Pro</h3>
-    <div class="card" style="border: 2px solid var(--gold); text-align:center;">
-        <div style="background:var(--gold); color:black; font-size:10px; font-weight:900; padding:2px 8px; border-radius:4px; position:absolute; top:10px; right:10px;">OFERTA</div>
-        <h2 style="margin:10px 0;">R$ 4,99<span style="font-size:14px; color:#94a3b8;">/mês</span></h2>
-        <p style="font-size:13px; color:#94a3b8; margin-bottom:20px;">Vidas infinitas, sem anúncios e selo exclusivo no ranking.</p>
-        <button class="btn-main" style="background:var(--gold); color:black; box-shadow: 0 4px 0 #b45309;" onclick="alert('Checkout em breve!')">ASSINAR AGORA</button>
+    <h3 style="text-align: center;">💎 FluentGo Premium</h3>
+    <div class="card" style="border: 2px solid var(--gold);">
+        <h2 style="color:var(--gold);">R$ 4,99/mês</h2>
+        <button class="btn-main" style="background:var(--gold); color:black;">ASSINAR</button>
     </div>
 </main>
 
 <main id="settingsView" class="container hidden">
-    <h3 style="margin-left:10px;">⚙️ Configurações</h3>
+    <h3 style="text-align: center;">⚙️ Configurações</h3>
     <div class="card">
-        <p style="font-size:11px; color:#94a3b8; font-weight:800; text-align:left;">IDIOMA DE ESTUDO</p>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-            <button onclick="changeLang('English')" class="btn-outline" id="opt-English">🇺🇸 Inglês</button>
-            <button onclick="changeLang('Spanish')" class="btn-outline" id="opt-Spanish">🇪🇸 Espanhol</button>
-            <button onclick="changeLang('French')" class="btn-outline" id="opt-French">🇫🇷 Francês</button>
-            <button onclick="changeLang('Italian')" class="btn-outline" id="opt-Italian">🇮🇹 Italiano</button>
+        <p style="font-size:11px; color:#94a3b8; font-weight:800;">IDIOMA</p>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <button onclick="changeLang('English')" class="btn-main" style="font-size:12px;">🇺🇸 Inglês</button>
+            <button onclick="changeLang('Spanish')" class="btn-main" style="font-size:12px;">🇪🇸 Espanhol</button>
+            <button onclick="changeLang('French')" class="btn-main" style="font-size:12px;">🇫🇷 Francês</button>
+            <button onclick="changeLang('Italian')" class="btn-main" style="font-size:12px;">🇮🇹 Italiano</button>
         </div>
-
-        <p style="font-size:11px; color:#94a3b8; font-weight:800; text-align:left; margin-top:25px;">SISTEMA</p>
-        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:12px; border-radius:12px;">
-            <span>Efeitos Sonoros</span>
-            <input type="checkbox" id="soundToggle" checked style="width:20px; height:20px;">
+        <hr style="margin:20px 0; border:0; border-top:1px solid #334155;">
+        <div style="display:flex; justify-content:space-between;">
+            <span>Sons</span> <input type="checkbox" id="soundToggle" checked>
         </div>
-        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:12px; border-radius:12px; margin-top:8px;">
-            <span>Voz Automática (TTS)</span>
-            <input type="checkbox" id="voiceToggle" checked style="width:20px; height:20px;">
-        </div>
-
-        <button onclick="auth.signOut()" class="btn-outline" style="color:#EF4444; margin-top:30px; border-color:rgba(239,68,68,0.3);">Sair da Conta</button>
+        <button onclick="auth.signOut()" style="color:var(--error); background:none; margin-top:20px;">Sair da conta</button>
     </div>
 </main>
 
 <div id="practiceView" class="hidden" style="position:fixed; inset:0; background:var(--bg); z-index:5000;">
-    <div class="container" style="display:flex; flex-direction:column; height:100%;">
+    <div class="container">
         <div style="display:flex; align-items:center; gap:15px;">
             <button onclick="closePractice()" style="width:40px; background:none; font-size:24px;">✕</button>
             <div style="background:#334155; flex:1; height:10px; border-radius:10px;">
@@ -117,12 +94,12 @@
         <h2 id="targetPhrase" style="text-align:center; font-size:2rem; margin:40px 0;">...</h2>
         <div id="dropZone" class="word-area"></div>
         <div id="wordBank" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;"></div>
-        <div style="margin-top:auto; padding-bottom:40px;">
-            <button id="checkBtn" class="btn-main" style="background:var(--secondary); box-shadow:0 4px 0 #059669;">VERIFICAR</button>
+        <div style="margin-top:auto; padding-bottom:100px;">
+            <button id="checkBtn" class="btn-check">VERIFICAR</button>
         </div>
     </div>
     <div id="feedbackBar">
-        <h3 id="feedbackMsg" style="color:white; margin-bottom:15px;"></h3>
+        <h3 id="feedbackMsg" style="color:white; margin-bottom:15px; font-size:1.4rem;"></h3>
         <button id="nextBtn" style="background:white; color:black; font-weight:900;">CONTINUAR</button>
     </div>
 </div>
@@ -144,7 +121,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-const database = {
+const phrases = {
     English: [{pt: "O carro é azul", en: "the car is blue"}, {pt: "Eu bebo leite", en: "i drink milk"}],
     Spanish: [{pt: "Eu como pão", en: "yo como pan"}],
     French: [{pt: "Eu sou estudante", en: "je suis étudiant"}],
@@ -156,19 +133,7 @@ let currentQ = [];
 let qIdx = 0;
 let selection = [];
 
-function play(id) {
-    if(document.getElementById('soundToggle').checked) {
-        const a = document.getElementById(id); a.currentTime = 0; a.play();
-    }
-}
-
-function speak(text) {
-    if(document.getElementById('voiceToggle').checked) {
-        const msg = new SpeechSynthesisUtterance(text);
-        msg.lang = userData.lang === 'English' ? 'en-US' : userData.lang === 'Spanish' ? 'es-ES' : 'fr-FR';
-        window.speechSynthesis.speak(msg);
-    }
-}
+function play(id) { if(document.getElementById('soundToggle').checked) { const a = document.getElementById(id); a.currentTime = 0; a.play(); } }
 
 window.showTab = (id) => {
     ['homeView', 'rankingView', 'vipView', 'settingsView'].forEach(v => document.getElementById(v).classList.add('hidden'));
@@ -186,7 +151,9 @@ async function loadRanking() {
     let users = [];
     snap.forEach(c => users.push(c.val()));
     users.reverse().forEach((u, i) => {
-        board.innerHTML += `<div class="rank-item"><span>${i+1}. ${u.email.split('@')[0]}</span> <b>${u.xp} XP</b></div>`;
+        board.innerHTML += `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #334155;">
+            <span>${i+1}. ${u.email ? u.email.split('@')[0] : 'User'}</span><b>${u.xp || 0} XP</b>
+        </div>`;
     });
 }
 
@@ -200,15 +167,12 @@ function updateUI() {
     document.getElementById('userXP').innerText = userData.xp || 0;
     document.getElementById('levelTxt').innerText = `Nível ${userData.lvl || 1}`;
     document.getElementById('taskTxt').innerText = `Tarefa ${userData.task || 1} de 10`;
-    document.getElementById('mainProgress').style.width = `${((userData.task || 1)-1)*10}%`;
     document.getElementById('langTag').innerText = (userData.lang || "EN").substring(0,2).toUpperCase();
-    document.querySelectorAll('.btn-outline').forEach(b => b.classList.remove('active'));
-    document.getElementById('opt-' + userData.lang)?.classList.add('active');
 }
 
 document.getElementById('startBtn').onclick = () => {
     qIdx = 0;
-    const pool = database[userData.lang] || database.English;
+    const pool = phrases[userData.lang] || phrases.English;
     currentQ = [...pool].sort(() => 0.5 - Math.random()).slice(0, 5);
     document.getElementById('practiceView').classList.remove('hidden');
     renderQ();
@@ -220,7 +184,7 @@ function renderQ() {
     document.getElementById('innerBar').style.width = `${(qIdx / 5) * 100}%`;
     document.getElementById('targetPhrase').innerText = q.pt;
     document.getElementById('dropZone').innerHTML = "";
-    document.getElementById('feedbackBar').className = "";
+    document.getElementById('feedbackBar').classList.remove('correct', 'wrong');
     const bank = document.getElementById('wordBank');
     bank.innerHTML = "";
     let parts = [...q.en.split(" "), "the", "is"].sort(() => Math.random() - 0.5);
@@ -240,16 +204,18 @@ document.getElementById('checkBtn').onclick = () => {
     const correct = currentQ[qIdx].en.toLowerCase().trim();
     const bar = document.getElementById('feedbackBar');
     if(guess === correct) {
-        play('sndCorrect'); speak(correct);
-        bar.className = "correct"; document.getElementById('feedbackMsg').innerText = "Excelente! ✨";
+        play('sndCorrect');
+        bar.className = "correct";
+        document.getElementById('feedbackMsg').innerText = "Excelente! ✨";
     } else {
         play('sndWrong');
-        bar.className = "wrong"; document.getElementById('feedbackMsg').innerText = "Resposta: " + correct;
+        bar.className = "wrong";
+        document.getElementById('feedbackMsg').innerText = "Resposta: " + correct;
     }
 };
 
 document.getElementById('nextBtn').onclick = async () => {
-    document.getElementById('feedbackBar').className = "";
+    document.getElementById('feedbackBar').classList.remove('correct', 'wrong');
     qIdx++;
     if(qIdx < 5) renderQ();
     else {
