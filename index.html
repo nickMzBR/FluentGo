@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FluentGo | V2.4</title>
+    <title>FluentGo | V2.5</title>
     <style>
         :root { --primary: #2563EB; --secondary: #10B981; --premium: #FF9900; --ads: #EF4444; --bg: #121212; --card: #1E1E1E; }
         body { margin:0; font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: #fff; text-align: center; overflow-x: hidden; }
@@ -12,7 +12,6 @@
         .container { padding: 20px; max-width: 600px; margin: 0 auto; position: relative; z-index: 10; }
         .hidden { display: none !important; }
         
-        /* CARDS E BOTÕES 3D */
         .card { background: var(--card); padding: 25px; border-radius: 24px; border: 1px solid #333; margin-bottom: 20px; box-shadow: 0 8px 0 #000; }
         
         button { padding: 14px 24px; border-radius: 16px; border: none; font-weight: 700; cursor: pointer; transition: 0.1s; font-size: 1em; position: relative; }
@@ -21,31 +20,18 @@
         .btn-main { background: var(--primary); color: white; width: 100%; box-shadow: 0 5px 0 #1D4ED8; margin-top: 10px; }
         .btn-ghost { background: #333; color: #ccc; width: 100%; margin-top: 10px; border-bottom: 4px solid #111; }
         
-        /* CORREÇÃO DOS INPUTS DE LOGIN E EXERCÍCIOS */
         input[type="email"], input[type="password"], input[type="text"] { 
-            background: #252525; 
-            border: 2px solid #444; 
-            padding: 16px; 
-            border-radius: 18px; /* Bordas arredondadas como antes */
-            color: white; 
-            font-size: 1.1em; 
-            text-align: center; 
-            width: 85%; 
-            outline: none; 
-            margin-bottom: 15px; 
-            border-bottom: 5px solid #000; /* Efeito 3D no input */
-            transition: 0.3s;
+            background: #252525; border: 2px solid #444; padding: 16px; border-radius: 18px; color: white; 
+            font-size: 1.1em; text-align: center; width: 85%; outline: none; margin-bottom: 15px; border-bottom: 5px solid #000; 
         }
-        input:focus { border-color: var(--primary); }
 
-        /* Estilos de Jogo */
         .btn-option { background: #252525; color: white; width: 100%; margin: 8px 0; text-align: left; border: 2px solid #444; border-bottom: 5px solid #000; padding: 15px; border-radius: 18px; }
         .btn-word { background: #444; color: white; margin: 5px; display: inline-block; padding: 10px 18px; border-radius: 12px; border-bottom: 4px solid #222; }
         .btn-word.used { opacity: 0.2; pointer-events: none; }
         .word-area { min-height: 80px; border: 2px dashed #444; border-radius: 20px; margin-bottom: 25px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 10px; background: rgba(255,255,255,0.02); }
 
         .progress-container { background: #333; height: 12px; border-radius: 10px; margin: 15px 0; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.5s; }
         
         canvas { position: fixed; inset: 0; pointer-events: none; z-index: 2000; }
     </style>
@@ -60,18 +46,18 @@
 </header>
 
 <div id="authSection" class="container">
-    <div class="card" style="margin-top: 50px; padding-top: 40px;">
-        <h2 style="margin-bottom: 30px;">Bem-vindo de volta!</h2>
-        <input type="email" id="email" placeholder="Seu e-mail">
-        <input type="password" id="password" placeholder="Sua senha">
-        <button id="loginBtn" class="btn-main" style="margin-top: 20px;">ENTRAR</button>
+    <div class="card" style="margin-top: 50px;">
+        <h2>Aprenda um novo idioma</h2>
+        <input type="email" id="email" placeholder="E-mail">
+        <input type="password" id="password" placeholder="Senha">
+        <button id="loginBtn" class="btn-main">ENTRAR</button>
         <button id="registerBtn" class="btn-ghost">CRIAR CONTA</button>
     </div>
 </div>
 
 <div id="langOnboarding" class="container hidden">
     <div class="card">
-        <h2>Escolha seu curso:</h2>
+        <h2>O que vamos aprender?</h2>
         <button class="btn-ghost" style="border-color: var(--primary)" onclick="setInitialLang('Ingles')">🇺🇸 Inglês</button>
         <button class="btn-ghost" style="border-color: var(--secondary)" onclick="setInitialLang('Espanhol')">🇪🇸 Espanhol</button>
         <button class="btn-ghost" style="border-color: #FF0055" onclick="setInitialLang('Japones')">🇯🇵 Japonês</button>
@@ -85,11 +71,11 @@
     </div>
     <div class="card">
         <h3 id="moduleLabel">Módulo 1</h3>
-        <p id="taskLabel" style="color: #aaa; font-size: 0.9em;">Tarefa 1 de 5</p>
+        <p id="taskLabel" style="color: #aaa;">Tarefa 1 de 5</p>
         <div class="progress-container"><div id="mainProgress" class="progress-fill"></div></div>
         <button id="startBtn" class="btn-main" style="padding: 20px; font-size: 1.2em;">ESTUDAR AGORA</button>
     </div>
-    <button id="configBtn" class="btn-ghost">⚙️ Configurações</button>
+    <button id="configBtn" class="btn-ghost">⚙️ Mudar Idioma</button>
     <button id="logoutBtn" class="btn-ghost" style="color: var(--ads);">Sair</button>
 </div>
 
@@ -108,10 +94,10 @@
         <button id="closeTask" style="background:none; color:#666; font-size: 1.5em;">✕</button>
     </div>
     <div class="container" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-        <h4 id="taskInstruction" style="color: var(--primary); text-transform: uppercase; font-weight: 900; letter-spacing: 1px;">...</h4>
+        <h4 id="taskInstruction" style="color: var(--primary); text-transform: uppercase; font-weight: 900;">...</h4>
         <h1 id="questionDisplay" style="margin: 20px 0;">...</h1>
         <div id="exerciseArea"></div>
-        <div id="feedback" style="margin-top: 20px; font-weight: bold; min-height: 30px; font-size: 1.2em;"></div>
+        <div id="feedback" style="margin-top: 20px; font-weight: bold; min-height: 30px;"></div>
         <button id="checkBtn" class="btn-main" style="width: 80%; align-self: center;">VERIFICAR</button>
     </div>
 </div>
@@ -126,41 +112,46 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-const dictionary = {
-    Ingles: [
-        {pt: "Olá", en: "hello", alt: ["hi"]}, 
-        {pt: "Sim", en: "yes", alt: ["yeah"]}, 
-        {pt: "Água", en: "water", alt: []}, 
-        {pt: "Pão", en: "bread", alt: []}, 
-        {pt: "Café", en: "coffee", alt: []},
-        {pt: "Por favor", en: "please", alt: []},
-        {pt: "Obrigado", en: "thanks", alt: ["thank you"]}
-    ],
-    Espanhol: [{pt: "Olá", en: "hola", alt: []}, {pt: "Sim", en: "si", alt: []}, {pt: "Água", en: "agua", alt: []}],
-    Japones: [{pt: "Bom dia", en: "ohayou", alt: []}, {pt: "Gato", en: "neko", alt: []}, {pt: "Sim", en: "hai", alt: []}]
+// CURRÍCULO PREDEFINIDO (Adicione mais módulos aqui)
+const courseData = {
+    Ingles: {
+        M1: [ // Básico: Saudações
+            {q: "Olá", a: ["hello", "hi"], type: "choice", options: ["Hello", "Apple", "Water"]},
+            {q: "Sim", a: ["yes"], type: "input"},
+            {q: "Por favor", a: ["please"], type: "choice", options: ["Please", "Thanks", "No"]},
+            {q: "Obrigado", a: ["thanks", "thank you"], type: "input"},
+            {q: "Tchau", a: ["goodbye", "bye"], type: "phrase", words: ["goodbye", "hello", "yes"]}
+        ],
+        M2: [ // Nível 2: Comida e Bebida
+            {q: "Água", a: ["water"], type: "input"},
+            {q: "Café", a: ["coffee"], type: "choice", options: ["Coffee", "Tea", "Milk"]},
+            {q: "Pão", a: ["bread"], type: "input"},
+            {q: "Eu bebo água", a: ["i drink water"], type: "phrase", words: ["i", "drink", "water", "eat", "bread"]},
+            {q: "Eu como pão", a: ["i eat bread"], type: "input"}
+        ],
+        M3: [ // Nível 3: Frases estruturadas
+            {q: "Como você está?", a: ["how are you"], type: "phrase", words: ["how", "are", "you", "fine", "thanks"]},
+            {q: "Eu estou bem", a: ["i am fine", "i'm fine"], type: "input"},
+            {q: "Qual o seu nome?", a: ["what is your name"], type: "phrase", words: ["what", "is", "your", "name", "hello"]},
+            {q: "Bom dia", a: ["good morning"], type: "choice", options: ["Good morning", "Good night", "Hello"]},
+            {q: "Meu nome é...", a: ["my name is"], type: "input"}
+        ]
+    },
+    Espanhol: {
+        M1: [
+            {q: "Olá", a: ["hola"], type: "input"},
+            {q: "Sim", a: ["si"], type: "choice", options: ["Si", "No", "Gracias"]},
+            {q: "Obrigado", a: ["gracias"], type: "input"},
+            {q: "Por favor", a: ["por favor"], type: "phrase", words: ["por", "favor", "de", "nada"]},
+            {q: "De nada", a: ["de nada"], type: "choice", options: ["De nada", "Hola", "Si"]}
+        ]
+    }
 };
 
 let userData = { xp: 0, lang: "", mod: 1, task: 1, combo: 0 };
 let currentQuestions = [];
 let qIdx = 0;
 let phraseBuilder = [];
-
-function generateSession() {
-    const lang = userData.lang;
-    const words = [...dictionary[lang]].sort(() => Math.random() - 0.5).slice(0, 5);
-    const types = ["input", "choice", "phrase"];
-    return words.map(w => {
-        const type = types[Math.floor(Math.random() * types.length)];
-        let q = { q: w.pt, a: [w.en, ...w.alt], type: type };
-        if(type === "choice") {
-            const others = dictionary[lang].filter(x => x.en !== w.en).sort(() => Math.random() - 0.5);
-            q.options = [w.en, others[0]?.en || "word", others[1]?.en || "test"].sort(() => Math.random() - 0.5);
-        } else if(type === "phrase") {
-            q.words = [w.en, "is", "the"].sort(() => Math.random() - 0.5);
-        }
-        return q;
-    });
-}
 
 const showSection = (id) => {
     ["authSection", "appSection", "taskModal", "langOnboarding", "studyModal"].forEach(s => document.getElementById(s).classList.add("hidden"));
@@ -176,7 +167,12 @@ const updateUI = () => {
     document.getElementById("mainProgress").style.width = `${((userData.task - 1) || 0) * 20}%`;
 };
 
-window.startLesson = () => { currentQuestions = generateSession(); qIdx = 0; showStudyCard(); };
+window.startLesson = () => { 
+    const modKey = "M" + userData.mod;
+    currentQuestions = courseData[userData.lang][modKey] || courseData[userData.lang]["M1"];
+    qIdx = 0; 
+    showStudyCard(); 
+};
 
 function showStudyCard() {
     if (qIdx < 5) {
@@ -209,7 +205,7 @@ function renderExercise() {
     } else if (q.type === "phrase") {
         phraseBuilder = [];
         const drop = document.createElement("div"); drop.className = "word-area"; area.appendChild(drop);
-        q.words.forEach(w => {
+        q.words.sort(() => Math.random() - 0.5).forEach(w => {
             const b = document.createElement("button"); b.className = "btn-word"; b.innerText = w;
             b.onclick = () => { if(!b.classList.contains("used")) { phraseBuilder.push(w); drop.innerHTML += `<span>${w} </span>`; b.classList.add("used"); }};
             area.appendChild(b);
