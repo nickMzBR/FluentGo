@@ -26,8 +26,8 @@
         .chip.used { opacity: 0.15; pointer-events: none; }
 
         nav { background: #1E293B; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #334155; }
-        nav div { font-size: 24px; cursor: pointer; opacity: 0.4; }
-        nav div.active { opacity: 1; color: var(--primary); }
+        nav div { font-size: 24px; cursor: pointer; opacity: 0.4; transition: 0.3s; }
+        nav div.active { opacity: 1; color: var(--primary); transform: scale(1.1); }
     </style>
 </head>
 <body>
@@ -53,21 +53,33 @@
 </main>
 
 <main id="vipView" class="container hidden">
-    <div class="card" style="border: 2px solid var(--gold);">
-        <h3 style="color:var(--gold)">💎 PLANO PREMIUM</h3>
-        <p style="margin: 15px 0; font-size: 14px; color: #94a3b8;">Vidas infinitas e sem anúncios.</p>
-        <button class="btn-check" style="background:var(--gold); box-shadow: 0 5px 0 #b45309; color: black;">R$ 4,99 / MÊS</button>
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+        <div class="card" style="border: 2px solid var(--gold); background: linear-gradient(145deg, #1e293b, #0f172a);">
+            <div style="font-size: 40px; margin-bottom: 10px;">💎</div>
+            <h3 style="color:var(--gold); font-size: 1.5rem;">PLANO PREMIUM</h3>
+            <p style="margin: 15px 0; font-size: 14px; color: #94a3b8; line-height: 1.5;">
+                Remova anúncios, ganhe vidas infinitas e acesse cursos exclusivos.
+            </p>
+            <button class="btn-check" style="background:var(--gold); box-shadow: 0 5px 0 #b45309; color: #000;">ASSINAR POR R$ 4,99</button>
+        </div>
     </div>
 </main>
 
 <main id="settingsView" class="container hidden">
     <div class="card">
-        <h3 style="margin-bottom: 20px;">⚙️ AJUSTES</h3>
-        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:15px; border-radius:15px;">
+        <h3 style="margin-bottom: 25px; text-align: left; padding-left: 10px;">⚙️ AJUSTES</h3>
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:18px; border-radius:18px; margin-bottom: 10px;">
             <span>Efeitos de Som</span>
-            <input type="checkbox" id="soundToggle" checked style="width:22px; height:22px;">
+            <input type="checkbox" id="soundToggle" checked style="width:24px; height:24px; accent-color: var(--secondary);">
         </div>
-        <button onclick="auth.signOut()" style="background:none; color:var(--error); margin-top:20px;">Sair da Conta</button>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:18px; border-radius:18px; margin-bottom: 10px;">
+            <span>Notificações</span>
+            <input type="checkbox" id="notifToggle" checked style="width:24px; height:24px; accent-color: var(--secondary);">
+        </div>
+
+        <button onclick="handleLogout()" style="background:none; color:var(--error); margin-top:30px; border: 1px solid var(--error);">SAIR DA CONTA</button>
     </div>
 </main>
 
@@ -99,7 +111,7 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getDatabase, ref, onValue, update, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = { apiKey: "AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw", authDomain: "fluentgo-35024.firebaseapp.com", databaseURL: "https://fluentgo-35024-default-rtdb.firebaseio.com", projectId: "fluentgo-35024", appId: "1:613715387990:web:0345ade26374dd32d1fdf7" };
@@ -118,7 +130,7 @@ let qIdx = 0;
 let selection = [];
 let state = "CHECK";
 
-// ATUALIZAÇÃO EM TEMPO REAL (CORREÇÃO DO UNDEFINED)
+// OBSERVADOR EM TEMPO REAL
 onAuthStateChanged(auth, (u) => {
     if(u) {
         onValue(ref(db, 'users/'+u.uid), (snap) => {
@@ -132,6 +144,8 @@ onAuthStateChanged(auth, (u) => {
             document.getElementById('homeView').classList.remove('hidden');
             document.getElementById('bottomNav').classList.remove('hidden');
         });
+    } else {
+        window.location.href = "login.html"; // Redireciona se não logado
     }
 });
 
@@ -141,7 +155,8 @@ function updateHomeUI() {
     document.getElementById('taskTxt').innerText = `Tarefa ${user.task || 1} de 10`;
     document.getElementById('langTag').innerText = (user.lang || "EN").substring(0,2).toUpperCase();
     document.querySelectorAll('.btn-lang').forEach(b => b.classList.remove('active'));
-    document.getElementById('ln-'+user.lang)?.classList.add('active');
+    const currentLangBtn = document.getElementById('ln-'+user.lang);
+    if(currentLangBtn) currentLangBtn.classList.add('active');
 }
 
 window.changeLang = (l) => {
@@ -149,6 +164,21 @@ window.changeLang = (l) => {
     update(ref(db, 'users/'+auth.currentUser.uid), {lang: l});
 };
 
+window.handleLogout = () => {
+    signOut(auth).then(() => { location.reload(); });
+};
+
+// NAVEGAÇÃO DE ABAS
+window.showTab = (id) => {
+    const views = ['homeView', 'vipView', 'settingsView'];
+    views.forEach(v => document.getElementById(v).classList.add('hidden'));
+    document.querySelectorAll('nav div').forEach(d => d.classList.remove('active'));
+    
+    document.getElementById(id).classList.remove('hidden');
+    document.getElementById('nv-' + id.replace('View','')).classList.add('active');
+};
+
+// LÓGICA DE JOGO (SIMPLIFICADA PARA TESTE)
 document.getElementById('startBtn').onclick = () => {
     qIdx = 0;
     document.getElementById('practiceView').classList.remove('hidden');
@@ -158,13 +188,12 @@ document.getElementById('startBtn').onclick = () => {
 function loadQ() {
     state = "CHECK"; selection = [];
     const q = phrases[qIdx % phrases.length];
-    const btn = document.getElementById('actionBtn');
-    btn.innerText = "VERIFICAR";
-    btn.className = "btn-check";
+    document.getElementById('actionBtn').innerText = "VERIFICAR";
+    document.getElementById('actionBtn').className = "btn-check";
     document.getElementById('feedbackText').innerText = "";
     document.getElementById('dropZone').innerHTML = "";
-    document.getElementById('innerBar').style.width = `${(qIdx / 5) * 100}%`;
     document.getElementById('targetPhrase').innerText = q.pt;
+    document.getElementById('innerBar').style.width = `${(qIdx / 5) * 100}%`;
     
     const bank = document.getElementById('wordBank');
     bank.innerHTML = "";
@@ -187,10 +216,10 @@ document.getElementById('actionBtn').onclick = function() {
         const guess = selection.join(" ").toLowerCase().trim();
         const correct = phrases[qIdx % phrases.length].en.toLowerCase().trim();
         if(guess === correct) {
-            this.innerText = "CONTINUAR"; this.className = "btn-check btn-next";
-            document.getElementById('feedbackText').innerText = "Correto! ✨";
+            this.innerText = "CONTINUAR"; this.classList.add('btn-next');
+            document.getElementById('feedbackText').innerText = "Excelente! ✨";
         } else {
-            this.innerText = "ENTENDI"; this.className = "btn-check btn-wrong";
+            this.innerText = "ENTENDI"; this.classList.add('btn-wrong');
             document.getElementById('feedbackText').innerText = "Resposta: " + correct;
         }
         state = "NEXT";
@@ -208,12 +237,6 @@ async function finish() {
     document.getElementById('practiceView').classList.add('hidden');
 }
 
-window.showTab = (id) => {
-    ['homeView', 'vipView', 'settingsView'].forEach(v => document.getElementById(v).classList.add('hidden'));
-    document.querySelectorAll('nav div').forEach(d => d.classList.remove('active'));
-    document.getElementById(id).classList.remove('hidden');
-    document.getElementById('nv-'+id.replace('View','')).classList.add('active');
-};
 window.closePractice = () => document.getElementById('practiceView').classList.add('hidden');
 </script>
 </body>
