@@ -3,93 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FluentGo Pro | Monetizado</title>
+    <title>FluentGo</title>
     
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6478620932842773" crossorigin="anonymous"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #2563EB; --secondary: #10B981; --streak: #FF4500; --bg: #0F172A; --card: #1E293B; --text: #F8FAFC; --premium: #F59E0B; }
+        :root { --primary: #2563EB; --secondary: #10B981; --bg: #0F172A; --card: #1E293B; --text: #F8FAFC; --premium: #F59E0B; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; }
         body { margin:0; background: var(--bg); color: var(--text); overflow-x: hidden; }
         .container { padding: 20px; max-width: 500px; margin: 0 auto; }
         .hidden { display: none !important; }
         
+        /* HEADER */
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: rgba(15, 23, 42, 0.95); border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 1000; }
-        .stat-badge { background: #000; padding: 5px 12px; border-radius: 12px; font-weight: 800; display: flex; align-items: center; gap: 5px; }
+        .stat-badge { background: #000; padding: 5px 12px; border-radius: 12px; font-weight: 800; display: flex; align-items: center; gap: 5px; color: #FF4500; }
 
-        /* OVERLAY DE ANÚNCIO */
-        #adOverlay { position: fixed; inset: 0; background: #000; z-index: 5000; display: none; flex-direction: column; align-items: center; justify-content: center; }
-        .ad-box { width: 90%; height: 60%; background: #1e293b; border: 1px solid #334155; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-        #closeAdBtn { margin-top: 20px; width: 80%; padding: 18px; border-radius: 15px; border: none; font-weight: 900; background: #334155; color: #94a3b8; pointer-events: none; transition: 0.3s; }
-        #closeAdBtn.ready { background: var(--primary); color: white; pointer-events: auto; transform: scale(1.05); }
+        /* ADS OVERLAY (TRAVA OBRIGATÓRIA) */
+        #adOverlay { position: fixed; inset: 0; background: #000; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        .ad-content { width: 90%; max-width: 350px; height: 450px; background: #1e293b; border-radius: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #334155; position: relative; }
+        #closeAdBtn { margin-top: 20px; width: 85%; padding: 20px; border-radius: 18px; border: none; font-weight: 900; background: #334155; color: #94a3b8; pointer-events: none; transition: 0.3s; }
+        #closeAdBtn.ready { background: var(--primary); color: white; pointer-events: auto; box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4); }
 
-        /* Estilos de Card e Botões */
-        .card { background: var(--card); padding: 20px; border-radius: 24px; border: 1px solid #334155; margin-bottom: 15px; }
-        .progress-bar { background: #334155; height: 12px; border-radius: 10px; overflow: hidden; margin: 10px 0; }
-        .progress-fill { height: 100%; background: var(--secondary); width: 0%; transition: 0.6s; }
-        button { padding: 16px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; width: 100%; margin-bottom: 8px; transition: 0.2s; }
+        /* ESTILOS GERAIS */
+        .card { background: var(--card); padding: 20px; border-radius: 24px; border: 1px solid #475569; margin-bottom: 15px; }
+        .progress-bar { background: #334155; height: 10px; border-radius: 10px; overflow: hidden; margin: 10px 0; }
+        .progress-fill { height: 100%; background: var(--secondary); width: 0%; transition: 0.8s; }
+        button { padding: 18px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; width: 100%; transition: 0.2s; margin-bottom: 10px; }
         .btn-main { background: var(--primary); color: white; box-shadow: 0 4px 0 #1D4ED8; }
         .btn-premium { background: var(--premium); color: white; box-shadow: 0 4px 0 #B45309; }
-        .btn-danger { background: #ef4444; color: white; }
         
-        .rank-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #334155; }
-        .teach-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
-        .word-card { background: var(--bg); border-radius: 15px; border: 2px solid #334155; text-align: center; padding-bottom: 10px; }
-        .word-img { width: 100%; height: 90px; object-fit: cover; border-radius: 13px 13px 0 0; }
-        
-        .word-area { min-height: 100px; border: 2px dashed #334155; border-radius: 20px; margin: 15px 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 10px; }
-        .chip { background: #334155; padding: 12px 18px; border-radius: 15px; font-weight: 700; cursor: pointer; color: white; }
-        .chip.used { opacity: 0.2; pointer-events: none; }
+        /* GAMEPLAY */
+        .teach-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+        .word-card { background: var(--bg); border-radius: 20px; border: 2px solid #334155; text-align: center; padding-bottom: 10px; transition: 0.2s; }
+        .word-img { width: 100%; height: 100px; object-fit: cover; border-radius: 18px 18px 0 0; }
+        .word-area { min-height: 100px; border: 2px dashed #475569; border-radius: 20px; margin: 20px 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 10px; background: rgba(0,0,0,0.2); }
+        .chip { background: #334155; padding: 14px 18px; border-radius: 16px; font-weight: 700; cursor: pointer; color: white; box-shadow: 0 3px 0 #1e293b; }
+        .chip.used { opacity: 0.1; pointer-events: none; }
+        .rank-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #334155; }
     </style>
 </head>
 <body>
 
 <header class="hidden" id="mainHeader">
-    <div style="font-weight:900; letter-spacing:-1px;">FLUENTGO</div>
+    <div style="font-weight:900; letter-spacing:-1px;">FLUENTGO <span id="langTag" style="font-size:10px; background:var(--primary); padding:2px 6px; border-radius:5px; margin-left:5px;">EN</span></div>
     <div style="display:flex; align-items:center; gap:12px;">
-        <div class="stat-badge" style="color: var(--streak);">🔥 <span id="streakVal">0</span></div>
+        <div class="stat-badge">🔥 <span id="streakVal">0</span></div>
         <div onclick="toggleSettings(true)" style="cursor:pointer; font-size: 1.4rem;">⚙️</div>
     </div>
 </header>
 
 <div id="adOverlay">
-    <div class="ad-box">
-        <span style="position:absolute; top:10px; left:10px; font-size:10px; color:#94a3b8;">PUBLICIDADE</span>
+    <div class="ad-content">
+        <span style="position:absolute; top:15px; left:15px; font-size:10px; color:#94a3b8;">ANÚNCIO</span>
+        
         <ins class="adsbygoogle"
-             style="display:block; width:100%; height:100%;"
+             style="display:block; width:300px; height:250px"
              data-ad-client="ca-pub-6478620932842773"
              data-ad-slot="auto"
-             data-ad-format="auto"
+             data-ad-format="rectangle"
              data-full-width-responsive="true"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        
-        <div id="adPlaceholder" style="text-align:center;">
-            <div style="font-size:40px;">📺</div>
-            <p>Carregando anúncio...</p>
+
+        <div style="text-align:center; padding:20px;">
+            <div style="font-size:60px;">📺</div>
+            <p style="color:#94a3b8;">O anúncio aparecerá aqui após a aprovação do Google.</p>
         </div>
     </div>
     <button id="closeAdBtn">Aguarde 5s...</button>
 </div>
 
 <div id="settingsModal" style="position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:3000; display:none; align-items:center; justify-content:center; backdrop-filter:blur(10px);">
-    <div style="background:var(--card); width:85%; padding:25px; border-radius:30px; text-align:center; border:1px solid #475569;">
-        <button onclick="alert('Premium em breve!')" class="btn-premium">⭐ SEJA PREMIUM</button>
-        <button onclick="alert('Funcionalidade Premium!')" style="background:#64748b; color:white;">🚫 REMOVER ADS</button>
-        <hr style="border:0; border-top:1px solid #334155; margin:20px 0;">
-        <button onclick="changeLanguage('English')" style="background:transparent; border:1px solid #334155; color:white;">🇺🇸 English</button>
-        <button onclick="changeLanguage('Spanish')" style="background:transparent; border:1px solid #334155; color:white; margin-top:5px;">🇪🇸 Spanish</button>
-        <button onclick="toggleSettings(false)" class="btn-main" style="margin-top:20px;">VOLTAR</button>
-        <button onclick="handleLogout()" class="btn-danger">SAIR</button>
+    <div style="background:var(--card); width:85%; padding:25px; border-radius:35px; text-align:center; border:1px solid #475569;">
+        <button onclick="alert('Loja em breve!')" class="btn-premium">⭐ SEJA PREMIUM</button>
+        <button onclick="alert('Funcionalidade Premium!')" style="background:#475569; color:white;">🚫 REMOVER ADS</button>
+        <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <button onclick="changeLanguage('English')" class="btn-main">🇺🇸 EN</button>
+            <button onclick="changeLanguage('Spanish')" class="btn-main">🇪🇸 ES</button>
+            <button onclick="changeLanguage('French')" class="btn-main">🇫🇷 FR</button>
+            <button onclick="changeLanguage('Italian')" class="btn-main">🇮🇹 IT</button>
+        </div>
+        <button onclick="toggleSettings(false)" style="background:transparent; color:white; margin-top:10px;">VOLTAR</button>
+        <button onclick="handleLogout()" style="color:#ef4444; background:none; font-size:12px; margin-top:10px;">SAIR</button>
     </div>
 </div>
 
 <main id="landingView" class="container">
-    <h1 style="text-align:center; font-size:3rem; font-weight:900; margin-top:60px;">Fluent<span style="color:var(--primary)">Go</span></h1>
+    <h1 style="text-align:center; font-size:3.5rem; font-weight:900; margin-top:60px;">Fluent<span style="color:var(--primary)">Go</span></h1>
     <div class="card">
-        <div id="regOnly" class="hidden"><input type="text" id="username" placeholder="Nome" style="width:100%; padding:15px; margin-bottom:10px; border-radius:10px; border:none; background:#0f172a; color:white;"></div>
-        <input type="email" id="email" placeholder="E-mail" style="width:100%; padding:15px; margin-bottom:10px; border-radius:10px; border:none; background:#0f172a; color:white;">
-        <input type="password" id="password" placeholder="Senha" style="width:100%; padding:15px; margin-bottom:10px; border-radius:10px; border:none; background:#0f172a; color:white;">
+        <div id="regOnly" class="hidden"><input type="text" id="username" placeholder="Nome" style="width:100%; padding:15px; margin-bottom:10px; border-radius:12px; border:none; background:#0f172a; color:white;"></div>
+        <input type="email" id="email" placeholder="E-mail" style="width:100%; padding:15px; margin-bottom:10px; border-radius:12px; border:none; background:#0f172a; color:white;">
+        <input type="password" id="password" placeholder="Senha" style="width:100%; padding:15px; margin-bottom:10px; border-radius:12px; border:none; background:#0f172a; color:white;">
         <button id="authBtn" class="btn-main">ENTRAR</button>
         <button onclick="toggleAuthMode()" style="background:none; color:#94a3b8; font-size:0.8rem; text-decoration:underline;">Criar conta</button>
     </div>
@@ -97,13 +102,13 @@
 
 <main id="dashboardView" class="container hidden">
     <div class="card">
-        <h2 id="modLabel" style="margin:0;">Nível 1</h2>
+        <h2 id="levelLabel">Carregando...</h2>
         <div class="progress-bar"><div id="mainProgress" class="progress-fill"></div></div>
         <p id="xpText" style="color:#94a3b8; font-size:0.9rem;">0 / 100 XP</p>
         <button id="actionBtn" class="btn-main">CARREGANDO...</button>
     </div>
     <div class="card">
-        <h3 style="margin:0 0 10px 0;">🏆 Ranking Global</h3>
+        <h3 style="margin:0 0 10px 0;">🏆 Ranking</h3>
         <div id="rankList"></div>
     </div>
 </main>
@@ -111,14 +116,14 @@
 <main id="teachingView" class="container hidden">
     <h2 style="text-align:center;">Dicionário</h2>
     <div class="teach-grid" id="teachGrid"></div>
-    <button id="confirmTeach" class="btn-success" style="background:var(--secondary); color:white;">PRONTO!</button>
+    <button id="confirmTeach" style="background:var(--secondary); color:white;">APRENDI!</button>
 </main>
 
 <main id="practiceView" class="hidden" style="position:fixed; inset:0; background:var(--bg); z-index:2000; padding:20px;">
     <div class="progress-bar"><div id="taskProgress" class="progress-fill"></div></div>
     <div class="container">
-        <div id="audioBtn" style="font-size:5rem; cursor:pointer; text-align:center;">🔊</div>
-        <h2 id="questionTxt" style="text-align:center; margin:20px 0;">...</h2>
+        <div id="audioBtn" style="font-size:5rem; cursor:pointer; text-align:center; margin-top:20px;">🔊</div>
+        <h2 id="targetPhrase" style="text-align:center; margin:20px 0;">...</h2>
         <div id="dropZone" class="word-area"></div>
         <div id="wordBank" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;"></div>
         <button id="checkBtn" class="btn-main" style="margin-top:30px;">VERIFICAR</button>
@@ -128,28 +133,36 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getDatabase, ref, set, get, update, onValue, query, orderByChild, limitToLast } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, set, get, update, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = { apiKey: "AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw", authDomain: "fluentgo-35024.firebaseapp.com", databaseURL: "https://fluentgo-35024-default-rtdb.firebaseio.com", projectId: "fluentgo-35024", appId: "1:613715387990:web:0345ade26374dd32d1fdf7" };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-const contentMap = {
+// BANCO DE DADOS GLOBAL
+const content = {
     English: {
-        1: { title: "Nível 1: Padaria", words: { "bread": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200", "eat": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200" }, sentences: [{pt: "Eu como pão", ans: "i eat bread", parts: ["i", "eat", "bread", "the"]}] },
-        2: { title: "Nível 2: Café", words: { "coffee": "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200", "drink": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=200" }, sentences: [{pt: "Eu bebo café", ans: "i drink coffee", parts: ["i", "drink", "coffee", "is"]}] }
+        1: { name: "Nível 1: Padaria", words: { "bread": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200", "eat": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200" }, sentences: [{pt: "Eu como pão", ans: "i eat bread", parts: ["i", "eat", "bread", "the"]}] },
+        2: { name: "Nível 2: Bebida", words: { "water": "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=200", "drink": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=200" }, sentences: [{pt: "Eu bebo água", ans: "i drink water", parts: ["i", "drink", "water", "juice"]}] }
     },
     Spanish: {
-        1: { title: "Nivel 1: El Pan", words: { "pan": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200", "como": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200" }, sentences: [{pt: "Eu como pão", ans: "yo como pan", parts: ["yo", "como", "pan", "el"]}] }
+        1: { name: "Nivel 1: El Pan", words: { "pan": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200", "como": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200" }, sentences: [{pt: "Eu como pão", ans: "yo como pan", parts: ["yo", "como", "pan", "el"]}] }
+    },
+    French: {
+        1: { name: "Niveau 1: Le Pain", words: { "pain": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200", "mange": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200" }, sentences: [{pt: "Eu como pão", ans: "je mange du pain", parts: ["je", "mange", "du", "pain", "le"]}] },
+        2: { name: "Niveau 2: Café", words: { "café": "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200", "bois": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=200" }, sentences: [{pt: "Eu bebo café", ans: "je bois du café", parts: ["je", "bois", "du", "café", "un"]}] }
+    },
+    Italian: {
+        1: { name: "Livello 1: Il Pane", words: { "pane": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200", "mangio": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200" }, sentences: [{pt: "Eu como pão", ans: "io mangio pane", parts: ["io", "mangio", "pane", "il"]}] }
     }
 };
 
-let userData = { progress: { English: 0, Spanish: 0 }, currentLang: "English", streak: 0, hasLearned: false, username: "Estudante" };
+let userData = { progress: { English:0, Spanish:0, French:0, Italian:0 }, currentLang: "English", hasLearned: false, username: "Estudante", streak: 0 };
 let currentQ = []; let qIdx = 0; let userPhrase = []; let authMode = 'login';
 
-// Lógica de Anúncios
-function showAds(callback) {
+// LÓGICA DE ANÚNCIO OBRIGATÓRIO
+function showAd(callback) {
     const overlay = document.getElementById('adOverlay');
     const btn = document.getElementById('closeAdBtn');
     overlay.style.display = 'flex';
@@ -160,34 +173,39 @@ function showAds(callback) {
     const timer = setInterval(() => {
         count--;
         if(count > 0) btn.innerText = `Aguarde ${count}s...`;
-        else {
-            clearInterval(timer);
-            btn.innerText = "FECHAR ANÚNCIO ×";
-            btn.classList.add('ready');
-        }
+        else { clearInterval(timer); btn.innerText = "FECHAR ANÚNCIO ×"; btn.classList.add('ready'); }
     }, 1000);
 
     btn.onclick = () => { overlay.style.display = 'none'; callback(); };
 }
 
-// Funções de Interface e Jogo
 window.toggleSettings = (s) => document.getElementById('settingsModal').style.display = s ? 'flex' : 'none';
-window.handleLogout = () => { toggleSettings(false); signOut(auth); };
+window.handleLogout = () => signOut(auth);
 window.toggleAuthMode = () => { authMode = (authMode === 'login') ? 'register' : 'login'; document.getElementById('regOnly').classList.toggle('hidden', authMode === 'login'); };
 const showView = (id) => { ['landingView', 'dashboardView', 'teachingView', 'practiceView'].forEach(v => document.getElementById(v).classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); document.getElementById('mainHeader').classList.toggle('hidden', id === 'landingView'); };
-const speak = (t) => { const m = new SpeechSynthesisUtterance(t); m.lang = (userData.currentLang === "Spanish") ? "es-ES" : "en-US"; window.speechSynthesis.speak(m); };
+
+const speak = (t) => { 
+    const m = new SpeechSynthesisUtterance(t); 
+    const langs = {English:'en-US', Spanish:'es-ES', French:'fr-FR', Italian:'it-IT'};
+    m.lang = langs[userData.currentLang]; 
+    window.speechSynthesis.speak(m); 
+};
 
 function updateUI() {
     const xp = userData.progress[userData.currentLang] || 0;
-    const level = Math.floor(xp / 100) + 1;
-    const content = contentMap[userData.currentLang][level] || contentMap[userData.currentLang][1];
-    document.getElementById('modLabel').innerText = content.title;
+    const lvl = Math.floor(xp / 100) + 1;
+    const langData = content[userData.currentLang] || content.English;
+    const c = langData[lvl] || langData[1];
+    
+    document.getElementById('langTag').innerText = userData.currentLang.slice(0,2).toUpperCase();
+    document.getElementById('levelLabel').innerText = c.name;
     document.getElementById('xpText').innerText = `${xp % 100} / 100 XP`;
     document.getElementById('mainProgress').style.width = `${xp % 100}%`;
     document.getElementById('streakVal').innerText = userData.streak;
+    
     const btn = document.getElementById('actionBtn');
-    btn.innerText = userData.hasLearned ? "COMEÇAR TAREFA" : "APRENDER PALAVRAS";
-    btn.onclick = userData.hasLearned ? () => startPractice(content) : () => startTeaching(content);
+    btn.innerText = userData.hasLearned ? "COMEÇAR TAREFA" : "ESTUDAR PALAVRAS";
+    btn.onclick = userData.hasLearned ? () => startPractice(c) : () => startTeaching(c);
 }
 
 function startTeaching(c) {
@@ -207,7 +225,7 @@ function startPractice(c) { currentQ = c.sentences; qIdx = 0; showView('practice
 function renderExercise() {
     const q = currentQ[qIdx]; userPhrase = [];
     document.getElementById('taskProgress').style.width = `${(qIdx/currentQ.length)*100}%`;
-    document.getElementById('questionTxt').innerText = q.pt;
+    document.getElementById('targetPhrase').innerText = q.pt;
     document.getElementById('dropZone').innerHTML = "";
     const b = document.getElementById('wordBank'); b.innerHTML = "";
     q.parts.sort(()=>Math.random()-0.5).forEach(w => {
@@ -219,25 +237,25 @@ function renderExercise() {
 
 document.getElementById('checkBtn').onclick = async () => {
     if(userPhrase.join(" ").toLowerCase().trim() === currentQ[qIdx].ans) {
-        const oldLvl = Math.floor((userData.progress[userData.currentLang] || 0) / 100);
+        const xp = userData.progress[userData.currentLang] || 0;
+        const oldLvl = Math.floor(xp / 100);
         userData.progress[userData.currentLang] += 20;
         if(Math.floor(userData.progress[userData.currentLang]/100) > oldLvl) userData.hasLearned = false;
         
         await update(ref(db, 'users/'+auth.currentUser.uid), userData);
         qIdx++;
         if(qIdx < currentQ.length) renderExercise();
-        else showAds(() => { showView('dashboardView'); updateUI(); });
-    } else { alert("Tente de novo!"); }
+        else showAd(() => { showView('dashboardView'); updateUI(); }); // Roda o anúncio ao fim de cada tarefa
+    } else { alert("Tente novamente!"); }
 };
 
-// Ranking e Auth
 onAuthStateChanged(auth, async (u) => {
     if(u) {
         const s = await get(ref(db, 'users/'+u.uid));
         if(s.exists()) userData = s.val();
         showView('dashboardView'); updateUI();
-        onValue(query(ref(db, 'users'), limitToLast(5)), snap => {
-            const list = Object.values(snap.val() || {}).sort((a,b) => (b.progress[userData.currentLang]||0) - (a.progress[userData.currentLang]||0));
+        onValue(ref(db, 'users'), snap => {
+            const list = Object.values(snap.val() || {}).sort((a,b) => (b.progress[userData.currentLang]||0) - (a.progress[userData.currentLang]||0)).slice(0,5);
             document.getElementById('rankList').innerHTML = list.map((u, i) => `<div class="rank-item"><span>${i+1}. ${u.username}</span><b>${u.progress[userData.currentLang]||0} XP</b></div>`).join('');
         });
     } else showView('landingView');
@@ -251,6 +269,12 @@ document.getElementById('authBtn').onclick = async () => {
             await set(ref(db, 'users/'+r.user.uid), { ...userData, username: document.getElementById('username').value });
         } else await signInWithEmailAndPassword(auth, e, p);
     } catch(err) { alert(err.message); }
+};
+
+window.changeLanguage = async (l) => {
+    userData.currentLang = l; userData.hasLearned = false;
+    await update(ref(db, 'users/'+auth.currentUser.uid), { currentLang: l, hasLearned: false });
+    updateUI(); toggleSettings(false);
 };
 </script>
 </body>
