@@ -3,29 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FluentGo ultra</title>
+    <title>FluentGo Master | Ultimate Edition</title>
     <style>
         :root { --primary: #2563EB; --secondary: #10B981; --premium: #FF9900; --ads: #EF4444; --bg: #121212; --card: #1E1E1E; }
-        body { margin:0; font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: #fff; text-align: center; }
-        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: #000; border-bottom: 2px solid #333; position: sticky; top: 0; z-index: 100; }
-        .container { padding: 20px; max-width: 600px; margin: 0 auto; }
+        body { margin:0; font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: #fff; text-align: center; overflow-x: hidden; }
+        
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: #000; border-bottom: 2px solid #333; position: sticky; top: 0; z-index: 1000; }
+        .container { padding: 20px; max-width: 600px; margin: 0 auto; position: relative; z-index: 10; }
         .hidden { display: none !important; }
-        .card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid #333; margin-bottom: 20px; }
-        button { padding: 14px 24px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 1em; }
-        button:active { transform: scale(0.95); }
-        .btn-main { background: var(--primary); color: white; width: 100%; margin-top: 10px; }
-        .btn-ghost { background: #333; color: #ccc; width: 100%; margin-top: 10px; }
-        .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .btn-ads { background: transparent; border: 2px solid var(--ads); color: var(--ads); font-size: 0.8em; }
-        .btn-premium { background: transparent; border: 2px solid var(--premium); color: var(--premium); font-size: 0.8em; }
-        .btn-option { background: #333; color: white; width: 100%; margin: 5px 0; text-align: left; border: 2px solid transparent; padding: 15px; border-radius: 12px; }
-        .btn-option:hover { border-color: var(--primary); }
+        
+        /* RESTAURAÇÃO DO VISUAL 3D */
+        .card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid #333; margin-bottom: 20px; box-shadow: 0 8px 0 #000; }
+        
+        button { padding: 14px 24px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: 0.1s; font-size: 1em; position: relative; }
+        button:active { transform: translateY(4px); box-shadow: none !important; }
+        
+        .btn-main { background: var(--primary); color: white; width: 100%; box-shadow: 0 5px 0 #1D4ED8; margin-top: 10px; }
+        .btn-ghost { background: #333; color: #ccc; width: 100%; margin-top: 10px; border-bottom: 4px solid #111; }
+        
+        /* Exercícios */
+        .btn-option { background: #252525; color: white; width: 100%; margin: 8px 0; text-align: left; border: 2px solid #444; border-bottom: 5px solid #000; padding: 15px; }
         .btn-word { background: #444; color: white; margin: 5px; display: inline-block; padding: 10px 18px; border-radius: 10px; border-bottom: 4px solid #222; }
-        .btn-word.used { opacity: 0.3; pointer-events: none; }
-        .word-area { min-height: 80px; border-bottom: 2px dashed #444; margin-bottom: 20px; padding: 10px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
-        .progress-container { background: #333; height: 10px; border-radius: 5px; margin: 10px 0; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
-        input[type="text"] { background: #252525; border: 2px solid #444; padding: 18px; border-radius: 15px; color: white; font-size: 1.2em; text-align: center; width: 85%; outline: none; margin-bottom: 10px; }
+        .btn-word.used { opacity: 0.2; pointer-events: none; }
+        .word-area { min-height: 80px; border: 2px dashed #444; border-radius: 15px; margin-bottom: 25px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 10px; background: rgba(255,255,255,0.02); }
+
+        /* Progress Bar */
+        .progress-container { background: #333; height: 12px; border-radius: 6px; margin: 15px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+        input[type="text"] { background: #252525; border: 2px solid #444; padding: 18px; border-radius: 15px; color: white; font-size: 1.2em; text-align: center; width: 85%; outline: none; margin-bottom: 15px; border-bottom: 5px solid #000; }
+        
         canvas { position: fixed; inset: 0; pointer-events: none; z-index: 2000; }
     </style>
 </head>
@@ -34,7 +41,7 @@
 <canvas id="fxCanvas"></canvas>
 
 <header>
-    <div style="font-size: 1.5em; font-weight: 900;">FLUENT<span style="color:var(--primary)">GO</span></div>
+    <div style="font-size: 1.4em; font-weight: 900; letter-spacing: -1px;">FLUENT<span style="color:var(--primary)">GO</span></div>
     <div id="userMenu" class="hidden"><span id="userXpDisplay" style="color: var(--premium); font-weight: bold;">0 XP</span></div>
 </header>
 
@@ -50,52 +57,48 @@
 
 <div id="langOnboarding" class="container hidden">
     <div class="card">
-        <h2>O que vamos aprender?</h2>
-        <button class="btn-ghost" style="border: 1px solid var(--primary)" onclick="setInitialLang('Ingles')">🇺🇸 Inglês</button>
-        <button class="btn-ghost" style="border: 1px solid var(--secondary)" onclick="setInitialLang('Espanhol')">🇪🇸 Espanhol</button>
-        <button class="btn-ghost" style="border: 1px solid #FF0055" onclick="setInitialLang('Japones')">🇯🇵 Japonês</button>
+        <h2>Escolha seu curso:</h2>
+        <button class="btn-ghost" style="border-color: var(--primary)" onclick="setInitialLang('Ingles')">🇺🇸 Inglês</button>
+        <button class="btn-ghost" style="border-color: var(--secondary)" onclick="setInitialLang('Espanhol')">🇪🇸 Espanhol</button>
+        <button class="btn-ghost" style="border-color: #FF0055" onclick="setInitialLang('Japones')">🇯🇵 Japonês</button>
     </div>
 </div>
 
 <div id="appSection" class="container hidden">
-    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-        <div style="flex:1; background:#252525; padding:10px; border-radius:15px;">🌍 <b id="currentLangLabel">---</b></div>
-        <div style="flex:1; background:#252525; padding:10px; border-radius:15px;">🔥 Combo: <b id="comboLabel">0</b></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+        <div style="background:#252525; padding:12px; border-radius:15px; border: 1px solid #333;">🌍 <b id="currentLangLabel">---</b></div>
+        <div style="background:#252525; padding:12px; border-radius:15px; border: 1px solid #333;">🔥 Combo: <b id="comboLabel">0</b></div>
     </div>
     <div class="card">
         <h3 id="moduleLabel">Módulo 1</h3>
-        <p id="taskLabel" style="color: #aaa;">Tarefa 1 de 5</p>
+        <p id="taskLabel" style="color: #aaa; font-size: 0.9em;">Tarefa 1 de 5</p>
         <div class="progress-container"><div id="mainProgress" class="progress-fill"></div></div>
-        <button id="startBtn" class="btn-main" style="padding: 20px;">ESTUDAR AGORA</button>
-        <div class="shop-grid">
-            <button class="btn-ads" onclick="alert('Loja em breve!')">Remover Ads</button>
-            <button class="btn-premium" onclick="alert('Loja em breve!')">Premium</button>
-        </div>
+        <button id="startBtn" class="btn-main" style="padding: 20px; font-size: 1.2em;">ESTUDAR AGORA</button>
     </div>
-    <button id="configBtn" class="btn-ghost">⚙️ Mudar Idioma</button>
-    <button id="logoutBtn" class="btn-ghost" style="color: var(--ads);">Sair da Conta</button>
+    <button id="configBtn" class="btn-ghost">⚙️ Configurações</button>
+    <button id="logoutBtn" class="btn-ghost" style="color: var(--ads);">Sair</button>
 </div>
 
 <div id="studyModal" class="container hidden">
     <div class="card" style="margin-top: 50px; padding: 50px 25px;">
         <h4 style="color:var(--premium); letter-spacing: 2px;">MEMORIZE</h4>
-        <h1 id="studyWord" style="font-size: 3em; margin: 20px 0;">Word</h1>
-        <h2 id="studyTranslation" style="color:var(--secondary)">Tradução</h2>
-        <button id="nextStudyBtn" class="btn-main" style="margin-top: 40px;">PRÓXIMO</button>
+        <h1 id="studyWord" style="font-size: 3em; margin: 20px 0;">...</h1>
+        <h2 id="studyTranslation" style="color:var(--secondary)">...</h2>
+        <button id="nextStudyBtn" class="btn-main">PRÓXIMO</button>
     </div>
 </div>
 
 <div id="taskModal" class="hidden" style="position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: flex; flex-direction: column;">
     <div style="padding: 20px; display: flex; align-items: center; gap: 15px;">
         <div class="progress-container" style="flex:1;"><div id="taskProgress" class="progress-fill"></div></div>
-        <button id="closeTask" style="background:none; color:#666; font-size: 1.2em;">✕</button>
+        <button id="closeTask" style="background:none; color:#666; font-size: 1.5em;">✕</button>
     </div>
     <div class="container" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-        <h4 id="taskInstruction" style="color: var(--primary); text-transform: uppercase; font-weight: 900;">TRADUZA</h4>
-        <h1 id="questionDisplay" style="margin: 20px 0;">Pergunta</h1>
+        <h4 id="taskInstruction" style="color: var(--primary); text-transform: uppercase; font-weight: 900;">...</h4>
+        <h1 id="questionDisplay" style="margin: 20px 0;">...</h1>
         <div id="exerciseArea"></div>
-        <div id="feedback" style="margin-top: 20px; font-weight: bold; min-height: 30px;"></div>
-        <button id="checkBtn" class="btn-main">VERIFICAR</button>
+        <div id="feedback" style="margin-top: 20px; font-weight: bold; min-height: 30px; font-size: 1.2em;"></div>
+        <button id="checkBtn" class="btn-main" style="width: 80%; align-self: center;">VERIFICAR</button>
     </div>
 </div>
 
@@ -109,33 +112,10 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// BANCO DE DADOS AMPLIADO
 const dictionary = {
-    Ingles: [
-        {pt: "Olá", en: "hello", alt: ["hi", "hey"]},
-        {pt: "Sim", en: "yes", alt: ["yeah"]},
-        {pt: "Por favor", en: "please", alt: ["pls"]},
-        {pt: "Obrigado", en: "thanks", alt: ["thank you"]},
-        {pt: "Água", en: "water", alt: ["aqua"]},
-        {pt: "Pão", en: "bread", alt: []},
-        {pt: "Maçã", en: "apple", alt: []},
-        {pt: "Café", en: "coffee", alt: []},
-        {pt: "Cachorro", en: "dog", alt: []},
-        {pt: "Gato", en: "cat", alt: []}
-    ],
-    Espanhol: [
-        {pt: "Olá", en: "hola", alt: []},
-        {pt: "Sim", en: "si", alt: []},
-        {pt: "Obrigado", en: "gracias", alt: []},
-        {pt: "Água", en: "agua", alt: []},
-        {pt: "Bom dia", en: "buenos dias", alt: []}
-    ],
-    Japones: [
-        {pt: "Bom dia", en: "ohayou", alt: ["ohayo"]},
-        {pt: "Obrigado", en: "arigatou", alt: ["arigato"]},
-        {pt: "Gato", en: "neko", alt: []},
-        {pt: "Sim", en: "hai", alt: []}
-    ]
+    Ingles: [{pt: "Olá", en: "hello", alt: ["hi"]}, {pt: "Sim", en: "yes", alt: ["yeah"]}, {pt: "Água", en: "water", alt: []}, {pt: "Pão", en: "bread", alt: []}, {pt: "Café", en: "coffee", alt: []}],
+    Espanhol: [{pt: "Olá", en: "hola", alt: []}, {pt: "Sim", en: "si", alt: []}, {pt: "Água", en: "agua", alt: []}],
+    Japones: [{pt: "Bom dia", en: "ohayou", alt: []}, {pt: "Gato", en: "neko", alt: []}, {pt: "Sim", en: "hai", alt: []}]
 };
 
 let userData = { xp: 0, lang: "", mod: 1, task: 1, combo: 0 };
@@ -143,22 +123,18 @@ let currentQuestions = [];
 let qIdx = 0;
 let phraseBuilder = [];
 
-// --- VARIABILIDADE INFINITA: GERADOR DINÂMICO ---
 function generateSession() {
     const lang = userData.lang;
     const words = [...dictionary[lang]].sort(() => Math.random() - 0.5).slice(0, 5);
     const types = ["input", "choice", "phrase"];
-    
     return words.map(w => {
         const type = types[Math.floor(Math.random() * types.length)];
         let q = { q: w.pt, a: [w.en, ...w.alt], type: type };
-        
         if(type === "choice") {
-            const others = dictionary[lang].filter(x => x.en !== w.en).sort(() => Math.random() - 0.5).slice(0, 2);
-            q.options = [w.en, others[0].en, others[1].en].sort(() => Math.random() - 0.5);
+            const others = dictionary[lang].filter(x => x.en !== w.en).sort(() => Math.random() - 0.5);
+            q.options = [w.en, others[0]?.en || "word", others[1]?.en || "test"].sort(() => Math.random() - 0.5);
         } else if(type === "phrase") {
-            const extra = dictionary[lang].sort(() => Math.random() - 0.5).slice(0, 2).map(x => x.en);
-            q.words = [w.en, ...extra].sort(() => Math.random() - 0.5);
+            q.words = [w.en, "is", "the"].sort(() => Math.random() - 0.5);
         }
         return q;
     });
@@ -178,11 +154,7 @@ const updateUI = () => {
     document.getElementById("mainProgress").style.width = `${((userData.task - 1) || 0) * 20}%`;
 };
 
-function startLesson() {
-    currentQuestions = generateSession();
-    qIdx = 0;
-    showStudyCard();
-}
+window.startLesson = () => { currentQuestions = generateSession(); qIdx = 0; showStudyCard(); };
 
 function showStudyCard() {
     if (qIdx < 5) {
@@ -190,11 +162,7 @@ function showStudyCard() {
         const q = currentQuestions[qIdx];
         document.getElementById("studyWord").innerText = q.q;
         document.getElementById("studyTranslation").innerText = q.a[0].toUpperCase();
-    } else {
-        qIdx = 0;
-        showSection("taskModal");
-        renderExercise();
-    }
+    } else { qIdx = 0; showSection("taskModal"); renderExercise(); }
 }
 
 document.getElementById("nextStudyBtn").onclick = () => { qIdx++; showStudyCard(); };
@@ -202,59 +170,36 @@ document.getElementById("nextStudyBtn").onclick = () => { qIdx++; showStudyCard(
 function renderExercise() {
     const q = currentQuestions[qIdx];
     const area = document.getElementById("exerciseArea");
-    area.innerHTML = "";
-    document.getElementById("feedback").innerText = "";
+    area.innerHTML = ""; document.getElementById("feedback").innerText = "";
     document.getElementById("taskProgress").style.width = `${(qIdx / 5) * 100}%`;
     document.getElementById("questionDisplay").innerText = q.q;
-    document.getElementById("taskInstruction").innerText = q.type === "input" ? "Digite a Tradução" : q.type === "choice" ? "Escolha a Correta" : "Monte a Frase";
+    document.getElementById("taskInstruction").innerText = q.type;
 
     if (q.type === "input") {
         area.innerHTML = `<input type="text" id="ansInput" placeholder="Sua resposta...">`;
         document.getElementById("ansInput").focus();
-    } 
-    else if (q.type === "choice") {
+    } else if (q.type === "choice") {
         q.options.forEach(opt => {
-            const b = document.createElement("button");
-            b.className = "btn-option";
-            b.innerText = opt;
-            b.onclick = () => {
-                document.querySelectorAll(".btn-option").forEach(x => x.style.borderColor = "transparent");
-                b.style.borderColor = "var(--primary)";
-                b.dataset.selected = "true";
-            };
+            const b = document.createElement("button"); b.className = "btn-option"; b.innerText = opt;
+            b.onclick = () => { document.querySelectorAll(".btn-option").forEach(x => x.style.borderColor = "#444"); b.style.borderColor = "var(--primary)"; b.dataset.selected = "true"; };
+            area.appendChild(b);
+        });
+    } else if (q.type === "phrase") {
+        phraseBuilder = [];
+        const drop = document.createElement("div"); drop.className = "word-area"; area.appendChild(drop);
+        q.words.forEach(w => {
+            const b = document.createElement("button"); b.className = "btn-word"; b.innerText = w;
+            b.onclick = () => { if(!b.classList.contains("used")) { phraseBuilder.push(w); drop.innerHTML += `<span>${w} </span>`; b.classList.add("used"); }};
             area.appendChild(b);
         });
     }
-    else if (q.type === "phrase") {
-        phraseBuilder = [];
-        const drop = document.createElement("div"); drop.className = "word-area";
-        area.appendChild(drop);
-        const bank = document.createElement("div");
-        q.words.forEach(w => {
-            const b = document.createElement("button");
-            b.className = "btn-word"; b.innerText = w;
-            b.onclick = () => {
-                if(!b.classList.contains("used")) {
-                    phraseBuilder.push(w);
-                    drop.innerHTML += `<span>${w} </span>`;
-                    b.classList.add("used");
-                }
-            };
-            bank.appendChild(b);
-        });
-        area.appendChild(bank);
-    }
 }
 
-function checkAnswer() {
+document.getElementById("checkBtn").onclick = () => {
     const q = currentQuestions[qIdx];
     let userAns = "";
-
     if (q.type === "input") userAns = document.getElementById("ansInput").value.trim().toLowerCase();
-    else if (q.type === "choice") {
-        const sel = document.querySelector(".btn-option[data-selected='true']");
-        if(sel) userAns = sel.innerText.toLowerCase();
-    }
+    else if (q.type === "choice") userAns = (document.querySelector(".btn-option[data-selected='true']")?.innerText || "").toLowerCase();
     else if (q.type === "phrase") userAns = phraseBuilder.join(" ").toLowerCase();
 
     if (q.a.includes(userAns)) {
@@ -271,7 +216,7 @@ function checkAnswer() {
         spawnParticles(window.innerWidth/2, window.innerHeight/2, "#EF4444");
     }
     updateUI();
-}
+};
 
 async function finishTask() {
     userData.task++;
@@ -290,20 +235,16 @@ document.getElementById("loginBtn").onclick = () => signInWithEmailAndPassword(a
 document.getElementById("registerBtn").onclick = () => createUserWithEmailAndPassword(auth, email.value, password.value);
 document.getElementById("logoutBtn").onclick = () => signOut(auth);
 document.getElementById("startBtn").onclick = startLesson;
-document.getElementById("checkBtn").onclick = checkAnswer;
 document.getElementById("configBtn").onclick = () => showSection("langOnboarding");
 document.getElementById("closeTask").onclick = () => showSection("appSection");
 
 onAuthStateChanged(auth, async (u) => {
     if(u) {
         const s = await get(ref(db, 'users/' + u.uid));
-        if(s.exists()) {
-            userData = s.val();
-            if(!userData.lang) showSection("langOnboarding");
-            else showSection("appSection");
-        } else showSection("langOnboarding");
+        if(s.exists()) { userData = s.val(); if(!userData.lang) showSection("langOnboarding"); else showSection("appSection"); }
+        else showSection("langOnboarding");
         document.getElementById("userMenu").classList.remove("hidden"); updateUI();
-    } else { showSection("authSection"); document.getElementById("userMenu").classList.add("hidden"); }
+    } else showSection("authSection");
 });
 
 const canvas = document.getElementById("fxCanvas"), ctx = canvas.getContext("2d");
