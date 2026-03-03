@@ -106,26 +106,13 @@ const questionsPerTask=5;
 const totalModules=10, totalTasks=10;
 
 // ======= Exercícios completos para 3 línguas =======
-const exercises = {
-  Ingles: [],
-  Espanhol: [],
-  Japones: []
-};
+const exercises = { Ingles: [], Espanhol: [], Japones: [] };
 
 function generateTasks(lang){
   const baseWords = {
-    Ingles:[
-      ["Hello","Olá"],["Goodbye","Tchau"],["Thank you","Obrigado"],["Please","Por favor"],["Yes","Sim"],
-      ["No","Não"],["How are you?","Como vai?"],["I am Nick","Eu sou Nick"],["Good morning","Bom dia"],["Sorry","Desculpa"]
-    ],
-    Espanhol:[
-      ["Hola","Oi"],["Adiós","Tchau"],["Gracias","Obrigado"],["Por favor","Por favor"],["Sí","Sim"],
-      ["No","Não"],["¿Cómo estás?","Como vai?"],["Soy Nick","Eu sou Nick"],["Buenos días","Bom dia"],["Lo siento","Desculpa"]
-    ],
-    Japones:[
-      ["こんにちは (Konnichiwa)","Olá"],["さようなら (Sayounara)","Tchau"],["ありがとう (Arigatou)","Obrigado"],["お願いします (Onegaishimasu)","Por favor"],["はい (Hai)","Sim"],
-      ["いいえ (Iie)","Não"],["お元気ですか (Ogenki desu ka)","Como vai?"],["私はニックです (Watashi wa Nick desu)","Eu sou Nick"],["おはよう (Ohayou)","Bom dia"],["ごめんなさい (Gomen nasai)","Desculpa"]
-    ]
+    Ingles:[["Hello","Olá"],["Goodbye","Tchau"],["Thank you","Obrigado"],["Please","Por favor"],["Yes","Sim"],["No","Não"],["How are you?","Como vai?"],["I am Nick","Eu sou Nick"],["Good morning","Bom dia"],["Sorry","Desculpa"]],
+    Espanhol:[["Hola","Oi"],["Adiós","Tchau"],["Gracias","Obrigado"],["Por favor","Por favor"],["Sí","Sim"],["No","Não"],["¿Cómo estás?","Como vai?"],["Soy Nick","Eu sou Nick"],["Buenos días","Bom dia"],["Lo siento","Desculpa"]],
+    Japones:[["こんにちは (Konnichiwa)","Olá"],["さようなら (Sayounara)","Tchau"],["ありがとう (Arigatou)","Obrigado"],["お願いします (Onegaishimasu)","Por favor"],["はい (Hai)","Sim"],["いいえ (Iie)","Não"],["お元気ですか (Ogenki desu ka)","Como vai?"],["私はニックです (Watashi wa Nick desu)","Eu sou Nick"],["おはよう (Ohayou)","Bom dia"],["ごめんなさい (Gomen nasai)","Desculpa"]]
   };
   
   for(let m=0;m<10;m++){
@@ -145,10 +132,13 @@ function generateTasks(lang){
 ["Ingles","Espanhol","Japones"].forEach(generateTasks);
 
 // ======= Lógica das tarefas =======
-function startNextTask(){ showExercise(); }
+function startNextTask(){
+  if(!user) return alert("Entre para começar!");
+  taskModal.classList.remove("hidden");
+  showExercise();
+}
 
 function showExercise(){
-  taskModal.classList.remove("hidden");
   const ex = exercises[currentLanguage][currentModule-1][currentTask-1][currentQuestion];
   exerciseContainer.innerHTML="";
   taskTitle.innerText=`${currentLanguage} - Módulo ${currentModule} Tarefa ${currentTask} Pergunta ${currentQuestion+1}`;
@@ -190,8 +180,9 @@ function checkAnswer(ans){
   if(user) set(ref(db, `users/${user.uid}/tasks/${currentLanguage}-module${currentModule}-task${currentTask}-q${currentQuestion+1}`), ans);
 
   currentQuestion++;
-  if(currentQuestion<questionsPerTask) showExercise();
-  else {
+  if(currentQuestion<questionsPerTask){
+    showExercise();
+  } else {
     currentTask++;
     currentQuestion=0;
     if(currentTask>totalTasks){
@@ -200,10 +191,11 @@ function checkAnswer(ans){
       if(currentModule>totalModules){
         congratsLanguage.innerText=currentLanguage;
         congratsModal.style.display="flex";
+        taskModal.classList.add("hidden");
         return;
       }
     }
-    showExercise();
+    taskModal.classList.add("hidden"); // fecha modal após terminar tarefa
   }
 }
 
@@ -238,7 +230,6 @@ onAuthStateChanged(auth,u=>{
     logoutBtn.style.display="none";
   }
 });
-
 </script>
 </body>
 </html>
