@@ -3,21 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FluentGo | Pro</title>
+    <title>FluentGo Master | Aprenda Grátis</title>
     <style>
-        :root { --primary: #2563EB; --secondary: #10B981; --premium: #FF9900; --danger: #EF4444; --bg: #121212; --card: #1E1E1E; }
-        body { margin:0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #fff; text-align: center; }
+        :root { --primary: #2563EB; --secondary: #10B981; --premium: #FF9900; --ads: #EF4444; --bg: #121212; --card: #1E1E1E; }
+        body { margin:0; font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: #fff; text-align: center; }
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: #000; border-bottom: 2px solid #333; position: sticky; top: 0; z-index: 100; }
+        
         .container { padding: 20px; max-width: 600px; margin: 0 auto; }
         .hidden { display: none !important; }
+        
+        /* Cards e Botões */
         .card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid #333; margin-bottom: 20px; }
         button { padding: 14px 24px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 1em; }
-        .btn-main { background: var(--primary); color: white; width: 100%; }
-        .btn-ghost { background: #333; color: #ccc; margin-top: 10px; }
-        .btn-lang { background: #252525; border: 2px solid #444; color: white; margin: 10px 0; width: 100%; font-size: 1.2em; }
-        .progress-container { background: #333; height: 12px; border-radius: 6px; margin: 15px 0; overflow: hidden; }
+        button:active { transform: scale(0.95); }
+        .btn-main { background: var(--primary); color: white; width: 100%; margin-top: 10px; }
+        .btn-ghost { background: #333; color: #ccc; width: 100%; margin-top: 10px; }
+        
+        /* Loja Simulada */
+        .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .btn-ads { background: transparent; border: 2px solid var(--ads); color: var(--ads); font-size: 0.8em; }
+        .btn-premium { background: transparent; border: 2px solid var(--premium); color: var(--premium); font-size: 0.8em; }
+
+        /* Estilos de Exercício */
+        .btn-option { background: #333; color: white; width: 100%; margin: 5px 0; text-align: left; border: 2px solid transparent; }
+        .btn-option:hover { border-color: var(--primary); }
+        .btn-word { background: #444; color: white; margin: 5px; display: inline-block; padding: 8px 15px; border-radius: 8px; }
+        .btn-word.used { opacity: 0.3; pointer-events: none; }
+        .word-area { min-height: 60px; border-bottom: 2px dashed #444; margin-bottom: 20px; padding: 10px; display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; }
+
+        /* Progress Bar */
+        .progress-container { background: #333; height: 10px; border-radius: 5px; margin: 10px 0; overflow: hidden; }
         .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
-        input[type="text"] { background: #252525; border: 2px solid #444; padding: 15px; border-radius: 15px; color: white; font-size: 1.2em; text-align: center; width: 90%; outline: none; }
+        
+        input[type="text"] { background: #252525; border: 2px solid #444; padding: 15px; border-radius: 15px; color: white; font-size: 1.2em; text-align: center; width: 85%; outline: none; }
         canvas { position: fixed; inset: 0; pointer-events: none; z-index: 2000; }
     </style>
 </head>
@@ -27,51 +45,74 @@
 
 <header>
     <div style="font-size: 1.5em; font-weight: 900;">FLUENT<span style="color:var(--primary)">GO</span></div>
-    <div id="userMenu" class="hidden"><span id="userXpDisplay" style="color: var(--premium); font-weight: bold;">0 XP</span></div>
+    <div id="userMenu" class="hidden">
+        <span id="userXpDisplay" style="color: var(--premium); font-weight: bold;">0 XP</span>
+    </div>
 </header>
 
 <div id="authSection" class="container">
     <div class="card" style="margin-top: 50px;">
-        <h2>Aprenda agora.</h2>
-        <input type="email" id="email" placeholder="E-mail" style="width: 90%; padding: 10px; margin-bottom: 10px; border-radius: 8px;"><br>
-        <input type="password" id="password" placeholder="Senha" style="width: 90%; padding: 10px; margin-bottom: 20px; border-radius: 8px;"><br>
+        <h2>Aprenda um novo idioma</h2>
+        <input type="email" id="email" placeholder="E-mail" style="width: 85%; padding: 12px; margin-bottom: 10px; border-radius: 8px; background: #222; border: 1px solid #444; color: white;">
+        <input type="password" id="password" placeholder="Senha" style="width: 85%; padding: 12px; margin-bottom: 20px; border-radius: 8px; background: #222; border: 1px solid #444; color: white;">
         <button id="loginBtn" class="btn-main">ENTRAR</button>
-        <button id="registerBtn" class="btn-ghost" style="width: 100%">CRIAR CONTA</button>
+        <button id="registerBtn" class="btn-ghost">CRIAR CONTA</button>
     </div>
 </div>
 
 <div id="langOnboarding" class="container hidden">
     <div class="card">
-        <h2>Escolha seu Idioma</h2>
-        <button class="btn-lang" onclick="setInitialLang('Ingles')">🇺🇸 Inglês</button>
-        <button class="btn-lang" onclick="setInitialLang('Espanhol')">🇪🇸 Espanhol</button>
-        <button class="btn-lang" onclick="setInitialLang('Japones')">🇯🇵 Japonês</button>
+        <h2>O que vamos aprender?</h2>
+        <button class="btn-ghost" style="border: 1px solid var(--primary)" onclick="setInitialLang('Ingles')">🇺🇸 Inglês</button>
+        <button class="btn-ghost" style="border: 1px solid var(--secondary)" onclick="setInitialLang('Espanhol')">🇪🇸 Espanhol</button>
+        <button class="btn-ghost" style="border: 1px solid #FF0055" onclick="setInitialLang('Japones')">🇯🇵 Japonês</button>
     </div>
 </div>
 
 <div id="appSection" class="container hidden">
-    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
         <div style="flex:1; background:#252525; padding:10px; border-radius:15px;">🌍 <b id="currentLangLabel">---</b></div>
         <div style="flex:1; background:#252525; padding:10px; border-radius:15px;">🔥 Combo: <b id="comboLabel">0</b></div>
     </div>
+
     <div class="card">
         <h3 id="moduleLabel">Módulo 1</h3>
         <p id="taskLabel" style="color: #aaa;">Tarefa 1 de 5</p>
         <div class="progress-container"><div id="mainProgress" class="progress-fill"></div></div>
-        <button id="startBtn" class="btn-main">CONTINUAR</button>
+        <button id="startBtn" class="btn-main" style="padding: 20px;">ESTUDAR AGORA</button>
+        
+        <div class="shop-grid">
+            <button class="btn-ads" onclick="alert('Loja em breve!')">Remover Ads (R$ 4,99)</button>
+            <button class="btn-premium" onclick="alert('Loja em breve!')">Premium (R$ 9,99)</button>
+        </div>
     </div>
-    <button id="configBtn" class="btn-ghost" style="width: 100%;">⚙️ Configurações</button>
-    <button id="logoutBtn" class="btn-ghost" style="width: 100%; color: var(--danger);">Sair</button>
+
+    <button id="configBtn" class="btn-ghost">⚙️ Mudar Idioma</button>
+    <button id="logoutBtn" class="btn-ghost" style="color: var(--ads);">Sair da Conta</button>
+</div>
+
+<div id="studyModal" class="container hidden">
+    <div class="card" style="margin-top: 50px; padding: 50px 25px;">
+        <h4 style="color:var(--premium); letter-spacing: 2px;">MEMORIZE</h4>
+        <h1 id="studyWord" style="font-size: 3em; margin: 20px 0;">Word</h1>
+        <h2 id="studyTranslation" style="color:var(--secondary)">Tradução</h2>
+        <button id="nextStudyBtn" class="btn-main" style="margin-top: 40px;">PRÓXIMO</button>
+    </div>
 </div>
 
 <div id="taskModal" class="hidden" style="position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: flex; flex-direction: column;">
-    <div style="padding: 20px;"><div class="progress-container"><div id="taskProgress" class="progress-fill"></div></div></div>
-    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 30px;">
-        <h4 style="color: var(--primary);">TRADUZA</h4>
-        <h1 id="questionDisplay" style="font-size: 2.5em;">Olá</h1>
-        <input type="text" id="answerInput" autocomplete="off" placeholder="Resposta...">
+    <div style="padding: 20px; display: flex; align-items: center; gap: 15px;">
+        <div class="progress-container" style="flex:1;"><div id="taskProgress" class="progress-fill"></div></div>
+        <button id="closeTask" style="background:none; color:#666; font-size: 1.2em;">✕</button>
+    </div>
+    <div class="container" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+        <h4 id="taskInstruction" style="color: var(--primary); text-transform: uppercase; font-weight: 900;">TRADUZA</h4>
+        <h1 id="questionDisplay" style="margin: 20px 0;">Pergunta</h1>
+        
+        <div id="exerciseArea"></div>
+
         <div id="feedback" style="margin-top: 20px; font-weight: bold; min-height: 30px;"></div>
-        <button id="checkBtn" class="btn-main" style="margin-top: 30px; align-self: center; width: 80%;">VERIFICAR</button>
+        <button id="checkBtn" class="btn-main">VERIFICAR</button>
     </div>
 </div>
 
@@ -85,48 +126,53 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// CURRÍCULO COM VARIAÇÕES (Array de respostas)
+// CURRÍCULO COMPLETO COM VARIAÇÕES
 const courseData = {
     Ingles: {
         M1: [
-            {q: "Olá", a: ["hello", "hi"]},
-            {q: "Sim", a: ["yes", "yeah"]},
-            {q: "Por favor", a: ["please"]},
-            {q: "Obrigado", a: ["thank you", "thanks"]},
-            {q: "Tchau", a: ["goodbye", "bye"]}
+            {q: "Olá / Oi", a: ["hello", "hi"], type: "input"},
+            {q: "Sim", a: ["yes", "yeah"], type: "choice", options: ["Yes", "No", "Please"]},
+            {q: "Por favor", a: ["please"], type: "phrase", words: ["please", "thanks", "hello"]},
+            {q: "Thank you", a: ["obrigado", "obrigada"], type: "input"},
+            {q: "Tchau", a: ["goodbye", "bye"], type: "choice", options: ["Goodbye", "Welcome", "Hi"]}
         ],
         M2: [
-            {q: "Água", a: ["water"]},
-            {q: "Café", a: ["coffee"]},
-            {q: "Maçã", a: ["apple"]},
-            {q: "Pão", a: ["bread"]},
-            {q: "Leite", a: ["milk"]}
-        ],
-        // ... (Adicionar M3 a M10 seguindo este padrão de Array em 'a')
+            {q: "Água", a: ["water"], type: "input"},
+            {q: "Pão", a: ["bread"], type: "choice", options: ["Bread", "Apple", "Coffee"]},
+            {q: "Eu bebo água", a: ["i drink water"], type: "phrase", words: ["i", "drink", "water", "eat", "apple"]},
+            {q: "Apple", a: ["maçã"], type: "input"},
+            {q: "Coffee", a: ["café"], type: "choice", options: ["Café", "Leite", "Suco"]}
+        ]
     },
     Espanhol: {
         M1: [
-            {q: "Olá", a: ["hola"]},
-            {q: "Obrigado", a: ["gracias"]},
-            {q: "Bom dia", a: ["buenos dias"]},
-            {q: "Tchau", a: ["adios", "chao"]},
-            {q: "Sim", a: ["si"]}
+            {q: "Olá", a: ["hola"], type: "input"},
+            {q: "Obrigado", a: ["gracias"], type: "choice", options: ["Gracias", "De nada", "Si"]},
+            {q: "Por favor", a: ["por favor"], type: "phrase", words: ["por", "favor", "gracias", "no"]},
+            {q: "Bom dia", a: ["buenos dias"], type: "input"},
+            {q: "Sim / Não", a: ["si no", "si y no"], type: "choice", options: ["Si y no", "Hola", "Adios"]}
         ]
     },
     Japones: {
         M1: [
-            {q: "Bom dia", a: ["ohayou", "ohayo"]},
-            {q: "Obrigado", a: ["arigatou", "arigato"]},
-            {q: "Olá", a: ["konnichiwa", "konichiwa"]},
-            {q: "Sim", a: ["hai"]},
-            {q: "Não", a: ["iie", "ie"]}
+            {q: "Bom dia", a: ["ohayou", "ohayo"], type: "input"},
+            {q: "Obrigado", a: ["arigatou", "arigato"], type: "choice", options: ["Arigatou", "Hai", "Iie"]},
+            {q: "Eu sou estudante", a: ["watashi wa gakusei desu"], type: "phrase", words: ["watashi", "wa", "gakusei", "desu", "mizu"]},
+            {q: "Neko", a: ["gato"], type: "input"},
+            {q: "Sim", a: ["hai"], type: "choice", options: ["Hai", "Iie", "Desu"]}
         ]
     }
 };
 
 let userData = { xp: 0, lang: "", mod: 1, task: 1, combo: 0 };
-let taskQuestions = [];
+let currentQuestions = [];
 let qIdx = 0;
+let phraseBuilder = [];
+
+const showSection = (id) => {
+    ["authSection", "appSection", "taskModal", "langOnboarding", "studyModal"].forEach(s => document.getElementById(s).classList.add("hidden"));
+    document.getElementById(id).classList.remove("hidden");
+};
 
 const updateUI = () => {
     document.getElementById("userXpDisplay").innerText = `${userData.xp || 0} XP`;
@@ -137,45 +183,97 @@ const updateUI = () => {
     document.getElementById("mainProgress").style.width = `${((userData.task - 1) || 0) * 20}%`;
 };
 
-window.setInitialLang = async (lang) => {
-    userData.lang = lang; userData.mod = 1; userData.task = 1; userData.xp = 0; userData.combo = 0;
-    await set(ref(db, 'users/' + auth.currentUser.uid), userData);
-    showSection("appSection"); updateUI();
-};
-
-function initTask() {
+// FLUXO DE ENSINO
+function startLesson() {
     const modKey = "M" + userData.mod;
-    // Puxamos as 5 perguntas DIFERENTES do módulo atual
-    taskQuestions = courseData[userData.lang][modKey] || courseData[userData.lang]["M1"];
+    currentQuestions = courseData[userData.lang][modKey] || courseData[userData.lang]["M1"];
     qIdx = 0;
-    showSection("taskModal");
-    renderQuestion();
+    showStudyCard();
 }
 
-function renderQuestion() {
-    const q = taskQuestions[qIdx];
+function showStudyCard() {
+    if (qIdx < 5) {
+        showSection("studyModal");
+        const q = currentQuestions[qIdx];
+        document.getElementById("studyWord").innerText = q.q;
+        document.getElementById("studyTranslation").innerText = q.a[0].toUpperCase();
+    } else {
+        qIdx = 0;
+        showSection("taskModal");
+        renderExercise();
+    }
+}
+
+document.getElementById("nextStudyBtn").onclick = () => { qIdx++; showStudyCard(); };
+
+// EXERCÍCIOS
+function renderExercise() {
+    const q = currentQuestions[qIdx];
+    const area = document.getElementById("exerciseArea");
+    area.innerHTML = "";
+    document.getElementById("feedback").innerText = "";
     document.getElementById("taskProgress").style.width = `${(qIdx / 5) * 100}%`;
     document.getElementById("questionDisplay").innerText = q.q;
-    document.getElementById("answerInput").value = "";
-    document.getElementById("answerInput").focus();
-    document.getElementById("feedback").innerText = "";
+
+    if (q.type === "input") {
+        area.innerHTML = `<input type="text" id="ansInput" placeholder="Digite a tradução...">`;
+        document.getElementById("ansInput").focus();
+    } 
+    else if (q.type === "choice") {
+        q.options.forEach(opt => {
+            const b = document.createElement("button");
+            b.className = "btn-option";
+            b.innerText = opt;
+            b.onclick = () => {
+                document.querySelectorAll(".btn-option").forEach(x => x.style.borderColor = "transparent");
+                b.style.borderColor = "var(--primary)";
+                b.dataset.selected = "true";
+            };
+            area.appendChild(b);
+        });
+    }
+    else if (q.type === "phrase") {
+        phraseBuilder = [];
+        const drop = document.createElement("div"); drop.className = "word-area"; drop.id = "phraseDrop";
+        area.appendChild(drop);
+        const bank = document.createElement("div");
+        q.words.sort(() => Math.random() - 0.5).forEach(w => {
+            const b = document.createElement("button");
+            b.className = "btn-word"; b.innerText = w;
+            b.onclick = () => {
+                if(!b.classList.contains("used")) {
+                    phraseBuilder.push(w);
+                    drop.innerHTML += `<span>${w} </span>`;
+                    b.classList.add("used");
+                }
+            };
+            bank.appendChild(b);
+        });
+        area.appendChild(bank);
+    }
 }
 
 function checkAnswer() {
-    const userVal = document.getElementById("answerInput").value.trim().toLowerCase();
-    const possibleAnswers = taskQuestions[qIdx].a; // Isso agora é um Array
-    const feedback = document.getElementById("feedback");
+    const q = currentQuestions[qIdx];
+    let userAns = "";
 
-    if (possibleAnswers.includes(userVal)) {
-        feedback.innerText = "✨ CORRETO!"; feedback.style.color = "var(--secondary)";
-        userData.xp += 10; userData.combo++;
+    if (q.type === "input") userAns = document.getElementById("ansInput").value.trim().toLowerCase();
+    else if (q.type === "choice") {
+        const sel = document.querySelector(".btn-option[data-selected='true']");
+        if(sel) userAns = sel.innerText.toLowerCase();
+    }
+    else if (q.type === "phrase") userAns = phraseBuilder.join(" ").toLowerCase();
+
+    if (q.a.includes(userAns)) {
+        document.getElementById("feedback").innerText = "✨ EXCELENTE!";
+        document.getElementById("feedback").style.color = "var(--secondary)";
+        userData.xp += 15; userData.combo++;
         spawnParticles(window.innerWidth/2, window.innerHeight/2, "#10B981");
         qIdx++;
-        if(qIdx < 5) setTimeout(renderQuestion, 1000);
-        else setTimeout(finishTask, 1000);
+        setTimeout(() => { if(qIdx < 5) renderExercise(); else finishTask(); }, 1200);
     } else {
-        feedback.innerText = `RESPOSTA: ${possibleAnswers[0].toUpperCase()}`;
-        feedback.style.color = "var(--danger)";
+        document.getElementById("feedback").innerText = `RESPOSTA: ${q.a[0].toUpperCase()}`;
+        document.getElementById("feedback").style.color = "var(--ads)";
         userData.combo = 0;
         spawnParticles(window.innerWidth/2, window.innerHeight/2, "#EF4444");
     }
@@ -189,36 +287,43 @@ async function finishTask() {
     showSection("appSection"); updateUI();
 }
 
-// FX & UI Logic
-const showSection = (id) => {
-    ["authSection", "appSection", "taskModal", "langOnboarding"].forEach(s => document.getElementById(s).classList.add("hidden"));
-    document.getElementById(id).classList.remove("hidden");
+// CONFIGURAÇÃO INICIAL
+window.setInitialLang = async (lang) => {
+    userData.lang = lang; userData.mod = 1; userData.task = 1; userData.xp = 0; userData.combo = 0;
+    await set(ref(db, 'users/' + auth.currentUser.uid), userData);
+    showSection("appSection"); updateUI();
 };
 
-// ... (Partículas Canvas - mantidas as mesmas do código anterior)
+// FIREBASE AUTH
+document.getElementById("loginBtn").onclick = () => signInWithEmailAndPassword(auth, email.value, password.value);
+document.getElementById("registerBtn").onclick = () => createUserWithEmailAndPassword(auth, email.value, password.value);
+document.getElementById("logoutBtn").onclick = () => signOut(auth);
+document.getElementById("startBtn").onclick = startLesson;
+document.getElementById("checkBtn").onclick = checkAnswer;
+document.getElementById("configBtn").onclick = () => showSection("langOnboarding");
+document.getElementById("closeTask").onclick = () => showSection("appSection");
+
+onAuthStateChanged(auth, async (u) => {
+    if(u) {
+        const s = await get(ref(db, 'users/' + u.uid));
+        if(s.exists()) {
+            userData = s.val();
+            userData.xp = userData.xp || 0;
+            userData.combo = userData.combo || 0;
+            if(!userData.lang) showSection("langOnboarding");
+            else showSection("appSection");
+        } else showSection("langOnboarding");
+        document.getElementById("userMenu").classList.remove("hidden"); updateUI();
+    } else { showSection("authSection"); document.getElementById("userMenu").classList.add("hidden"); }
+});
+
+// PARTÍCULAS CANVAS
 const canvas = document.getElementById("fxCanvas"), ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth; canvas.height = window.innerHeight;
 let parts = [];
 function spawnParticles(x,y,c){ for(let i=0;i<20;i++) parts.push({x,y,dx:(Math.random()-0.5)*10,dy:(Math.random()-0.5)*10,life:1,c}); }
 function renderFX(){ ctx.clearRect(0,0,canvas.width,canvas.height); parts.forEach((p,i)=>{ ctx.fillStyle = p.c; ctx.globalAlpha = p.life; ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, 7); ctx.fill(); p.x+=p.dx; p.y+=p.dy; p.life-=0.02; if(p.life<=0) parts.splice(i,1); }); requestAnimationFrame(renderFX); }
 renderFX();
-
-document.getElementById("loginBtn").onclick = () => signInWithEmailAndPassword(auth, email.value, password.value);
-document.getElementById("registerBtn").onclick = () => createUserWithEmailAndPassword(auth, email.value, password.value);
-document.getElementById("logoutBtn").onclick = () => signOut(auth);
-document.getElementById("startBtn").onclick = initTask;
-document.getElementById("checkBtn").onclick = checkAnswer;
-document.getElementById("configBtn").onclick = () => showSection("langOnboarding");
-document.getElementById("answerInput").onkeypress = (e) => { if(e.key === 'Enter') checkAnswer(); };
-
-onAuthStateChanged(auth, async (u) => {
-    if(u) {
-        const s = await get(ref(db, 'users/' + u.uid));
-        if(s.exists()) { userData = s.val(); if(!userData.lang) showSection("langOnboarding"); else showSection("appSection"); }
-        else showSection("langOnboarding");
-        document.getElementById("userMenu").classList.remove("hidden"); updateUI();
-    } else { showSection("authSection"); document.getElementById("userMenu").classList.add("hidden"); }
-});
 </script>
 </body>
 </html>
