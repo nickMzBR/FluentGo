@@ -10,9 +10,8 @@ button, select, input { padding:8px; border-radius:8px; border:none; margin:5px;
 button { background:#2563EB; color:white; cursor:pointer;}
 select, input { background:#333; color:white;}
 .hidden { display:none; }
-#taskModal, #adModal, #congratsModal { position:fixed; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px; }
+#taskModal, #congratsModal { position:fixed; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px; }
 #taskModal { background:#222; color:#fff; }
-#adModal { background:rgba(0,0,0,0.8); color:#fff; }
 #congratsModal { background:rgba(0,0,0,0.9); color:#fff; font-size:1.5em; display:none; }
 #congratsModal h1 { color:#2563EB; margin-bottom:20px; }
 </style>
@@ -60,12 +59,6 @@ select, input { background:#333; color:white;}
   <button onclick="exitTask()">Sair da Tarefa</button>
 </div>
 
-<div id="adModal" class="hidden">
-  <h2>Anúncio</h2>
-  <p>Assista este anúncio para continuar!</p>
-  <button onclick="closeAd()">Fechar Anúncio</button>
-</div>
-
 <div id="congratsModal">
   <h1>Parabéns! 🎉</h1>
   <p>Você concluiu o curso de <span id="congratsLanguage"></span>!</p>
@@ -100,7 +93,6 @@ const xpDisplay = document.getElementById("xpDisplay");
 const taskModal = document.getElementById("taskModal");
 const taskTitle = document.getElementById("taskTitle");
 const exerciseContainer = document.getElementById("exerciseContainer");
-const adModal = document.getElementById("adModal");
 const congratsModal = document.getElementById("congratsModal");
 const congratsLanguage = document.getElementById("congratsLanguage");
 
@@ -114,15 +106,12 @@ const questionsPerTask=5;
 const totalModules=10, totalTasks=10;
 
 // ======= Exercícios completos para 3 línguas =======
-// Para simplificar aqui, vou gerar **um template completo de dados estruturados**.
-// No arquivo real, você vai repetir o mesmo esquema para todos os módulos e tarefas.
 const exercises = {
   Ingles: [],
   Espanhol: [],
   Japones: []
 };
 
-// Função para gerar tarefas automáticas baseadas em palavras/frases simples
 function generateTasks(lang){
   const baseWords = {
     Ingles:[
@@ -153,7 +142,6 @@ function generateTasks(lang){
   }
 }
 
-// Gerar para todas as línguas
 ["Ingles","Espanhol","Japones"].forEach(generateTasks);
 
 // ======= Lógica das tarefas =======
@@ -203,23 +191,20 @@ function checkAnswer(ans){
 
   currentQuestion++;
   if(currentQuestion<questionsPerTask) showExercise();
-  else adModal.classList.remove("hidden");
-}
-
-function closeAd(){
-  adModal.classList.add("hidden");
-  currentTask++;
-  currentQuestion=0;
-  if(currentTask>totalTasks){
-    currentModule++;
-    currentTask=1;
-    if(currentModule>totalModules){
-      congratsLanguage.innerText=currentLanguage;
-      congratsModal.style.display="flex";
-      return;
+  else {
+    currentTask++;
+    currentQuestion=0;
+    if(currentTask>totalTasks){
+      currentModule++;
+      currentTask=1;
+      if(currentModule>totalModules){
+        congratsLanguage.innerText=currentLanguage;
+        congratsModal.style.display="flex";
+        return;
+      }
     }
+    showExercise();
   }
-  showExercise();
 }
 
 function exitTask(){ taskModal.classList.add("hidden"); }
