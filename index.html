@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FluentGo | V2.5</title>
+    <title>FluentGo | V2.6</title>
     <style>
         :root { --primary: #2563EB; --secondary: #10B981; --premium: #FF9900; --ads: #EF4444; --bg: #121212; --card: #1E1E1E; }
         body { margin:0; font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: #fff; text-align: center; overflow-x: hidden; }
@@ -20,6 +20,11 @@
         .btn-main { background: var(--primary); color: white; width: 100%; box-shadow: 0 5px 0 #1D4ED8; margin-top: 10px; }
         .btn-ghost { background: #333; color: #ccc; width: 100%; margin-top: 10px; border-bottom: 4px solid #111; }
         
+        /* LOJA */
+        .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .btn-ads { background: transparent; border: 2px solid var(--ads); color: var(--ads); font-size: 0.8em; border-radius: 12px; }
+        .btn-premium { background: transparent; border: 2px solid var(--premium); color: var(--premium); font-size: 0.8em; border-radius: 12px; }
+
         input[type="email"], input[type="password"], input[type="text"] { 
             background: #252525; border: 2px solid #444; padding: 16px; border-radius: 18px; color: white; 
             font-size: 1.1em; text-align: center; width: 85%; outline: none; margin-bottom: 15px; border-bottom: 5px solid #000; 
@@ -74,6 +79,11 @@
         <p id="taskLabel" style="color: #aaa;">Tarefa 1 de 5</p>
         <div class="progress-container"><div id="mainProgress" class="progress-fill"></div></div>
         <button id="startBtn" class="btn-main" style="padding: 20px; font-size: 1.2em;">ESTUDAR AGORA</button>
+        
+        <div class="shop-grid">
+            <button class="btn-ads" onclick="alert('Loja em breve!')">Remover Ads</button>
+            <button class="btn-premium" onclick="alert('Loja em breve!')">Premium</button>
+        </div>
     </div>
     <button id="configBtn" class="btn-ghost">⚙️ Mudar Idioma</button>
     <button id="logoutBtn" class="btn-ghost" style="color: var(--ads);">Sair</button>
@@ -105,46 +115,23 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebaseio.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = { apiKey: "AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw", authDomain: "fluentgo-35024.firebaseapp.com", databaseURL: "https://fluentgo-35024-default-rtdb.firebaseio.com", projectId: "fluentgo-35024", appId: "1:613715387990:web:0345ade26374dd32d1fdf7" };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// CURRÍCULO PREDEFINIDO (Adicione mais módulos aqui)
 const courseData = {
     Ingles: {
-        M1: [ // Básico: Saudações
-            {q: "Olá", a: ["hello", "hi"], type: "choice", options: ["Hello", "Apple", "Water"]},
-            {q: "Sim", a: ["yes"], type: "input"},
-            {q: "Por favor", a: ["please"], type: "choice", options: ["Please", "Thanks", "No"]},
-            {q: "Obrigado", a: ["thanks", "thank you"], type: "input"},
-            {q: "Tchau", a: ["goodbye", "bye"], type: "phrase", words: ["goodbye", "hello", "yes"]}
-        ],
-        M2: [ // Nível 2: Comida e Bebida
-            {q: "Água", a: ["water"], type: "input"},
-            {q: "Café", a: ["coffee"], type: "choice", options: ["Coffee", "Tea", "Milk"]},
-            {q: "Pão", a: ["bread"], type: "input"},
-            {q: "Eu bebo água", a: ["i drink water"], type: "phrase", words: ["i", "drink", "water", "eat", "bread"]},
-            {q: "Eu como pão", a: ["i eat bread"], type: "input"}
-        ],
-        M3: [ // Nível 3: Frases estruturadas
-            {q: "Como você está?", a: ["how are you"], type: "phrase", words: ["how", "are", "you", "fine", "thanks"]},
-            {q: "Eu estou bem", a: ["i am fine", "i'm fine"], type: "input"},
-            {q: "Qual o seu nome?", a: ["what is your name"], type: "phrase", words: ["what", "is", "your", "name", "hello"]},
-            {q: "Bom dia", a: ["good morning"], type: "choice", options: ["Good morning", "Good night", "Hello"]},
-            {q: "Meu nome é...", a: ["my name is"], type: "input"}
-        ]
+        M1: [{q: "Olá", a: ["hello", "hi"], type: "choice", options: ["Hello", "Apple", "Water"]}, {q: "Sim", a: ["yes"], type: "input"}, {q: "Por favor", a: ["please"], type: "choice", options: ["Please", "Thanks", "No"]}, {q: "Obrigado", a: ["thanks"], type: "input"}, {q: "Tchau", a: ["goodbye"], type: "phrase", words: ["goodbye", "hello", "yes"]}],
+        M2: [{q: "Água", a: ["water"], type: "input"}, {q: "Café", a: ["coffee"], type: "choice", options: ["Coffee", "Tea", "Milk"]}, {q: "Pão", a: ["bread"], type: "input"}, {q: "Eu bebo água", a: ["i drink water"], type: "phrase", words: ["i", "drink", "water", "eat", "bread"]}, {q: "Eu como pão", a: ["i eat bread"], type: "input"}]
     },
     Espanhol: {
-        M1: [
-            {q: "Olá", a: ["hola"], type: "input"},
-            {q: "Sim", a: ["si"], type: "choice", options: ["Si", "No", "Gracias"]},
-            {q: "Obrigado", a: ["gracias"], type: "input"},
-            {q: "Por favor", a: ["por favor"], type: "phrase", words: ["por", "favor", "de", "nada"]},
-            {q: "De nada", a: ["de nada"], type: "choice", options: ["De nada", "Hola", "Si"]}
-        ]
+        M1: [{q: "Olá", a: ["hola"], type: "input"}, {q: "Sim", a: ["si"], type: "choice", options: ["Si", "No", "Gracias"]}, {q: "Obrigado", a: ["gracias"], type: "input"}, {q: "Por favor", a: ["por favor"], type: "phrase", words: ["por", "favor", "de", "nada"]}, {q: "De nada", a: ["de nada"], type: "choice", options: ["De nada", "Hola", "Si"]}]
+    },
+    Japones: {
+        M1: [{q: "Bom dia", a: ["ohayou"], type: "input"}, {q: "Sim", a: ["hai"], type: "choice", options: ["Hai", "Iie", "Neko"]}, {q: "Gato", a: ["neko"], type: "input"}, {q: "Obrigado", a: ["arigatou"], type: "phrase", words: ["arigatou", "hai", "desu"]}, {q: "Estudante", a: ["gakusei"], type: "choice", options: ["Gakusei", "Sensei", "Neko"]}]
     }
 };
 
@@ -169,7 +156,8 @@ const updateUI = () => {
 
 window.startLesson = () => { 
     const modKey = "M" + userData.mod;
-    currentQuestions = courseData[userData.lang][modKey] || courseData[userData.lang]["M1"];
+    const langData = courseData[userData.lang] || courseData["Ingles"];
+    currentQuestions = langData[modKey] || langData["M1"];
     qIdx = 0; 
     showStudyCard(); 
 };
@@ -243,8 +231,15 @@ async function finishTask() {
     showSection("appSection"); updateUI();
 }
 
+// TROCA DE IDIOMA COM PERSISTÊNCIA
 window.setInitialLang = async (lang) => {
-    userData.lang = lang; userData.mod = 1; userData.task = 1; userData.xp = 0; userData.combo = 0;
+    // Busca se já existe progresso para esse usuário antes de resetar
+    const snapshot = await get(ref(db, 'users/' + auth.currentUser.uid));
+    if(snapshot.exists() && snapshot.val().lang === lang) {
+        userData = snapshot.val();
+    } else {
+        userData.lang = lang; userData.mod = 1; userData.task = 1; userData.xp = userData.xp || 0; userData.combo = 0;
+    }
     await set(ref(db, 'users/' + auth.currentUser.uid), userData);
     showSection("appSection"); updateUI();
 };
