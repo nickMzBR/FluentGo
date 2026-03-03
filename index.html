@@ -3,90 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FluentGo</title>
+    <title>FluentGo | Full Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #2563EB; --secondary: #10B981; --bg: #0F172A; --card: #1E293B; --text: #F8FAFC; --gold: #F59E0B; --error: #EF4444; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
         body { background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
-        .container { flex: 1; padding: 20px; max-width: 450px; margin: 0 auto; display: flex; flex-direction: column; width: 100%; overflow-y: auto; }
+        .container { flex: 1; padding: 15px; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; width: 100%; overflow-y: auto; padding-bottom: 90px; }
         .hidden { display: none !important; }
         
-        /* Estilo Inputs e Botões */
-        input { width: 100%; padding: 16px; border-radius: 14px; border: 1px solid #334155; background: #1E293B; color: white; margin-bottom: 12px; font-size: 16px; outline: none; }
-        button { padding: 18px; border-radius: 16px; border: none; font-weight: 800; cursor: pointer; width: 100%; font-size: 14px; text-transform: uppercase; transition: 0.2s; }
-        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 0 #1D4ED8; }
-        .btn-primary:active { transform: translateY(2px); box-shadow: 0 2px 0 #1D4ED8; }
-        .btn-outline { background: transparent; color: #94a3b8; border: 1px solid #334155; margin-top: 10px; }
-
-        /* Login */
-        .auth-container { text-align: center; justify-content: center; display: flex; flex-direction: column; height: 100%; }
-        .logo { font-size: 32px; font-weight: 900; margin-bottom: 30px; }
-        .logo span { color: var(--primary); }
-
-        /* App */
-        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #334155; }
+        /* Header e Cards */
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #0F172A; border-bottom: 1px solid #334155; }
         .card { background: var(--card); padding: 25px; border-radius: 24px; border: 1px solid #334155; text-align: center; margin-bottom: 15px; }
-        nav { position: fixed; bottom: 0; left: 0; right: 0; background: #1E293B; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #334155; height: 75px; }
+        
+        /* Inputs e Botões */
+        input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #475569; background: #0F172A; color: white; margin-bottom: 10px; font-weight: 600; outline: none; }
+        button { padding: 16px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; width: 100%; font-size: 15px; text-transform: uppercase; transition: 0.2s; }
+        .btn-check { background: var(--primary); color: white; box-shadow: 0 5px 0 #1D4ED8; }
+        .btn-check:active { transform: translateY(3px); box-shadow: 0 2px 0 #1D4ED8; }
+        .btn-lang { background: #0F172A; color: white; border: 1px solid #334155; border-radius: 12px; padding: 12px; font-size: 12px; }
+        .btn-lang.active { border: 2px solid var(--primary); background: rgba(37, 99, 235, 0.1); }
+
+        /* Navegação */
+        nav { position: fixed; bottom: 0; left: 0; right: 0; background: #1E293B; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #334155; z-index: 100; height: 75px; }
         nav div { display: flex; flex-direction: column; align-items: center; font-size: 20px; cursor: pointer; opacity: 0.4; flex: 1; }
         nav div.active { opacity: 1; color: var(--primary); }
-        nav span { font-size: 10px; font-weight: 700; margin-top: 4px; }
+        nav span { font-size: 9px; font-weight: 700; margin-top: 5px; text-transform: uppercase; }
+
+        /* Ranking */
+        .rank-item { display: flex; justify-content: space-between; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 16px; margin-bottom: 8px; border: 1px solid transparent; }
+        .rank-item.me { border-color: var(--primary); background: rgba(37, 99, 235, 0.1); }
 
         /* Jogo */
-        .word-area { min-height: 100px; border: 2px dashed #475569; border-radius: 20px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 15px; margin: 20px 0; }
-        .chip { background: #334155; padding: 12px 18px; border-radius: 12px; font-weight: 700; border: 1px solid #475569; }
-        .chip.used { opacity: 0.2; pointer-events: none; }
+        .word-area { min-height: 110px; border: 2px dashed #475569; border-radius: 20px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 15px; background: rgba(255,255,255,0.02); margin: 15px 0; }
+        .chip { background: #334155; padding: 12px 16px; border-radius: 14px; font-weight: 700; color: white; border: 1px solid #475569; }
+        .chip.used { opacity: 0.1; pointer-events: none; }
     </style>
 </head>
 <body>
 
-<div id="view-auth" class="container auth-container">
-    <div class="logo">FLUENT<span>GO</span></div>
-    <h2 id="auth-title">Entrar no FluentGo</h2>
-    <p id="auth-msg" style="font-size: 12px; color: var(--error); margin-bottom: 10px; height: 15px;"></p>
+<div id="view-auth" class="container" style="justify-content: center; text-align: center;">
+    <h1 style="font-size: 32px; font-weight: 900; margin-bottom: 20px;">FLUENT<span style="color:var(--primary)">GO</span></h1>
+    <h2 id="auth-title">Entrar</h2>
+    <p id="auth-error" style="color: var(--error); font-size: 12px; margin-bottom: 10px;"></p>
     <input type="email" id="email" placeholder="E-mail">
     <input type="password" id="password" placeholder="Senha">
-    <button id="btn-auth-action" class="btn-primary">ENTRAR</button>
-    <button id="btn-toggle-auth" class="btn-outline">Criar conta nova</button>
+    <button id="btn-auth" class="btn-check">ENTRAR</button>
+    <button id="btn-toggle-auth" style="background:none; color:#94a3b8; margin-top:15px; text-transform:none;">Não tem conta? Criar agora</button>
 </div>
 
 <div id="view-app" class="hidden" style="height: 100%; display: flex; flex-direction: column;">
     <header>
-        <div style="font-weight:900;">FLUENTGO <span id="ui-lang" style="color:var(--primary); font-size:10px;">EN</span></div>
+        <div style="font-weight:900;"><span id="ui-username-head" style="font-size:10px; display:block; opacity:0.6;">Olá, Estudante</span>FLUENTGO <span id="ui-lang-tag" style="color:var(--primary); font-size:10px;">EN</span></div>
         <div style="font-weight: 800; color: var(--secondary);">🔥 <span id="ui-xp">0</span></div>
     </header>
 
-    <div id="tab-home" class="container">
-        <div class="card" style="margin-top: 20px;">
-            <h1 id="ui-lvl-num" style="font-size: 4rem; font-weight: 900; color: var(--gold);">1</h1>
+    <main id="tab-home" class="container">
+        <div class="card" style="margin-top: 40px;">
+            <h1 id="ui-lvl" style="font-size: 4.5rem; font-weight: 900; color: var(--gold);">1</h1>
             <h2 id="ui-lvl-txt">Nível 1</h2>
-            <p id="ui-task" style="color: #94a3b8; margin-bottom: 25px;">Tarefa 1 de 10</p>
-            <button id="btn-start" class="btn-primary">PRATICAR AGORA</button>
+            <p id="ui-task" style="color: #94a3b8; margin-bottom: 30px;">Tarefa 1 de 10</p>
+            <button id="btn-start" class="btn-check">PRATICAR AGORA</button>
         </div>
-    </div>
+    </main>
 
-    <div id="tab-settings" class="container hidden">
+    <main id="tab-ranking" class="container hidden">
+        <h3 style="text-align:center; margin-bottom:20px;">🏆 RANKING GLOBAL</h3>
+        <div id="ranking-list"></div>
+    </main>
+
+    <main id="tab-settings" class="container hidden">
         <div class="card">
-            <h3>Configurações</h3>
-            <button id="btn-logout" class="btn-outline" style="color: var(--error); border-color: var(--error);">SAIR DA CONTA</button>
+            <h3 style="text-align:left; font-size: 13px; color: var(--primary); margin-bottom: 10px;">👤 SEU NOME</h3>
+            <input type="text" id="input-username" placeholder="Nome de usuário">
+            <button id="btn-save-name" class="btn-check" style="padding: 10px; font-size: 12px;">ATUALIZAR NOME</button>
         </div>
-    </div>
+
+        <div class="card">
+            <h3 style="text-align:left; font-size: 13px; margin-bottom:15px;">🌍 IDIOMA DE ESTUDO</h3>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <button class="btn-lang" onclick="changeLang('English')">English</button>
+                <button class="btn-lang" onclick="changeLang('Spanish')">Español</button>
+                <button class="btn-lang" onclick="changeLang('French')">Français</button>
+                <button class="btn-lang" onclick="changeLang('Italian')">Italiano</button>
+            </div>
+            <hr style="border:0; border-top:1px solid #334155; margin: 20px 0;">
+            <button id="btn-logout" style="background: rgba(239,68,68,0.1); color: var(--error); border: 1px solid var(--error);">SAIR DA CONTA</button>
+        </div>
+    </main>
 
     <nav>
         <div id="nav-home" class="active">🏠<span>Home</span></div>
+        <div id="nav-ranking">🏆<span>Ranking</span></div>
         <div id="nav-settings">⚙️<span>Ajustes</span></div>
     </nav>
 </div>
 
 <div id="view-practice" class="hidden" style="position:fixed; inset:0; background:var(--bg); z-index:9999; display: flex; flex-direction: column;">
     <div class="container">
-        <button id="btn-close-practice" style="width:40px; background:none; color:white; font-size:24px; text-align:left;">✕</button>
-        <div style="flex:1; display:flex; flex-direction:column; justify-content:center; text-align:center;">
-            <h2 id="q-pt" style="margin-bottom:20px;">Traduza a frase</h2>
-            <div id="drop-zone" class="word-area"></div>
-            <div id="word-bank" style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px;"></div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <button id="btn-close-practice" style="width:40px; background:none; font-size:24px; color:white;">✕</button>
+            <div style="background:#334155; flex:1; height:10px; border-radius:10px; overflow:hidden; margin: 0 15px;">
+                <div id="ui-prog-bar" style="width:0%; height:100%; background:var(--secondary); transition:0.4s;"></div>
+            </div>
         </div>
-        <button id="btn-check" class="btn-primary">VERIFICAR</button>
+        <div style="flex:1; display:flex; flex-direction:column; justify-content:center; text-align:center;">
+            <h2 id="q-pt" style="font-size: 1.8rem; font-weight:900; margin-bottom:15px;">...</h2>
+            <div id="drop-zone" class="word-area"></div>
+            <div id="word-bank" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;"></div>
+        </div>
+        <button id="btn-check" class="btn-check">VERIFICAR</button>
     </div>
 </div>
 
@@ -100,82 +126,113 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// Dados Iniciais Seguros (Evita Undefined)
-let user = { xp: 0, lvl: 1, task: 1, lang: "English" };
+let user = { username: "Estudante", xp: 0, lvl: 1, task: 1, lang: "English" };
 let isLogin = true;
 
-// --- CONTROLE DE TELAS ---
-function switchView(view) {
-    document.getElementById('view-auth').classList.add('hidden');
-    document.getElementById('view-app').classList.add('hidden');
-    document.getElementById('view-practice').classList.add('hidden');
-    document.getElementById('view-' + view).classList.remove('hidden');
-}
-
-// --- AUTH ---
+// --- AUTH E DADOS ---
 onAuthStateChanged(auth, (u) => {
     if (u) {
         onValue(ref(db, 'users/' + u.uid), (snap) => {
-            const data = snap.val();
-            if (data) user = { ...user, ...data }; // Mescla com os dados do banco
-            else set(ref(db, 'users/' + u.uid), user); // Cria se não existir
-            
-            updateUI();
-            switchView('app');
+            const d = snap.val();
+            if (d) { 
+                user = { ...user, ...d };
+                updateUI();
+                document.getElementById('view-auth').classList.add('hidden');
+                document.getElementById('view-app').classList.remove('hidden');
+            } else {
+                set(ref(db, 'users/' + u.uid), user);
+            }
         });
+        // Carrega Ranking
+        onValue(ref(db, 'users'), (snap) => { if(snap.exists()) buildRanking(snap.val()); });
     } else {
-        switchView('auth');
+        document.getElementById('view-app').classList.add('hidden');
+        document.getElementById('view-auth').classList.remove('hidden');
     }
 });
 
-document.getElementById('btn-auth-action').onclick = async () => {
+function updateUI() {
+    document.getElementById('ui-username-head').innerText = `Olá, ${user.username}`;
+    document.getElementById('input-username').value = user.username;
+    document.getElementById('ui-xp').innerText = user.xp;
+    document.getElementById('ui-lvl').innerText = user.lvl;
+    document.getElementById('ui-lvl-txt').innerText = `Nível ${user.lvl}`;
+    document.getElementById('ui-task').innerText = `Tarefa ${user.task} de 10`;
+    document.getElementById('ui-lang-tag').innerText = user.lang.substring(0,2).toUpperCase();
+    
+    // Marca botão de idioma ativo
+    document.querySelectorAll('.btn-lang').forEach(b => {
+        b.classList.toggle('active', b.innerText.includes(user.lang) || (b.innerText === "Español" && user.lang === "Spanish"));
+    });
+}
+
+// Botões Auth
+document.getElementById('btn-auth').onclick = async () => {
     const e = document.getElementById('email').value;
     const p = document.getElementById('password').value;
-    const msg = document.getElementById('auth-msg');
     try {
-        if (isLogin) await signInWithEmailAndPassword(auth, e, p);
+        if(isLogin) await signInWithEmailAndPassword(auth, e, p);
         else await createUserWithEmailAndPassword(auth, e, p);
-    } catch (err) { msg.innerText = "Erro: Dados inválidos"; }
+    } catch (err) { document.getElementById('auth-error').innerText = "Erro ao entrar."; }
 };
 
 document.getElementById('btn-toggle-auth').onclick = () => {
     isLogin = !isLogin;
-    document.getElementById('auth-title').innerText = isLogin ? "Entrar no FluentGo" : "Criar sua conta";
-    document.getElementById('btn-auth-action').innerText = isLogin ? "ENTRAR" : "CADASTRAR";
-    document.getElementById('btn-toggle-auth').innerText = isLogin ? "Criar conta nova" : "Já tenho conta";
+    document.getElementById('auth-title').innerText = isLogin ? "Entrar" : "Criar Conta";
+    document.getElementById('btn-auth').innerText = isLogin ? "ENTRAR" : "CADASTRAR";
+    document.getElementById('btn-toggle-auth').innerText = isLogin ? "Não tem conta? Criar agora" : "Já tem conta? Entrar";
 };
 
 document.getElementById('btn-logout').onclick = () => signOut(auth).then(() => location.reload());
 
-// --- INTERFACE ---
-function updateUI() {
-    document.getElementById('ui-xp').innerText = user.xp || 0;
-    document.getElementById('ui-lvl-num').innerText = user.lvl || 1;
-    document.getElementById('ui-lvl-txt').innerText = "Nível " + (user.lvl || 1);
-    document.getElementById('ui-task').innerText = "Tarefa " + (user.task || 1) + " de 10";
-}
-
-// --- JOGO SIMPLIFICADO ---
-let currentSelection = [];
-const phrase = { pt: "O gato bebe", en: "the cat drinks" };
-
-document.getElementById('btn-start').onclick = () => {
-    switchView('practice');
-    loadLevel();
+document.getElementById('btn-save-name').onclick = () => {
+    const name = document.getElementById('input-username').value.trim();
+    if(name) update(ref(db, 'users/' + auth.currentUser.uid), { username: name });
 };
 
-function loadLevel() {
+// --- IDIOMAS ---
+window.changeLang = (l) => {
+    user.lang = l;
+    update(ref(db, 'users/' + auth.currentUser.uid), { lang: l });
+};
+
+// --- RANKING ---
+function buildRanking(data) {
+    const list = Object.values(data).sort((a,b) => b.xp - a.xp).slice(0, 10);
+    document.getElementById('ranking-list').innerHTML = list.map((u, i) => `
+        <div class="rank-item ${u.username === user.username ? 'me' : ''}">
+            <span>${i+1}º ${u.username}</span>
+            <span style="color:var(--gold)">${u.xp} XP</span>
+        </div>
+    `).join('');
+}
+
+// --- JOGO ---
+const PHRASES = {
+    English: { pt: "O gato bebe leite", tg: "the cat drinks milk" },
+    Spanish: { pt: "O gato bebe leite", tg: "el gato bebe leche" },
+    French: { pt: "O gato bebe leite", tg: "le chat boit du lait" },
+    Italian: { pt: "O gato bebe leite", tg: "il gatto beve latte" }
+};
+
+let currentSelection = [];
+document.getElementById('btn-start').onclick = () => {
+    document.getElementById('view-practice').classList.remove('hidden');
+    loadQ();
+};
+
+function loadQ() {
     currentSelection = [];
-    document.getElementById('q-pt').innerText = phrase.pt;
+    const q = PHRASES[user.lang] || PHRASES.English;
+    document.getElementById('q-pt').innerText = q.pt;
     document.getElementById('drop-zone').innerHTML = "";
-    const bank = document.getElementById('word-bank');
-    bank.innerHTML = "";
+    document.getElementById('ui-prog-bar').style.width = "50%";
     
-    const words = [...phrase.en.split(" "), "is", "a"].sort(() => Math.random() - 0.5);
+    const bank = document.getElementById('word-bank'); bank.innerHTML = "";
+    const words = [...q.tg.split(" "), "is", "a"].sort(() => Math.random() - 0.5);
     words.forEach(w => {
         const b = document.createElement('button');
-        b.className = "chip";
-        b.innerText = w;
+        b.className = "chip"; b.innerText = w;
         b.onclick = () => {
             currentSelection.push(w);
             b.classList.add('used');
@@ -187,32 +244,34 @@ function loadLevel() {
 }
 
 document.getElementById('btn-check').onclick = async () => {
-    if (currentSelection.join(" ") === phrase.en) {
-        user.xp += 10;
+    const q = PHRASES[user.lang] || PHRASES.English;
+    if(currentSelection.join(" ") === q.tg) {
+        user.xp += 50;
+        user.task = user.task >= 10 ? 1 : user.task + 1;
+        if(user.task === 1) user.lvl++;
         await update(ref(db, 'users/' + auth.currentUser.uid), user);
-        switchView('app');
+        document.getElementById('view-practice').classList.add('hidden');
     } else {
-        alert("Errado! Tente de novo.");
-        loadLevel();
+        alert("Ops! Tente de novo.");
+        loadQ();
     }
 };
 
-document.getElementById('btn-close-practice').onclick = () => switchView('app');
+document.getElementById('btn-close-practice').onclick = () => document.getElementById('view-practice').classList.add('hidden');
 
-// Navegação de Tabs
-document.getElementById('nav-home').onclick = () => {
-    document.getElementById('tab-home').classList.remove('hidden');
-    document.getElementById('tab-settings').classList.add('hidden');
-    document.getElementById('nav-home').classList.add('active');
-    document.getElementById('nav-settings').classList.remove('active');
-};
-document.getElementById('nav-settings').onclick = () => {
-    document.getElementById('tab-home').classList.add('hidden');
-    document.getElementById('tab-settings').classList.remove('hidden');
-    document.getElementById('nav-settings').classList.add('active');
-    document.getElementById('nav-home').classList.remove('active');
-};
+// --- TABS ---
+document.getElementById('nav-home').onclick = () => showTab('home');
+document.getElementById('nav-ranking').onclick = () => showTab('ranking');
+document.getElementById('nav-settings').onclick = () => showTab('settings');
 
+function showTab(t) {
+    ['home', 'ranking', 'settings'].forEach(id => {
+        document.getElementById('tab-'+id).classList.add('hidden');
+        document.getElementById('nav-'+id).classList.remove('active');
+    });
+    document.getElementById('tab-'+t).classList.remove('hidden');
+    document.getElementById('nav-'+t).classList.add('active');
+}
 </script>
 </body>
 </html>
