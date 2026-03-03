@@ -3,35 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FluentGo Pro | Voz & Som</title>
+    <title>FluentGo Pro | Estável v7</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #2563EB; --secondary: #10B981; --bg: #0F172A; --card: #1E293B; --text: #F8FAFC; --gold: #F59E0B; --error: #EF4444; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; }
-        body { margin:0; background: var(--bg); color: var(--text); overflow: hidden; height: 100vh; }
-        .container { padding: 20px; max-width: 500px; margin: 0 auto; height: 100%; display: flex; flex-direction: column; }
+        body { margin:0; background: var(--bg); color: var(--text); overflow-x: hidden; height: 100vh; }
+        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
         .hidden { display: none !important; }
         
-        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #0F172A; border-bottom: 1px solid #334155; }
-        .card { background: var(--card); padding: 25px; border-radius: 28px; border: 1px solid #334155; margin-bottom: 15px; text-align: center; }
+        /* HEADER */
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #0F172A; border-bottom: 1px solid #334155; position: sticky; top:0; z-index:100; }
+        .card { background: var(--card); padding: 20px; border-radius: 24px; border: 1px solid #334155; margin-bottom: 15px; text-align: center; }
         
-        button { padding: 18px; border-radius: 20px; border: none; font-weight: 800; cursor: pointer; width: 100%; transition: 0.2s; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; }
-        .btn-main { background: var(--primary); color: white; box-shadow: 0 5px 0 #1D4ED8; }
-        .btn-check { background: var(--secondary); color: white; box-shadow: 0 5px 0 #059669; }
-        
-        /* ÁREA DE RESPOSTA */
-        .word-area { min-height: 130px; border: 2px dashed #475569; border-radius: 24px; margin: 25px 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; padding: 15px; background: rgba(0,0,0,0.3); }
-        .chip { background: #334155; padding: 14px 20px; border-radius: 16px; font-weight: 700; cursor: pointer; border: 1px solid #475569; font-size: 17px; box-shadow: 0 4px 0 #0F172A; color: white; }
-        .chip:active { transform: translateY(2px); box-shadow: 0 2px 0 #0F172A; }
-        .chip.used { opacity: 0.2; pointer-events: none; transform: scale(0.9); }
+        /* BOTÕES */
+        button { padding: 16px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; width: 100%; transition: 0.2s; font-size: 15px; }
+        .btn-main { background: var(--primary); color: white; box-shadow: 0 4px 0 #1D4ED8; margin-top: 10px; }
+        .btn-check { background: var(--secondary); color: white; box-shadow: 0 4px 0 #059669; }
+        .btn-lang { background: #334155; color: white; border: 1px solid #475569; margin: 5px 0; }
+        .active-lang { border: 2px solid var(--primary); background: rgba(37, 99, 235, 0.2); }
+
+        /* NAVEGAÇÃO */
+        nav { position: fixed; bottom: 0; width: 100%; background: #1E293B; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #334155; z-index: 1000; }
+        nav div { font-size: 24px; cursor: pointer; opacity: 0.4; }
+        nav div.active { opacity: 1; color: var(--primary); }
+
+        /* TAREFA */
+        .word-area { min-height: 120px; border: 2px dashed #475569; border-radius: 20px; margin: 20px 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 15px; background: rgba(0,0,0,0.2); }
+        .chip { background: #334155; padding: 12px 16px; border-radius: 14px; font-weight: 700; cursor: pointer; border: 1px solid #475569; font-size: 16px; color: white; box-shadow: 0 3px 0 #0F172A; }
+        .chip.used { opacity: 0.2; pointer-events: none; }
         
         /* FEEDBACK BAR */
-        #feedbackBar { position: fixed; bottom: 0; left: 0; right: 0; padding: 40px 25px; transform: translateY(100%); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 9999; text-align: center; }
-        #feedbackBar.correct { transform: translateY(0); background: #065F46; border-top: 5px solid #10B981; }
-        #feedbackBar.wrong { transform: translateY(0); background: #991B1B; border-top: 5px solid #EF4444; }
-
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
-        .shake { animation: shake 0.3s ease-in-out; }
+        #feedbackBar { position: fixed; bottom: 0; left: 0; right: 0; padding: 25px; transform: translateY(100%); transition: 0.3s ease; z-index: 6000; text-align: center; border-radius: 20px 20px 0 0; }
+        #feedbackBar.correct { transform: translateY(0); background: #065F46; }
+        #feedbackBar.wrong { transform: translateY(0); background: #991B1B; }
     </style>
 </head>
 <body>
@@ -45,98 +50,141 @@
     <div style="font-weight: 800; color: var(--secondary);">🔥 <span id="userXP">0</span></div>
 </header>
 
-<main id="homeView" class="container hidden">
-    <div class="card" style="margin-top: 50px;">
-        <h1 id="levelTxt">Nível 1</h1>
-        <p id="taskTxt" style="color:#94a3b8; margin-bottom: 25px;">Carregando progresso...</p>
-        <button id="startBtn" class="btn-main">PRATICAR TAREFA</button>
+<main id="authView" class="container">
+    <h1 style="text-align:center; font-size:3rem; font-weight:900; margin: 40px 0;">FluentGo</h1>
+    <div class="card">
+        <input type="email" id="email" placeholder="E-mail" style="width:100%; padding:15px; margin-bottom:10px; border-radius:12px; background:#0F172A; color:white; border:1px solid #334155;">
+        <input type="password" id="password" placeholder="Senha" style="width:100%; padding:15px; margin-bottom:10px; border-radius:12px; background:#0F172A; color:white; border:1px solid #334155;">
+        <button id="loginBtn" class="btn-main">ENTRAR / CADASTRAR</button>
     </div>
 </main>
 
-<div id="practiceView" class="hidden" style="position:fixed; inset:0; background:var(--bg); z-index:5000;">
-    <div class="container" id="gameWindow">
+<main id="homeView" class="container hidden">
+    <div class="card">
+        <h2 id="levelTxt">Nível 1</h2>
+        <p id="taskTxt">Tarefa 1 de 10</p>
+        <button id="startBtn" class="btn-main">PRATICAR AGORA</button>
+    </div>
+    
+    <div class="card" style="padding: 10px;">
+        <p style="font-size: 12px; font-weight: 800; color: #64748b; margin-bottom: 10px;">TROCAR IDIOMA</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <button onclick="changeLang('English')" class="btn-lang" id="lang-English">🇺🇸 Inglês</button>
+            <button onclick="changeLang('Spanish')" class="btn-lang" id="lang-Spanish">🇪🇸 Espanhol</button>
+        </div>
+    </div>
+</main>
+
+<main id="rankingView" class="container hidden">
+    <h3 style="text-align: center;">🏆 Top 10 Alunos</h3>
+    <div id="leaderboard" class="card"></div>
+</main>
+
+<div id="practiceView" class="hidden" style="position:fixed; inset:0; background:var(--bg); z-index:5000; overflow: hidden;">
+    <div class="container" style="display: flex; flex-direction: column; height: 100%;">
         <div style="display:flex; justify-content:space-between; align-items:center;">
-            <button onclick="closePractice()" style="width:40px; background:none; font-size: 24px;">✕</button>
-            <div style="background:#334155; flex:1; height:12px; margin:0 20px; border-radius:10px;">
-                <div id="innerBar" style="width:0%; height:100%; background:var(--secondary); border-radius:10px; transition: 0.5s;"></div>
+            <button onclick="closePractice()" style="width:50px; background:none; font-size: 24px;">✕</button>
+            <div style="background:#334155; flex:1; height:10px; margin:0 15px; border-radius:10px;">
+                <div id="innerBar" style="width:0%; height:100%; background:var(--secondary); border-radius:10px;"></div>
             </div>
         </div>
 
-        <h2 id="targetPhrase" style="text-align:center; font-size:2.4rem; margin: 50px 0; font-weight: 900;">...</h2>
+        <h2 id="targetPhrase" style="text-align:center; font-size:1.8rem; margin: 30px 0; font-weight: 900;">...</h2>
         
         <div id="dropZone" class="word-area"></div>
-        <div id="wordBank" style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px;"></div>
+        <div id="wordBank" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;"></div>
         
-        <div style="margin-top:auto; padding-bottom:120px;">
+        <div style="margin-top: auto; padding-bottom: 30px;">
             <button id="checkBtn" class="btn-check">VERIFICAR RESPOSTA</button>
         </div>
     </div>
 
     <div id="feedbackBar">
-        <h2 id="feedbackMsg" style="margin:0 0 20px 0; font-size: 1.8rem;">Excelente! ✨</h2>
-        <button id="nextBtn" class="btn-main" style="background:white; color:black; box-shadow: 0 5px 0 #ddd;">CONTINUAR</button>
+        <h2 id="feedbackMsg" style="margin:0 0 15px 0; color: white;">...</h2>
+        <button id="nextBtn" style="background: white; color: black;">CONTINUAR</button>
     </div>
 </div>
 
+<nav id="mainNav" class="hidden">
+    <div onclick="showTab('homeView')" id="nav-home" class="active">🏠</div>
+    <div onclick="showTab('rankingView')" id="nav-ranking">🏆</div>
+</nav>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getDatabase, ref, get, update, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = { apiKey: "AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw", authDomain: "fluentgo-35024.firebaseapp.com", databaseURL: "https://fluentgo-35024-default-rtdb.firebaseio.com", projectId: "fluentgo-35024", appId: "1:613715387990:web:0345ade26374dd32d1fdf7" };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// Banco de frases
 const phrases = {
     English: [
+        {pt: "O carro é azul", en: "the car is blue"},
         {pt: "Eu bebo leite", en: "i drink milk"},
         {pt: "O gato é preto", en: "the cat is black"},
-        {pt: "Eu amo café", en: "i love coffee"},
-        {pt: "O carro é azul", en: "the car is blue"},
-        {pt: "Eu como pão", en: "i eat bread"}
+        {pt: "A casa é grande", en: "the house is big"}
     ],
     Spanish: [{pt: "Eu bebo leite", en: "yo bebo leche"}]
 };
 
+// Segurança contra Undefined
 let userData = { xp: 0, lvl: 1, task: 1, lang: "English" };
 let currentQ = [];
 let qIdx = 0;
 let selection = [];
 
-const playSnd = (id) => { const a = document.getElementById(id); a.currentTime = 0; a.play(); };
-
-// FUNÇÃO DE VOZ (O segredo do aprendizado)
 function speak(text) {
-    const msg = new SpeechSynthesisUtterance();
-    msg.text = text;
+    const msg = new SpeechSynthesisUtterance(text);
     msg.lang = userData.lang === 'English' ? 'en-US' : 'es-ES';
-    msg.rate = 0.9; // Um pouco mais lento para clareza
     window.speechSynthesis.speak(msg);
 }
 
-function updateUI() {
-    document.getElementById('userXP').innerText = userData.xp;
-    document.getElementById('levelTxt').innerText = `Nível ${userData.lvl}`;
-    document.getElementById('taskTxt').innerText = `Tarefa ${userData.task} de 10`;
+window.showTab = (id) => {
+    document.getElementById('homeView').classList.add('hidden');
+    document.getElementById('rankingView').classList.add('hidden');
+    document.getElementById(id).classList.remove('hidden');
+    document.querySelectorAll('nav div').forEach(d => d.classList.remove('active'));
+    document.getElementById('nav-'+id.replace('View','')).classList.add('active');
+    if(id === 'rankingView') loadRanking();
+};
+
+async function loadRanking() {
+    const snap = await get(ref(db, 'users'));
+    const board = document.getElementById('leaderboard');
+    board.innerHTML = "";
+    let users = [];
+    snap.forEach(u => users.push(u.val()));
+    users.sort((a,b) => b.xp - a.xp).slice(0,10).forEach((u, i) => {
+        board.innerHTML += `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #334155;">
+            <span>${i+1}. ${u.email ? u.email.split('@')[0] : 'User'}</span><b>${u.xp || 0} XP</b>
+        </div>`;
+    });
 }
 
-function startPractice() {
+window.changeLang = async (l) => {
+    userData.lang = l;
+    updateUI();
+    if(auth.currentUser) await update(ref(db, 'users/'+auth.currentUser.uid), {lang: l});
+};
+
+function updateUI() {
+    document.getElementById('userXP').innerText = userData.xp || 0;
+    document.getElementById('levelTxt').innerText = `Nível ${userData.lvl || 1}`;
+    document.getElementById('taskTxt').innerText = `Tarefa ${userData.task || 1} de 10`;
+    document.getElementById('langTag').innerText = (userData.lang || "EN").substring(0,2).toUpperCase();
+    document.querySelectorAll('.btn-lang').forEach(b => b.classList.remove('active-lang'));
+    document.getElementById('lang-'+userData.lang)?.classList.add('active-lang');
+}
+
+document.getElementById('startBtn').onclick = () => {
     qIdx = 0;
-    currentQ = [];
-    const pool = phrases[userData.lang] || phrases.English;
-    // Sorteia 5 frases
-    let shuffled = [...pool].sort(() => 0.5 - Math.random());
-    currentQ = shuffled.slice(0, 5).map(item => ({
-        pt: item.pt,
-        ans: item.en,
-        parts: [...item.en.split(" "), "the", "is"].sort(() => Math.random() - 0.5)
-    }));
-    
+    currentQ = [...phrases[userData.lang]].sort(() => 0.5 - Math.random()).slice(0,5);
     document.getElementById('practiceView').classList.remove('hidden');
     renderQ();
-}
+};
 
 function renderQ() {
     const q = currentQ[qIdx];
@@ -148,18 +196,15 @@ function renderQ() {
     
     const bank = document.getElementById('wordBank');
     bank.innerHTML = "";
-    q.parts.forEach((w, i) => {
+    let parts = [...q.en.split(" "), "is", "a"].sort(() => Math.random() - 0.5);
+    parts.forEach((w, i) => {
         const btn = document.createElement('button');
-        btn.className = "chip";
-        btn.innerText = w;
-        btn.id = "word-"+i;
+        btn.className = "chip"; btn.innerText = w; btn.id = "w-"+i;
         btn.onclick = () => {
-            playSnd('sndClick');
+            document.getElementById('sndClick').play();
             selection.push(w);
             btn.classList.add('used');
-            const span = document.createElement('span');
-            span.className = "chip";
-            span.innerText = w;
+            const span = document.createElement('span'); span.className = "chip"; span.innerText = w;
             document.getElementById('dropZone').appendChild(span);
         };
         bank.appendChild(btn);
@@ -167,57 +212,54 @@ function renderQ() {
 }
 
 document.getElementById('checkBtn').onclick = () => {
-    const guess = selection.join(" ").toLowerCase().trim();
-    const correct = currentQ[qIdx].ans.toLowerCase().trim();
+    const guess = selection.join(" ").toLowerCase();
+    const correct = currentQ[qIdx].en.toLowerCase();
     const bar = document.getElementById('feedbackBar');
-
     if(guess === correct) {
-        playSnd('sndCorrect');
-        speak(correct); // FALA A FRASE AO ACERTAR
+        document.getElementById('sndCorrect').play();
+        speak(correct);
         bar.className = "correct";
-        document.getElementById('feedbackMsg').innerText = "Incrível! ✨";
+        document.getElementById('feedbackMsg').innerText = "Correto! ✨";
     } else {
-        playSnd('sndWrong');
-        document.getElementById('gameWindow').classList.add('shake');
-        setTimeout(() => document.getElementById('gameWindow').classList.remove('shake'), 500);
+        document.getElementById('sndWrong').play();
         bar.className = "wrong";
         document.getElementById('feedbackMsg').innerText = "Resposta: " + correct;
     }
 };
 
-document.getElementById('nextBtn').onclick = () => {
+document.getElementById('nextBtn').onclick = async () => {
     document.getElementById('feedbackBar').className = "";
     qIdx++;
-    if(qIdx < 5) {
-        renderQ();
-    } else {
-        completeTask();
+    if(qIdx < 5) renderQ();
+    else {
+        userData.xp += 50;
+        userData.task++;
+        if(userData.task > 10) { userData.task = 1; userData.lvl++; }
+        await update(ref(db, 'users/'+auth.currentUser.uid), userData);
+        document.getElementById('practiceView').classList.add('hidden');
+        updateUI();
     }
 };
-
-async function completeTask() {
-    userData.xp += 100;
-    userData.task++;
-    if(userData.task > 10) { userData.task = 1; userData.lvl++; }
-    await update(ref(db, 'users/'+auth.currentUser.uid), userData);
-    alert("🚀 Tarefa Concluída! +100 XP");
-    document.getElementById('practiceView').classList.add('hidden');
-    updateUI();
-}
 
 onAuthStateChanged(auth, async (u) => {
     if(u) {
         const s = await get(ref(db, 'users/'+u.uid));
-        if(s.exists()) userData = s.val();
-        document.getElementById('homeView').classList.remove('hidden');
-        document.getElementById('mainHeader').classList.remove('hidden');
+        if(s.exists()) userData = {...userData, ...s.val()};
+        document.getElementById('authView').classList.add('hidden');
+        ['mainHeader', 'homeView', 'mainNav'].forEach(id => document.getElementById(id).classList.remove('hidden'));
         updateUI();
-    } else {
-        window.location.reload(); // Simples redirecionamento se deslogar
     }
 });
 
-document.getElementById('startBtn').onclick = startPractice;
+document.getElementById('loginBtn').onclick = async () => {
+    const e = document.getElementById('email').value, p = document.getElementById('password').value;
+    try { await signInWithEmailAndPassword(auth, e, p); }
+    catch { 
+        const r = await createUserWithEmailAndPassword(auth, e, p);
+        await set(ref(db, 'users/'+r.user.uid), userData);
+    }
+};
+
 window.closePractice = () => document.getElementById('practiceView').classList.add('hidden');
 </script>
 </body>
