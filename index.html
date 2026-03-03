@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FluentGo Pro | Tradução Real</title>
+    <title>FluentGo Pro | Final</title>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6478620932842773" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #2563EB; --secondary: #10B981; --bg: #0F172A; --card: #1E293B; --text: #F8FAFC; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; }
-        body { margin:0; background: var(--bg); color: var(--text); overflow: hidden; height: 100vh; }
+        body { margin:0; background: var(--bg); color: var(--text); overflow-x: hidden; }
         .container { padding: 20px; max-width: 500px; margin: 0 auto; }
         .hidden { display: none !important; }
-        header { display: flex; justify-content: space-between; padding: 15px 20px; background: #0F172A; border-bottom: 1px solid #334155; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #0F172A; border-bottom: 1px solid #334155; }
         
-        /* ADS */
         #adOverlay { position: fixed; inset: 0; background: #000; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; }
         .ad-box { width: 90%; height: 400px; background: #1e293b; border-radius: 24px; display: flex; align-items: center; justify-content: center; border: 1px solid #475569; position: relative; }
         #closeAdBtn { margin-top: 20px; width: 80%; padding: 20px; border-radius: 15px; border: none; font-weight: 900; background: #334155; color: #94a3b8; pointer-events: none; }
@@ -24,21 +23,20 @@
         input { width: 100%; padding: 15px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #334155; background: #0F172A; color: white; font-size: 16px; }
         button { padding: 18px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; width: 100%; transition: 0.2s; }
         .btn-main { background: var(--primary); color: white; box-shadow: 0 4px 0 #1D4ED8; }
-
-        .progress-bar { background: #334155; height: 12px; border-radius: 10px; overflow: hidden; margin: 15px 0; }
+        
+        .progress-bar { background: #334155; height: 10px; border-radius: 10px; overflow: hidden; margin: 15px 0; }
         .progress-fill { height: 100%; background: var(--secondary); width: 0%; transition: 0.4s; }
         
-        .word-area { min-height: 110px; border: 2px dashed #475569; border-radius: 20px; margin: 20px 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 15px; background: rgba(0,0,0,0.2); }
-        .chip { background: #334155; padding: 12px 16px; border-radius: 14px; font-weight: 700; cursor: pointer; color: white; border: 1px solid #475569; font-size: 1.1rem; }
+        .word-area { min-height: 100px; border: 2px dashed #475569; border-radius: 20px; margin: 20px 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 15px; background: rgba(0,0,0,0.2); }
+        .chip { background: #334155; padding: 12px 16px; border-radius: 14px; font-weight: 700; cursor: pointer; color: white; border: 1px solid #475569; }
         .chip.used { opacity: 0.1; pointer-events: none; }
-        
-        .q-label { text-align: center; color: #94a3b8; font-size: 0.9rem; font-weight: 800; margin-bottom: 5px; }
+        .active-lang { border: 2px solid var(--primary) !important; background: var(--primary) !important; }
     </style>
 </head>
 <body>
 
 <header class="hidden" id="mainHeader">
-    <div style="font-weight:900; letter-spacing: -1px;">FLUENTGO <span id="langTag" style="color:var(--primary); font-size: 0.7rem; background: rgba(37, 99, 235, 0.2); padding: 2px 6px; border-radius: 4px;">EN</span></div>
+    <div style="font-weight:900;">FLUENTGO <span id="langTag" style="color:var(--primary); font-size:12px;">EN</span></div>
     <div style="font-weight: 800; color: var(--secondary);">⭐ <span id="userXP">0</span></div>
 </header>
 
@@ -46,13 +44,13 @@
     <div class="ad-box">
         <ins class="adsbygoogle" style="display:block; width:300px; height:250px" data-ad-client="ca-pub-6478620932842773" data-ad-slot="auto"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        <p style="color:#94a3b8; position:absolute; bottom:20px;">Publicidade Obrigatória</p>
+        <p style="color:#94a3b8; position:absolute; bottom:20px;">Publicidade</p>
     </div>
     <button id="closeAdBtn">Aguarde 5s...</button>
 </div>
 
 <main id="authView" class="container">
-    <h1 style="text-align:center; font-size:3.5rem; font-weight: 900; margin: 60px 0 20px;">Fluent<span style="color:var(--primary)">Go</span></h1>
+    <h1 style="text-align:center; font-size:3rem; margin: 60px 0 20px;">FluentGo</h1>
     <div class="card">
         <input type="email" id="email" placeholder="E-mail">
         <input type="password" id="password" placeholder="Senha">
@@ -62,16 +60,16 @@
 
 <main id="dashboardView" class="container hidden">
     <div class="card" style="text-align:center;">
-        <h2 id="levelTxt" style="margin:0;">Nível 1</h2>
-        <p id="taskTxt" style="color:#94a3b8; margin: 5px 0 15px;">Tarefa 1 de 10</p>
+        <h2 id="levelTxt">Nível 1</h2>
+        <p id="taskTxt" style="color:#94a3b8;">Tarefa 1 de 10</p>
         <div class="progress-bar"><div id="mainProgress" class="progress-fill"></div></div>
         <button id="startBtn" class="btn-main">PRATICAR TAREFA (20 Questões)</button>
         
         <div style="margin-top:20px; display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <button onclick="changeLang('English')" class="chip" style="font-size: 0.8rem;">🇺🇸 Inglês</button>
-            <button onclick="changeLang('Spanish')" class="chip" style="font-size: 0.8rem;">🇪🇸 Espanhol</button>
-            <button onclick="changeLang('French')" class="chip" style="font-size: 0.8rem;">🇫🇷 Francês</button>
-            <button onclick="changeLang('Italian')" class="chip" style="font-size: 0.8rem;">🇮🇹 Italiano</button>
+            <button id="btn-English" onclick="selectLang('English')" class="chip">🇺🇸 Inglês</button>
+            <button id="btn-Spanish" onclick="selectLang('Spanish')" class="chip">🇪🇸 Espanhol</button>
+            <button id="btn-French" onclick="selectLang('French')" class="chip">🇫🇷 Francês</button>
+            <button id="btn-Italian" onclick="selectLang('Italian')" class="chip">🇮🇹 Italiano</button>
         </div>
     </div>
 </main>
@@ -79,13 +77,12 @@
 <main id="practiceView" class="hidden" style="position:fixed; inset:0; background:var(--bg); z-index:2000; padding:20px; display:flex; flex-direction:column;">
     <div class="progress-bar"><div id="taskProgress" class="progress-fill"></div></div>
     <div class="container" style="flex:1; display:flex; flex-direction:column; justify-content:center;">
-        <div class="q-label">TRADUZA PARA <span id="targetLangName" style="color:var(--primary)">INGLÊS</span>:</div>
-        <h2 id="targetPhrase" style="text-align:center; font-size:2.2rem; margin: 15px 0; font-weight: 900;">...</h2>
-        <p style="text-align: center; color: #64748b; font-size: 0.8rem; margin-bottom: 10px;">Toque nas palavras abaixo:</p>
+        <p style="text-align:center; color:#94a3b8; font-weight:800; margin:0;">TRADUZA PARA <span id="langNameDisplay">INGLÊS</span></p>
+        <h2 id="targetPhrase" style="text-align:center; font-size:2rem; margin: 20px 0; font-weight:900;">...</h2>
         <div id="dropZone" class="word-area"></div>
         <div id="wordBank" style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px;"></div>
-        <button id="checkBtn" class="btn-main" style="margin-top:30px;">VERIFICAR RESPOSTA</button>
-        <p style="text-align: center; color: #475569; font-size: 0.7rem; margin-top: 15px;">Questão <span id="qIdxTxt">1</span> de 20</p>
+        <button id="checkBtn" class="btn-main" style="margin-top:30px;">VERIFICAR</button>
+        <p style="text-align:center; font-size:12px; color:#475569; margin-top:10px;">Questão <span id="qCount">1</span>/20</p>
     </div>
 </main>
 
@@ -99,17 +96,14 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// BANCO DE DADOS CORRIGIDO: PERGUNTA EM PT -> RESPOSTA EM LÍNGUA ALVO
+// BANCO DE DADOS: PT -> TRADUÇÃO
 const database = {
     English: [
         {p: "Isso é um carro", a: "it is a car"}, {p: "Eu como pão", a: "i eat bread"}, {p: "Eu bebo água", a: "i drink water"},
-        {p: "A maçã é vermelha", a: "the apple is red"}, {p: "Bom dia", a: "good morning"}, {p: "Eu tenho um gato", a: "i have a cat"},
-        {p: "Onde está você?", a: "where are you"}, {p: "Eu gosto de café", a: "i like coffee"}, {p: "A casa é grande", a: "the house is big"},
-        {p: "Ela é minha amiga", a: "she is my friend"}, {p: "Nós bebemos leite", a: "we drink milk"}, {p: "Um livro azul", a: "a blue book"}
+        {p: "A maçã é vermelha", a: "the apple is red"}, {p: "Bom dia", a: "good morning"}, {p: "A casa é grande", a: "the house is big"}
     ],
     Spanish: [
-        {p: "Isso é um carro", a: "esto es un coche"}, {p: "Eu como pão", a: "yo como pan"}, {p: "Eu bebo água", a: "yo bebo agua"},
-        {p: "Bom dia", a: "buenos dias"}, {p: "A casa é grande", a: "la casa es grande"}
+        {p: "Isso é um carro", a: "esto es un coche"}, {p: "Eu como pão", a: "yo como pan"}, {p: "Eu bebo água", a: "yo bebo agua"}
     ],
     French: [
         {p: "Isso é um carro", a: "c'est une voiture"}, {p: "Eu como pão", a: "je mange du pain"}, {p: "Eu bebo água", a: "je bois de l'eau"}
@@ -119,10 +113,30 @@ const database = {
     ]
 };
 
+// VALORES PADRÃO PARA EVITAR UNDEFINED
 let userData = { xp: 0, lvl: 1, task: 1, lang: "English" };
 let currentQuestions = [];
 let qIdx = 0;
 let userPhrase = [];
+
+function updateUI() {
+    document.getElementById('levelTxt').innerText = `Nível ${userData.lvl || 1}`;
+    document.getElementById('taskTxt').innerText = `Tarefa ${userData.task || 1} de 10`;
+    document.getElementById('mainProgress').style.width = `${((userData.task || 1) - 1) * 10}%`;
+    document.getElementById('userXP').innerText = userData.xp || 0;
+    document.getElementById('langTag').innerText = (userData.lang || "English").slice(0,2).toUpperCase();
+    
+    // Marca o botão do idioma
+    document.querySelectorAll('.chip').forEach(b => b.classList.remove('active-lang'));
+    const activeBtn = document.getElementById('btn-' + userData.lang);
+    if(activeBtn) activeBtn.classList.add('active-lang');
+}
+
+window.selectLang = async (l) => {
+    userData.lang = l;
+    updateUI();
+    if(auth.currentUser) await update(ref(db, 'users/'+auth.currentUser.uid), {lang: l});
+};
 
 function runAd(callback) {
     const overlay = document.getElementById('adOverlay');
@@ -139,53 +153,38 @@ function runAd(callback) {
     btn.onclick = () => { overlay.style.display = 'none'; callback(); };
 }
 
-function updateDash() {
-    document.getElementById('levelTxt').innerText = `Nível ${userData.lvl}`;
-    document.getElementById('taskTxt').innerText = `Tarefa ${userData.task} de 10`;
-    document.getElementById('mainProgress').style.width = `${(userData.task - 1) * 10}%`;
-    document.getElementById('userXP').innerText = userData.xp;
-    document.getElementById('langTag').innerText = userData.lang.slice(0,2).toUpperCase();
-}
-
-window.changeLang = (l) => { userData.lang = l; updateDash(); update(ref(db, 'users/'+auth.currentUser.uid), userData); };
-
 function startTask() {
     currentQuestions = [];
-    const pool = database[userData.lang];
-    // Gera 20 questões aleatórias do banco
+    const pool = database[userData.lang] || database.English;
     for(let i=0; i<20; i++) {
         let item = pool[Math.floor(Math.random()*pool.length)];
         let words = item.a.split(" ");
-        // Adiciona "distratores" (palavras erradas para dificultar)
-        let distractors = ["not", "my", "to", "the", "is", "a", "it", "with", "no"];
-        let parts = [...words, distractors[Math.floor(Math.random()*distractors.length)], distractors[Math.floor(Math.random()*distractors.length)]];
+        let distractors = ["not", "my", "to", "the", "is", "a", "with"];
+        let parts = [...words, distractors[Math.floor(Math.random()*distractors.length)]];
         currentQuestions.push({ p: item.p, a: item.a, parts: parts.sort(() => Math.random() - 0.5) });
     }
     qIdx = 0;
     document.getElementById('dashboardView').classList.add('hidden');
     document.getElementById('practiceView').classList.remove('hidden');
-    document.getElementById('targetLangName').innerText = userData.lang.toUpperCase();
+    document.getElementById('langNameDisplay').innerText = userData.lang.toUpperCase();
     renderQ();
 }
 
 function renderQ() {
     const q = currentQuestions[qIdx];
     userPhrase = [];
-    document.getElementById('qIdxTxt').innerText = qIdx + 1;
+    document.getElementById('qCount').innerText = qIdx + 1;
     document.getElementById('taskProgress').style.width = `${(qIdx / 20) * 100}%`;
-    document.getElementById('targetPhrase').innerText = q.p; // Exibe em PORTUGUÊS
+    document.getElementById('targetPhrase').innerText = q.p; // MOSTRA EM PORTUGUÊS
     document.getElementById('dropZone').innerHTML = "";
     const bank = document.getElementById('wordBank'); bank.innerHTML = "";
     
-    // Filtra palavras únicas para o banco
     [...new Set(q.parts)].forEach(w => {
         const c = document.createElement('div'); c.className = "chip"; c.innerText = w;
         c.onclick = () => {
             if(!c.classList.contains('used')) {
                 userPhrase.push(w);
-                const span = document.createElement('span');
-                span.innerText = w + " ";
-                document.getElementById('dropZone').appendChild(span);
+                document.getElementById('dropZone').innerHTML += `<span>${w} </span>`;
                 c.classList.add('used');
             }
         };
@@ -194,8 +193,7 @@ function renderQ() {
 }
 
 document.getElementById('checkBtn').onclick = async () => {
-    const answer = userPhrase.join(" ").toLowerCase().trim();
-    if(answer === currentQuestions[qIdx].a.toLowerCase().trim()) {
+    if(userPhrase.join(" ").toLowerCase().trim() === currentQuestions[qIdx].a) {
         qIdx++;
         if(qIdx < 20) renderQ();
         else {
@@ -206,11 +204,11 @@ document.getElementById('checkBtn').onclick = async () => {
             runAd(() => {
                 document.getElementById('practiceView').classList.add('hidden');
                 document.getElementById('dashboardView').classList.remove('hidden');
-                updateDash();
+                updateUI();
             });
         }
     } else {
-        alert("Resposta incorreta! Tente montar a frase novamente.");
+        alert("Ops! Tente novamente.");
         renderQ();
     }
 };
@@ -218,19 +216,18 @@ document.getElementById('checkBtn').onclick = async () => {
 onAuthStateChanged(auth, async (u) => {
     if(u) {
         const s = await get(ref(db, 'users/'+u.uid));
-        if(s.exists()) userData = s.val();
+        if(s.exists()) userData = {...userData, ...s.val()};
         document.getElementById('authView').classList.add('hidden');
         document.getElementById('mainHeader').classList.remove('hidden');
         document.getElementById('dashboardView').classList.remove('hidden');
-        updateDash();
+        updateUI();
     }
 });
 
 document.getElementById('loginBtn').onclick = async () => {
     const e = document.getElementById('email').value, p = document.getElementById('password').value;
-    try {
-        await signInWithEmailAndPassword(auth, e, p);
-    } catch {
+    try { await signInWithEmailAndPassword(auth, e, p); } 
+    catch {
         const r = await createUserWithEmailAndPassword(auth, e, p);
         await set(ref(db, 'users/'+r.user.uid), userData);
     }
