@@ -3,319 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FluentGo | O App de Idiomas Infinito</title>
+    <title>FluentGo | Domine o Inglês</title>
     <style>
-        :root { --primary: #2563EB; --secondary: #10B981; --premium: #FF9900; --ads: #EF4444; --bg: #121212; --card: #1E1E1E; }
-        body { margin:0; font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: #fff; text-align: center; overflow-x: hidden; }
-        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: #000; border-bottom: 2px solid #333; position: sticky; top: 0; z-index: 1000; }
-        .container { padding: 20px; max-width: 600px; margin: 0 auto; position: relative; z-index: 10; }
-        .hidden { display: none !important; }
-        .card { background: var(--card); padding: 25px; border-radius: 24px; border: 1px solid #333; margin-bottom: 20px; box-shadow: 0 8px 0 #000; }
+        :root { --primary: #2563EB; --secondary: #10B981; --bg: #0F172A; --card: #1E293B; }
+        body { margin:0; font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; overflow-x: hidden; }
         
-        button { padding: 14px 24px; border-radius: 16px; border: none; font-weight: 700; cursor: pointer; transition: 0.1s; font-size: 1em; position: relative; }
-        button:active { transform: translateY(4px); box-shadow: none !important; }
-        .btn-main { background: var(--primary); color: white; width: 100%; box-shadow: 0 5px 0 #1D4ED8; margin-top: 10px; }
-        .btn-ghost { background: #333; color: #ccc; width: 100%; margin-top: 10px; border-bottom: 4px solid #111; }
-        
-        input { background: #252525; border: 2px solid #444; padding: 16px; border-radius: 18px; color: white; font-size: 1.1em; text-align: center; width: 85%; outline: none; margin-bottom: 15px; border-bottom: 5px solid #000; }
-        
-        /* RANKING */
-        .rank-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #252525; margin: 8px 0; border-radius: 15px; border-left: 5px solid var(--primary); }
-        .rank-pos { font-weight: 900; color: var(--premium); margin-right: 10px; }
-        .rank-name { flex: 1; text-align: left; font-weight: bold; }
-        .rank-xp { font-weight: 700; color: var(--secondary); }
+        /* Navigation */
+        nav { display: flex; justify-content: space-between; padding: 20px 10%; align-items: center; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 1.5rem; font-weight: 900; letter-spacing: -1px; }
+        .logo span { color: var(--primary); }
 
-        /* JOGO */
-        .word-area { min-height: 80px; border: 2px dashed #444; border-radius: 20px; margin-bottom: 25px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 10px; background: rgba(255,255,255,0.02); }
-        .btn-word { background: #444; color: white; margin: 5px; display: inline-block; padding: 10px 18px; border-radius: 12px; border-bottom: 4px solid #222; }
-        .btn-word.used { opacity: 0.2; pointer-events: none; }
-        .progress-container { background: #333; height: 12px; border-radius: 10px; margin: 15px 0; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.5s; }
+        /* Hero Section */
+        .hero { padding: 80px 10% 100px; text-align: center; background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%); }
+        h1 { font-size: 3.5rem; margin-bottom: 20px; line-height: 1.1; }
+        p.subtitle { font-size: 1.2rem; color: #94a3b8; max-width: 600px; margin: 0 auto 40px; }
         
-        canvas { position: fixed; inset: 0; pointer-events: none; z-index: 2000; }
+        .cta-group { display: flex; gap: 15px; justify-content: center; }
+        .btn { padding: 16px 32px; border-radius: 14px; font-weight: 700; cursor: pointer; border: none; transition: 0.3s; text-decoration: none; font-size: 1rem; }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4); }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(37, 99, 235, 0.6); }
+
+        /* Features */
+        .features { padding: 80px 10%; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        .feat-card { background: var(--card); padding: 30px; border-radius: 24px; border: 1px solid #334155; }
+        .feat-card h3 { color: var(--secondary); margin-top: 0; }
+
+        /* Auth Modal */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+        .modal-content { background: var(--card); padding: 40px; border-radius: 28px; width: 100%; max-width: 400px; position: relative; }
+        input { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 12px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; }
+        
+        .active { display: flex !important; }
     </style>
 </head>
 <body>
 
-<canvas id="fxCanvas"></canvas>
+<nav>
+    <div class="logo">FLUENT<span>GO</span></div>
+    <button class="btn btn-primary" style="padding: 10px 20px;" onclick="toggleModal('login')">Entrar</button>
+</nav>
 
-<header>
-    <div style="font-size: 1.4em; font-weight: 900; letter-spacing: -1px;">FLUENT<span style="color:var(--primary)">GO</span></div>
-    <div id="userMenu" class="hidden"><span id="userXpDisplay" style="color: var(--premium); font-weight: bold;">0 XP</span></div>
-</header>
+<section class="hero">
+    <h1>Aprenda Inglês com <br><span style="color: var(--secondary)">Memória Visual</span></h1>
+    <p class="subtitle">O método mais rápido para fixar vocabulário. Pratique diariamente, suba no ranking e nunca perca sua ofensiva.</p>
+    <div class="cta-group">
+        <button class="btn btn-primary" onclick="toggleModal('register')">Começar Agora — Grátis</button>
+    </div>
+</section>
 
-<div id="authSection" class="container">
-    <div class="card" style="margin-top: 50px;">
-        <h2 id="authTitle">Acesse sua conta</h2>
-        <div id="registerFields" class="hidden">
-            <input type="text" id="username" placeholder="Seu Nome de Usuário">
+
+
+<section class="features">
+    <div class="feat-card">
+        <h3>🔥 Ofensiva Diária</h3>
+        <p>Mantenha sua chama acesa praticando todos os dias. Não deixe sua sequência quebrar!</p>
+    </div>
+    <div class="feat-card">
+        <h3>📸 Imagens Reais</h3>
+        <p>Associe palavras a imagens de alta qualidade para uma memorização 3x mais rápida.</p>
+    </div>
+    <div class="feat-card">
+        <h3>🏆 Ranking Global</h3>
+        <p>Compita com alunos do mundo todo e veja quem é o mestre do vocabulário.</p>
+    </div>
+</section>
+
+<div id="authModal" class="modal">
+    <div class="modal-content">
+        <h2 id="modalTitle">Criar Conta</h2>
+        <div id="regFields">
+            <input type="text" id="username" placeholder="Nome de usuário">
         </div>
         <input type="email" id="email" placeholder="E-mail">
         <input type="password" id="password" placeholder="Senha">
-        
-        <button id="loginBtn" class="btn-main">ENTRAR</button>
-        <button id="registerViewBtn" class="btn-ghost">CRIAR NOVA CONTA</button>
-        <button id="doRegisterBtn" class="btn-main hidden">FINALIZAR CADASTRO</button>
-        <button id="backToLoginBtn" class="btn-ghost hidden">VOLTAR AO LOGIN</button>
-    </div>
-</div>
-
-<div id="appSection" class="container hidden">
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
-        <div style="background:#252525; padding:12px; border-radius:15px;">🌍 <b id="currentLangLabel">---</b></div>
-        <div style="background:#252525; padding:12px; border-radius:15px;">👤 <b id="currentUserLabel">---</b></div>
-    </div>
-
-    <div class="card">
-        <h3 id="moduleLabel">Nível 1</h3>
-        <p style="color: #888; margin-top: -10px;">Geração de Frases Infinitas</p>
-        <div class="progress-container"><div id="mainProgress" class="progress-fill"></div></div>
-        <button id="startBtn" class="btn-main" style="padding: 20px; font-size: 1.2em;">ESTUDAR AGORA</button>
-    </div>
-
-    <div class="card" style="padding: 15px;">
-        <h4 style="margin: 0 0 15px 0; color: var(--premium);">🏆 RANKING GLOBAL</h4>
-        <div id="rankingList">Carregando competidores...</div>
-    </div>
-
-    <button id="configBtn" class="btn-ghost">⚙️ Mudar Idioma</button>
-    <button id="logoutBtn" class="btn-ghost" style="color: var(--ads);">Sair da Conta</button>
-</div>
-
-<div id="langOnboarding" class="container hidden">
-    <div class="card">
-        <h2>O que vamos aprender?</h2>
-        <button class="btn-ghost" onclick="setInitialLang('Ingles')">🇺🇸 Inglês</button>
-        <button class="btn-ghost" onclick="setInitialLang('Espanhol')">🇪🇸 Espanhol</button>
-        <button class="btn-ghost" onclick="setInitialLang('Frances')">🇫🇷 Francês</button>
-        <button class="btn-ghost" onclick="setInitialLang('Italiano')">🇮🇹 Italiano</button>
-        <button class="btn-ghost" onclick="setInitialLang('Japones')">🇯🇵 Japonês</button>
-    </div>
-</div>
-
-<div id="taskModal" class="hidden" style="position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: flex; flex-direction: column;">
-    <div style="padding: 20px; display: flex; align-items: center; gap: 15px;">
-        <div class="progress-container" style="flex:1;"><div id="taskProgress" class="progress-fill"></div></div>
-        <button id="closeTask" style="background:none; border:none; color:#666; font-size: 1.5em; cursor:pointer;">✕</button>
-    </div>
-    <div class="container" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-        <div onclick="falarNovamente()" style="cursor:pointer; font-size: 3em; margin-bottom: 20px;">🔊</div>
-        <h4 style="color: var(--primary); letter-spacing: 2px;">TRADUZA A FRASE</h4>
-        <h1 id="questionDisplay" style="margin: 10px 0; font-size: 2em;">...</h1>
-        <div id="exerciseArea"></div>
-        <div id="feedback" style="margin-top: 20px; font-weight: bold; min-height: 24px;"></div>
-        <button id="checkBtn" class="btn-main" style="width: 80%; align-self: center;">VERIFICAR</button>
+        <button id="authBtn" class="btn btn-primary" style="width: 100%;">Continuar</button>
+        <p id="switchAuth" style="text-align: center; margin-top: 20px; cursor: pointer; color: #94a3b8; font-size: 0.9rem;"></p>
+        <button onclick="toggleModal()" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;">&times;</button>
     </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = { apiKey: "AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw", authDomain: "fluentgo-35024.firebaseapp.com", databaseURL: "https://fluentgo-35024-default-rtdb.firebaseio.com", projectId: "fluentgo-35024", appId: "1:613715387990:web:0345ade26374dd32d1fdf7" };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// DICIONÁRIO MULTILÍNGUE COMPLETO
-const vocab = {
-    Ingles: {
-        subjects: [{pt: "Eu", en: "I"}, {pt: "Você", en: "You"}, {pt: "Nós", en: "We"}],
-        verbs: [{pt: "como", en: "eat"}, {pt: "bebo", en: "drink"}, {pt: "vejo", en: "see"}],
-        objects: [{pt: "pão", en: "bread"}, {pt: "água", en: "water"}, {pt: "café", en: "coffee"}]
-    },
-    Espanhol: {
-        subjects: [{pt: "Eu", en: "Yo"}, {pt: "Você", en: "Tú"}, {pt: "Eles", en: "Ellos"}],
-        verbs: [{pt: "como", en: "como"}, {pt: "bebo", en: "bebo"}, {pt: "tenho", en: "tengo"}],
-        objects: [{pt: "pão", en: "pan"}, {pt: "água", en: "agua"}, {pt: "café", en: "café"}]
-    },
-    Frances: {
-        subjects: [{pt: "Eu", en: "Je"}, {pt: "Você", en: "Tu"}],
-        verbs: [{pt: "como", en: "mange"}, {pt: "bebo", en: "bois"}],
-        objects: [{pt: "pão", en: "du pain"}, {pt: "café", en: "un café"}]
-    },
-    Italiano: {
-        subjects: [{pt: "Eu", en: "Io"}, {pt: "Nós", en: "Noi"}],
-        verbs: [{pt: "como", en: "mangio"}, {pt: "bebo", en: "bevo"}],
-        objects: [{pt: "pão", en: "pane"}, {pt: "água", en: "acqua"}]
-    },
-    Japones: {
-        subjects: [{pt: "Eu", en: "Watashi wa"}, {pt: "Você", en: "Anata wa"}],
-        verbs: [{pt: "como", en: "tabemasu"}, {pt: "bebo", en: "nomimasu"}],
-        objects: [{pt: "pão", en: "pan o"}, {pt: "água", en: "mizu o"}]
-    }
+let mode = 'register';
+
+window.toggleModal = (m) => {
+    const modal = document.getElementById('authModal');
+    if(!m) { modal.classList.remove('active'); return; }
+    mode = m;
+    modal.classList.add('active');
+    document.getElementById('modalTitle').innerText = mode === 'register' ? 'Criar Conta' : 'Fazer Login';
+    document.getElementById('regFields').style.display = mode === 'register' ? 'block' : 'none';
+    document.getElementById('switchAuth').innerText = mode === 'register' ? 'Já tem uma conta? Entre' : 'Não tem conta? Cadastre-se';
 };
 
-let userData = { xp: 0, lang: "", mod: 1, username: "Estudante" };
-let currentQuestions = [];
-let qIdx = 0;
-let phraseBuilder = [];
-
-// SISTEMA DE VOZ
-function falar(texto) {
-    const vozes = { "Ingles": "en-US", "Espanhol": "es-ES", "Frances": "fr-FR", "Italiano": "it-IT", "Japones": "ja-JP" };
-    const msg = new SpeechSynthesisUtterance(texto);
-    msg.lang = vozes[userData.lang] || "en-US";
-    msg.rate = 0.9;
-    window.speechSynthesis.speak(msg);
-}
-
-window.falarNovamente = () => falar(currentQuestions[qIdx].a[0]);
-
-// NAVEGAÇÃO DE TELAS
-const showSection = (id) => {
-    ["authSection", "appSection", "taskModal", "langOnboarding"].forEach(s => document.getElementById(s).classList.add("hidden"));
-    document.getElementById(id).classList.remove("hidden");
+document.getElementById('switchAuth').onclick = () => {
+    toggleModal(mode === 'register' ? 'login' : 'register');
 };
 
-// LÓGICA DE CADASTRO/LOGIN
-document.getElementById("registerViewBtn").onclick = () => {
-    document.getElementById("registerFields").classList.remove("hidden");
-    document.getElementById("doRegisterBtn").classList.remove("hidden");
-    document.getElementById("backToLoginBtn").classList.remove("hidden");
-    document.getElementById("loginBtn").classList.add("hidden");
-    document.getElementById("registerViewBtn").classList.add("hidden");
-    document.getElementById("authTitle").innerText = "Crie sua conta gratuita";
-};
+document.getElementById('authBtn').onclick = async () => {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const username = document.getElementById('username').value;
 
-document.getElementById("backToLoginBtn").onclick = () => {
-    document.getElementById("registerFields").classList.add("hidden");
-    document.getElementById("doRegisterBtn").classList.add("hidden");
-    document.getElementById("backToLoginBtn").classList.add("hidden");
-    document.getElementById("loginBtn").classList.remove("hidden");
-    document.getElementById("registerViewBtn").classList.remove("hidden");
-    document.getElementById("authTitle").innerText = "Acesse sua conta";
-};
-
-document.getElementById("doRegisterBtn").onclick = () => {
-    const user = document.getElementById("username").value.trim();
-    const mail = document.getElementById("email").value;
-    const pass = document.getElementById("password").value;
-    if(user.length < 3) return alert("Username muito curto!");
-
-    createUserWithEmailAndPassword(auth, mail, pass).then(async (cred) => {
-        userData.username = user;
-        await set(ref(db, 'users/' + cred.user.uid), userData);
-    }).catch(e => alert(e.message));
-};
-
-document.getElementById("loginBtn").onclick = () => {
-    signInWithEmailAndPassword(auth, email.value, password.value).catch(e => alert(e.message));
-};
-
-// GERADOR DE LIÇÕES INFINITAS
-function generateLesson() {
-    let lesson = [];
-    const lang = vocab[userData.lang] || vocab.Ingles;
-    for(let i=0; i<5; i++) {
-        const s = lang.subjects[Math.floor(Math.random()*lang.subjects.length)];
-        const v = lang.verbs[Math.floor(Math.random()*lang.verbs.length)];
-        const o = lang.objects[Math.floor(Math.random()*lang.objects.length)];
-        lesson.push({
-            q: `${s.pt} ${v.pt} ${o.pt}`,
-            a: [`${s.en} ${v.en} ${o.en}`.toLowerCase()],
-            words: [s.en, v.en, o.en, "the", "a", "is"].sort(() => Math.random()-0.5)
-        });
-    }
-    return lesson;
-}
-
-document.getElementById("startBtn").onclick = () => {
-    currentQuestions = generateLesson();
-    qIdx = 0; showSection("taskModal"); renderExercise();
-};
-
-function renderExercise() {
-    const q = currentQuestions[qIdx];
-    const area = document.getElementById("exerciseArea");
-    area.innerHTML = ""; document.getElementById("feedback").innerText = "";
-    document.getElementById("taskProgress").style.width = `${(qIdx / 5) * 100}%`;
-    document.getElementById("questionDisplay").innerText = q.q;
-
-    phraseBuilder = [];
-    const drop = document.createElement("div"); drop.className = "word-area"; area.appendChild(drop);
-    q.words.forEach(w => {
-        const b = document.createElement("button"); b.className = "btn-word"; b.innerText = w;
-        b.onclick = () => { 
-            if(!b.classList.contains("used")) { 
-                phraseBuilder.push(w); 
-                drop.innerHTML += `<span>${w} </span>`; 
-                b.classList.add("used"); 
-                falar(w); 
-            }
-        };
-        area.appendChild(b);
-    });
-}
-
-document.getElementById("checkBtn").onclick = async () => {
-    const q = currentQuestions[qIdx];
-    const userAns = phraseBuilder.join(" ").toLowerCase();
-
-    if (q.a.includes(userAns)) {
-        document.getElementById("feedback").innerText = "✨ CORRETO!";
-        document.getElementById("feedback").style.color = "var(--secondary)";
-        falar(q.a[0]);
-        userData.xp += 20;
-        spawnParticles(window.innerWidth/2, window.innerHeight/2, "#10B981");
-        qIdx++;
-        if(qIdx < 5) setTimeout(renderExercise, 1200); 
-        else {
-            userData.mod = Math.floor(userData.xp / 100) + 1;
-            await set(ref(db, 'users/' + auth.currentUser.uid), userData);
-            showSection("appSection"); updateUI();
+    try {
+        if (mode === 'register') {
+            const res = await createUserWithEmailAndPassword(auth, email, password);
+            await set(ref(db, 'users/' + res.user.uid), {
+                username: username,
+                xp: 0,
+                mod: 1,
+                streak: 0,
+                lastDate: "",
+                hasLearned: false
+            });
+        } else {
+            await signInWithEmailAndPassword(auth, email, password);
         }
-    } else {
-        document.getElementById("feedback").innerText = "❌ TENTE DE NOVO";
-        document.getElementById("feedback").style.color = "var(--ads)";
-        spawnParticles(window.innerWidth/2, window.innerHeight/2, "#EF4444");
+        // Redireciona para o app após sucesso
+        window.location.href = "app.html"; 
+    } catch (e) {
+        alert("Erro: " + e.message);
     }
-    updateUI();
 };
-
-// RANKING E PERSISTÊNCIA
-onAuthStateChanged(auth, async (u) => {
-    if(u) {
-        const s = await get(ref(db, 'users/' + u.uid));
-        if(s.exists()) userData = s.val();
-        document.getElementById("currentUserLabel").innerText = userData.username;
-        userData.lang ? showSection("appSection") : showSection("langOnboarding");
-        loadRanking(); updateUI();
-        document.getElementById("userMenu").classList.remove("hidden");
-    } else showSection("authSection");
-});
-
-function loadRanking() {
-    onValue(ref(db, 'users/'), (snap) => {
-        const data = snap.val(); if(!data) return;
-        const list = Object.values(data).sort((a,b) => b.xp - a.xp).slice(0,5);
-        const div = document.getElementById("rankingList"); div.innerHTML = "";
-        list.forEach((u, i) => {
-            div.innerHTML += `<div class="rank-item"><span class="rank-pos">#${i+1}</span><span class="rank-name">${u.username}</span><span class="rank-xp">${u.xp} XP</span></div>`;
-        });
-    });
-}
-
-const updateUI = () => {
-    document.getElementById("userXpDisplay").innerText = `${userData.xp} XP`;
-    document.getElementById("currentLangLabel").innerText = userData.lang || "---";
-    document.getElementById("moduleLabel").innerText = `Nível ${userData.mod}`;
-    document.getElementById("mainProgress").style.width = `${(userData.xp % 100)}%`;
-};
-
-window.setInitialLang = async (l) => { userData.lang = l; await set(ref(db, 'users/' + auth.currentUser.uid), userData); showSection("appSection"); updateUI(); };
-document.getElementById("logoutBtn").onclick = () => signOut(auth);
-document.getElementById("configBtn").onclick = () => showSection("langOnboarding");
-document.getElementById("closeTask").onclick = () => showSection("appSection");
-
-// FX (PARTÍCULAS)
-const canvas = document.getElementById("fxCanvas"), ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-let parts = [];
-function spawnParticles(x,y,c){ for(let i=0;i<20;i++) parts.push({x,y,dx:(Math.random()-0.5)*10,dy:(Math.random()-0.5)*10,life:1,c}); }
-function renderFX(){ ctx.clearRect(0,0,canvas.width,canvas.height); parts.forEach((p,i)=>{ ctx.fillStyle = p.c; ctx.globalAlpha = p.life; ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, 7); ctx.fill(); p.x+=p.dx; p.y+=p.dy; p.life-=0.02; if(p.life<=0) parts.splice(i,1); }); requestAnimationFrame(renderFX); }
-renderFX();
 </script>
 </body>
 </html>
