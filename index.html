@@ -3,109 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FluentGo Pro | Fix v10</title>
+    <title>FluentGo Pro | v11 Estável</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #2563EB; --secondary: #10B981; --bg: #0F172A; --card: #1E293B; --text: #F8FAFC; --error: #EF4444; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; }
-        body { margin:0; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
-        .container { padding: 20px; max-width: 500px; margin: 0 auto; height: 100%; display: flex; flex-direction: column; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
+        
+        body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+        .container { flex: 1; padding: 15px; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; width: 100%; position: relative; }
         .hidden { display: none !important; }
         
-        /* HEADER */
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #0F172A; border-bottom: 1px solid #334155; }
-        .card { background: var(--card); padding: 20px; border-radius: 24px; border: 1px solid #334155; margin-bottom: 15px; text-align: center; }
+        .card { background: var(--card); padding: 25px; border-radius: 24px; border: 1px solid #334155; text-align: center; }
         
-        /* BOTÕES */
-        button { padding: 18px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; width: 100%; transition: 0.2s; font-size: 16px; text-transform: uppercase; }
+        button { padding: 18px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; width: 100%; font-size: 16px; text-transform: uppercase; transition: transform 0.1s; }
+        button:active { transform: scale(0.98); }
+        
         .btn-check { background: var(--primary); color: white; box-shadow: 0 5px 0 #1D4ED8; }
         .btn-next { background: var(--secondary) !important; color: white !important; box-shadow: 0 5px 0 #059669 !important; }
         .btn-wrong { background: var(--error) !important; color: white !important; box-shadow: 0 5px 0 #991B1B !important; }
 
-        /* ÁREA DE JOGO */
-        .word-area { min-height: 120px; border: 2px dashed #475569; border-radius: 20px; margin: 20px 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 15px; transition: 0.3s; }
-        .area-correct { background: rgba(16, 185, 129, 0.2); border-color: var(--secondary); }
-        .area-wrong { background: rgba(239, 68, 68, 0.2); border-color: var(--error); }
+        .word-area { min-height: 110px; border: 2px dashed #475569; border-radius: 20px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 15px; background: rgba(255,255,255,0.02); margin: 20px 0; }
+        .area-correct { background: rgba(16, 185, 129, 0.15); border-color: var(--secondary); border-style: solid; }
+        .area-wrong { background: rgba(239, 68, 68, 0.15); border-color: var(--error); border-style: solid; }
 
-        .chip { background: #334155; padding: 12px 18px; border-radius: 14px; font-weight: 700; cursor: pointer; color: white; border: 1px solid #475569; font-size: 16px; box-shadow: 0 3px 0 #0F172A; }
-        .chip.used { opacity: 0.1; pointer-events: none; }
+        .chip { background: #334155; padding: 12px 16px; border-radius: 14px; font-weight: 700; color: white; border: 1px solid #475569; font-size: 16px; box-shadow: 0 3px 0 #0F172A; }
+        .chip.used { opacity: 0.15; pointer-events: none; }
 
-        nav { position: fixed; bottom: 0; width: 100%; background: #1E293B; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #334155; }
-        nav div { font-size: 24px; cursor: pointer; opacity: 0.4; }
-        nav div.active { opacity: 1; color: var(--primary); }
+        nav { background: #1E293B; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #334155; }
     </style>
 </head>
 <body>
 
-<audio id="sndCorrect" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
-<audio id="sndWrong" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
-<audio id="sndClick" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
-
 <header id="mainHeader" class="hidden">
-    <div style="font-weight:900;">FLUENTGO <span id="langTag" style="color:var(--primary)">EN</span></div>
+    <div style="font-weight:900; letter-spacing: 1px;">FLUENTGO</div>
     <div style="font-weight: 800; color: var(--secondary);">🔥 <span id="userXP">0</span></div>
 </header>
 
 <main id="homeView" class="container hidden">
-    <div class="card" style="margin-top:20px;">
-        <h2 id="levelTxt">Nível 1</h2>
-        <p id="taskTxt">Tarefa 1 de 10</p>
-        <button id="startBtn" class="btn-check" style="background:var(--primary); box-shadow:0 5px 0 #1D4ED8;">PRATICAR TAREFA</button>
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+        <div class="card">
+            <h2 id="levelTxt" style="font-size: 1.5rem; margin-bottom: 5px;">Nível 1</h2>
+            <p id="taskTxt" style="color: #94a3b8; margin-bottom: 25px;">Tarefa 1 de 10</p>
+            <button id="startBtn" class="btn-check">PRATICAR TAREFA</button>
+        </div>
     </div>
 </main>
 
-<div id="practiceView" class="hidden" style="position:fixed; inset:0; background:var(--bg); z-index:9999;">
+<div id="practiceView" class="hidden" style="position:fixed; inset:0; background:var(--bg); z-index:9999; display: flex; flex-direction: column;">
     <div class="container">
-        <div style="display:flex; align-items:center; gap:15px;">
-            <button onclick="closePractice()" style="width:40px; background:none; font-size:24px; box-shadow:none;">✕</button>
-            <div style="background:#334155; flex:1; height:10px; border-radius:10px;">
-                <div id="innerBar" style="width:0%; height:100%; background:var(--secondary); transition:0.3s;"></div>
+        <div style="display:flex; align-items:center; gap:15px; margin-bottom: 20px;">
+            <button onclick="closePractice()" style="width:40px; background:none; font-size:24px; box-shadow:none; padding: 0;">✕</button>
+            <div style="background:#334155; flex:1; height:10px; border-radius:10px; overflow:hidden;">
+                <div id="innerBar" style="width:0%; height:100%; background:var(--secondary); transition:0.4s;"></div>
             </div>
         </div>
 
-        <h2 id="targetPhrase" style="text-align:center; font-size:1.8rem; margin:40px 0; font-weight:900;">...</h2>
-        
-        <div id="dropZone" class="word-area"></div>
-        
-        <div id="wordBank" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;"></div>
+        <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+            <h2 id="targetPhrase" style="text-align:center; font-size:1.8rem; font-weight:900; margin-bottom: 10px;">...</h2>
+            <div id="dropZone" class="word-area"></div>
+            <div id="wordBank" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;"></div>
+        </div>
 
-        <div id="feedbackText" style="text-align:center; margin-top:20px; font-weight:bold; min-height:24px;"></div>
-        
-        <div style="margin-top:auto; padding-bottom:30px;">
+        <div style="padding: 20px 0;">
+            <div id="feedbackText" style="text-align:center; margin-bottom:15px; font-weight:800; min-height:24px; font-size: 1.1rem;"></div>
             <button id="actionBtn" class="btn-check">VERIFICAR</button>
         </div>
     </div>
 </div>
 
 <nav id="mainNav" class="hidden">
-    <div onclick="showTab('homeView')" class="active">🏠</div>
-    <div>🏆</div>
-    <div>💎</div>
-    <div>⚙️</div>
+    <div onclick="showTab('homeView')" style="font-size: 24px; cursor:pointer;">🏠</div>
+    <div style="font-size: 24px; opacity: 0.2;">🏆</div>
+    <div style="font-size: 24px; opacity: 0.2;">⚙️</div>
 </nav>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, get, update, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = { apiKey: "AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw", authDomain: "fluentgo-35024.firebaseapp.com", databaseURL: "https://fluentgo-35024-default-rtdb.firebaseio.com", projectId: "fluentgo-35024", appId: "1:613715387990:web:0345ade26374dd32d1fdf7" };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-const phrases = {
-    English: [{pt: "O carro é azul", en: "the car is blue"}, {pt: "Eu bebo leite", en: "i drink milk"}],
-    Spanish: [{pt: "Yo como pan", en: "yo como pan"}]
-};
+const phrases = [
+    {pt: "O carro é azul", en: "the car is blue"},
+    {pt: "Eu bebo leite", en: "i drink milk"},
+    {pt: "A maçã é vermelha", en: "the apple is red"},
+    {pt: "O gato dorme", en: "the cat sleeps"},
+    {pt: "Eu tenho um livro", en: "i have a book"}
+];
 
-let userData = { xp: 0, lvl: 1, task: 1, lang: "English" };
+let userData = { xp: 0, lvl: 1, task: 1 };
 let currentQ = [];
 let qIdx = 0;
 let selection = [];
-let isChecking = true; // Define se o botão verifica ou avança
-
-function play(id) { document.getElementById(id).currentTime = 0; document.getElementById(id).play(); }
+let state = "CHECK"; // CHECK ou NEXT
 
 function updateUI() {
     document.getElementById('userXP').innerText = userData.xp || 0;
@@ -115,86 +110,82 @@ function updateUI() {
 
 document.getElementById('startBtn').onclick = () => {
     qIdx = 0;
-    const pool = phrases[userData.lang] || phrases.English;
-    currentQ = [...pool].sort(() => 0.5 - Math.random()).slice(0, 5);
+    currentQ = [...phrases].sort(() => 0.5 - Math.random()).slice(0, 5);
     document.getElementById('practiceView').classList.remove('hidden');
-    renderQ();
+    loadQuestion();
 };
 
-function renderQ() {
-    isChecking = true;
+function loadQuestion() {
+    state = "CHECK";
     selection = [];
     const q = currentQ[qIdx];
     
-    // Reset de UI
+    // Reset visual
     const btn = document.getElementById('actionBtn');
     btn.innerText = "VERIFICAR";
     btn.className = "btn-check";
-    document.getElementById('dropZone').className = "word-area";
     document.getElementById('feedbackText').innerText = "";
+    document.getElementById('dropZone').className = "word-area";
+    document.getElementById('dropZone').innerHTML = "";
     document.getElementById('innerBar').style.width = `${(qIdx / 5) * 100}%`;
     document.getElementById('targetPhrase').innerText = q.pt;
-    document.getElementById('dropZone').innerHTML = "";
     
     const bank = document.getElementById('wordBank');
     bank.innerHTML = "";
-    let parts = [...q.en.split(" "), "is", "a"].sort(() => Math.random() - 0.5);
+    let words = [...q.en.split(" "), "is", "a", "the"].sort(() => Math.random() - 0.5);
     
-    parts.forEach((w, i) => {
+    words.forEach(w => {
         const b = document.createElement('button');
-        b.className = "chip"; b.innerText = w; b.id = "w-"+i;
+        b.className = "chip"; b.innerText = w;
         b.onclick = () => {
-            if(!isChecking) return;
-            play('sndClick');
+            if(state !== "CHECK") return;
             selection.push(w);
             b.classList.add('used');
-            const s = document.createElement('span'); s.className = "chip"; s.innerText = w;
-            document.getElementById('dropZone').appendChild(s);
+            const span = document.createElement('span'); span.className = "chip"; span.innerText = w;
+            document.getElementById('dropZone').appendChild(span);
         };
         bank.appendChild(b);
     });
 }
 
 document.getElementById('actionBtn').onclick = function() {
-    if(isChecking) {
-        // LÓGICA DE VERIFICAÇÃO
+    if(state === "CHECK") {
         const guess = selection.join(" ").toLowerCase().trim();
         const correct = currentQ[qIdx].en.toLowerCase().trim();
-        const btn = this;
         const zone = document.getElementById('dropZone');
 
         if(guess === correct) {
-            play('sndCorrect');
+            this.innerText = "CONTINUAR";
+            this.className = "btn-next";
             zone.classList.add('area-correct');
-            btn.innerText = "CONTINUAR";
-            btn.classList.add('btn-next');
-            document.getElementById('feedbackText').innerText = "Excelente! ✨";
+            document.getElementById('feedbackText').innerText = "Muito bem! ✨";
             document.getElementById('feedbackText').style.color = "var(--secondary)";
         } else {
-            play('sndWrong');
+            this.innerText = "ENTENDI";
+            this.className = "btn-wrong";
             zone.classList.add('area-wrong');
-            btn.innerText = "ENTENDI";
-            btn.classList.add('btn-wrong');
             document.getElementById('feedbackText').innerText = "Resposta: " + correct;
             document.getElementById('feedbackText').style.color = "var(--error)";
         }
-        isChecking = false;
+        state = "NEXT";
     } else {
-        // LÓGICA DE AVANÇAR
         qIdx++;
         if(qIdx < 5) {
-            renderQ();
+            loadQuestion();
         } else {
-            finishTask();
+            completeTask();
         }
     }
 };
 
-async function finishTask() {
-    userData.xp += 50;
-    userData.task++;
-    if(userData.task > 10) { userData.task = 1; userData.lvl++; }
-    if(auth.currentUser) await update(ref(db, 'users/'+auth.currentUser.uid), userData);
+async function completeTask() {
+    userData.xp = (userData.xp || 0) + 50;
+    userData.task = (userData.task || 0) + 1;
+    if(userData.task > 10) { userData.task = 1; userData.lvl = (userData.lvl || 0) + 1; }
+    
+    if(auth.currentUser) {
+        await update(ref(db, 'users/'+auth.currentUser.uid), userData);
+    }
     document.getElementById('practiceView').classList.add('hidden');
     updateUI();
 }
@@ -202,8 +193,12 @@ async function finishTask() {
 onAuthStateChanged(auth, async (u) => {
     if(u) {
         const s = await get(ref(db, 'users/'+u.uid));
-        if(s.exists()) userData = {...userData, ...s.val()};
-        ['mainHeader', 'homeView', 'mainNav'].forEach(id => document.getElementById(id).classList.remove('hidden'));
+        if(s.exists()) userData = s.val();
+        else await set(ref(db, 'users/'+u.uid), userData);
+        
+        document.getElementById('mainHeader').classList.remove('hidden');
+        document.getElementById('homeView').classList.remove('hidden');
+        document.getElementById('mainNav').classList.remove('hidden');
         updateUI();
     }
 });
