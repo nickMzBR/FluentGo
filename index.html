@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>FluentGgo</title>
+<title>FluentGo</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -396,10 +396,23 @@ nav { position:fixed; bottom:0; left:0; right:0; background:var(--bg2); display:
 
 <div id="toast"></div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getDatabase, ref, onValue, update, set, off } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script>
+// Aliases para manter compatibilidade com o resto do código
+const initializeApp = (cfg) => firebase.initializeApp(cfg);
+const getAuth = (app) => app.auth();
+const getDatabase = (app) => app.database();
+const onAuthStateChanged = (auth, cb) => auth.onAuthStateChanged(cb);
+const signInWithEmailAndPassword = (auth, e, p) => auth.signInWithEmailAndPassword(e, p);
+const createUserWithEmailAndPassword = (auth, e, p) => auth.createUserWithEmailAndPassword(e, p);
+const signOut = (auth) => auth.signOut();
+const ref = (db, path) => db.ref(path);
+const onValue = (r, cb) => r.on('value', cb);
+const off = (r) => { if(r && r.off) r.off(); };
+const update = (r, data) => r.update(data);
+const set = (r, data) => r.set(data);
 
 const FB = { apiKey:"AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw", authDomain:"fluentgo-35024.firebaseapp.com", databaseURL:"https://fluentgo-35024-default-rtdb.firebaseio.com", projectId:"fluentgo-35024", appId:"1:613715387990:web:0345ade26374dd32d1fdf7" };
 const fbApp = initializeApp(FB);
@@ -1406,13 +1419,47 @@ el('btn-auth').onclick = async () => {
   const email = el('auth-email').value.trim();
   const pass  = el('auth-password').value;
   const err   = el('auth-error');
+  const btn   = el('btn-auth');
   err.innerText = '';
+
   if (!email || !pass) { err.innerText = 'Preencha e-mail e senha.'; return; }
+  if (!email.includes('@')) { err.innerText = 'E-mail inválido.'; return; }
+  if (pass.length < 6) { err.innerText = 'Senha deve ter no mínimo 6 caracteres.'; return; }
+
+  // Loading
+  btn.disabled = true;
+  btn.innerText = 'Entrando...';
+  btn.style.opacity = '0.7';
+
+  const MSGS = {
+    'auth/user-not-found': null, // vai tentar criar
+    'auth/wrong-password': 'Senha incorreta.',
+    'auth/invalid-credential': 'Senha incorreta.',
+    'auth/invalid-email': 'E-mail inválido.',
+    'auth/too-many-requests': 'Muitas tentativas. Aguarde um momento.',
+    'auth/network-request-failed': 'Sem conexão. Verifique sua internet.',
+    'auth/email-already-in-use': 'E-mail já cadastrado. Tente fazer login.',
+    'auth/weak-password': 'Senha fraca. Use pelo menos 6 caracteres.',
+  };
+
   try {
     await signInWithEmailAndPassword(auth, email, pass);
-  } catch {
-    try { await createUserWithEmailAndPassword(auth, email, pass); }
-    catch(e2) { err.innerText = 'Erro: verifique seu e-mail e senha.'; }
+  } catch(e1) {
+    if (e1.code === 'auth/user-not-found' || e1.code === 'auth/invalid-credential') {
+      // Usuário não existe — tenta criar conta
+      btn.innerText = 'Criando conta...';
+      try {
+        await createUserWithEmailAndPassword(auth, email, pass);
+      } catch(e2) {
+        err.innerText = MSGS[e2.code] || ('Erro: ' + e2.code);
+      }
+    } else {
+      err.innerText = MSGS[e1.code] || ('Erro: ' + e1.code);
+    }
+  } finally {
+    btn.disabled = false;
+    btn.innerText = 'Entrar / Cadastrar';
+    btn.style.opacity = '1';
   }
 };
 
