@@ -1064,8 +1064,10 @@ function renderTranslate(ex, body) {
   const bank = el('word-bank');
   const selected = []; // [{word, bankBtn, zoneChip}]
 
-  // Gera chips do banco
-  const words = shuffle(ex.words || [...ex.target.split(' '), 'a','the','is'].slice(0, ex.target.split(' ').length + 2));
+  // Gera chips do banco — remove pontuação das palavras para comparação justa
+  const cleanWords = w => w.replace(/[.,!?¡¿'";\-:]/g, '').trim();
+  const rawWords = ex.words || [...ex.target.split(' '), 'a','the','is'].slice(0, ex.target.split(' ').length + 2);
+  const words = shuffle(rawWords.map(cleanWords).filter(w => w.length > 0));
   words.forEach(w => {
     const btn = document.createElement('button');
     btn.className = 'wchip';
@@ -1094,7 +1096,7 @@ function renderTranslate(ex, body) {
   el('btn-check').onclick = () => {
     if (selected.length === 0) { toast('Selecione as palavras! 👆'); return; }
     const answer = selected.map(s => s.word).join(' ');
-    const correct = answer.toLowerCase() === ex.target.toLowerCase();
+    const correct = normalize(answer) === normalize(ex.target);
     handleAnswer(correct, ex.target);
     // Desabilitar interação
     zone.querySelectorAll('.wchip').forEach(c => c.style.pointerEvents = 'none');
@@ -1200,6 +1202,11 @@ function getLangKey() {
 // ═══════════════════════════════════════════════════════════
 //  RESPOSTA
 // ═══════════════════════════════════════════════════════════
+// Remove pontuação e normaliza para comparação justa
+function normalize(str) {
+  return str.toLowerCase().replace(/[.,!?¡¿'";-:]/g, "").replace(/\s+/g, " ").trim();
+}
+
 function handleAnswer(correct, answer) {
   if (correct) {
     sndCorrect();
