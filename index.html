@@ -1,290 +1,1280 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FluentGo | Premium Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        :root { --primary: #2563EB; --secondary: #10B981; --bg: #0F172A; --card: #1E293B; --text: #F8FAFC; --gold: #F59E0B; --error: #EF4444; --premium: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
-        body { background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
-        .container { flex: 1; padding: 15px; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; width: 100%; overflow-y: auto; padding-bottom: 90px; }
-        .hidden { display: none !important; }
-        
-        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #0F172A; border-bottom: 1px solid #334155; }
-        .card { background: var(--card); padding: 25px; border-radius: 24px; border: 1px solid #334155; text-align: center; margin-bottom: 15px; }
-        
-        button { padding: 16px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; width: 100%; font-size: 14px; text-transform: uppercase; transition: 0.2s; }
-        .btn-check { background: var(--primary); color: white; box-shadow: 0 4px 0 #1D4ED8; }
-        .btn-check:active { transform: translateY(2px); box-shadow: 0 1px 0 #1D4ED8; }
-        .btn-premium { background: var(--premium); color: white; box-shadow: 0 4px 0 #6d28d9; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>FluentGo</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #3B82F6;
+  --primary-dark: #1D4ED8;
+  --secondary: #10B981;
+  --secondary-dark: #059669;
+  --bg: #080E1A;
+  --bg2: #0D1625;
+  --card: #111827;
+  --card2: #1A2436;
+  --border: #1E2D45;
+  --text: #F1F5F9;
+  --text2: #94A3B8;
+  --gold: #F59E0B;
+  --gold-dark: #D97706;
+  --error: #EF4444;
+  --error-dark: #B91C1C;
+  --correct: #10B981;
+  --heart: #F43F5E;
+  --purple: #8B5CF6;
+  --purple-dark: #6D28D9;
+}
 
-        nav { position: fixed; bottom: 0; left: 0; right: 0; background: #1E293B; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #334155; z-index: 100; height: 75px; }
-        nav div { display: flex; flex-direction: column; align-items: center; font-size: 20px; cursor: pointer; opacity: 0.4; flex: 1; }
-        nav div.active { opacity: 1; color: var(--primary); }
-        nav span { font-size: 9px; font-weight: 700; margin-top: 5px; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; display: flex; flex-direction: column; }
 
-        .word-area { min-height: 110px; border: 2px dashed #475569; border-radius: 20px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 15px; margin: 15px 0; }
-        .chip { background: #334155; padding: 12px 16px; border-radius: 14px; font-weight: 700; border: 1px solid #475569; box-shadow: 0 3px 0 #000; }
-        .chip.used { opacity: 0.1; pointer-events: none; }
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
-        #feedback-banner { position: fixed; bottom: -120px; left: 0; right: 0; padding: 25px; transition: 0.4s; z-index: 999; display: flex; justify-content: space-between; align-items: center; }
-        #feedback-banner.show { bottom: 0; }
-        
-        /* Estilo Loja Premium */
-        .premium-card { background: var(--premium); border-radius: 20px; padding: 20px; text-align: left; margin-bottom: 15px; position: relative; overflow: hidden; }
-        .premium-tag { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 8px; font-size: 10px; font-weight: 900; }
-    </style>
+/* HIDDEN */
+.hidden { display: none !important; }
+
+/* AUTH VIEW */
+#view-auth {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 24px;
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+}
+#view-auth::before {
+  content: '';
+  position: absolute;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
+  top: -100px; left: -100px;
+  pointer-events: none;
+}
+#view-auth::after {
+  content: '';
+  position: absolute;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%);
+  bottom: -100px; right: -100px;
+  pointer-events: none;
+}
+.auth-logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+}
+.auth-logo span { color: var(--primary); }
+.auth-sub { color: var(--text2); font-size: 14px; margin-bottom: 40px; }
+.auth-box { width: 100%; max-width: 360px; }
+.input-group { margin-bottom: 12px; }
+.input-group label { display: block; font-size: 11px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.input-field {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--card);
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  transition: border-color 0.2s;
+  outline: none;
+}
+.input-field:focus { border-color: var(--primary); }
+.auth-error { color: var(--error); font-size: 12px; margin-bottom: 10px; min-height: 16px; text-align: center; }
+
+/* APP VIEW */
+#view-app {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* HEADER */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  gap: 12px;
+}
+.header-logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+.header-logo span { color: var(--primary); }
+.header-stats { display: flex; align-items: center; gap: 14px; }
+.stat-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.stat-pill .icon { font-size: 14px; }
+
+/* TABS */
+.tab-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 16px 90px;
+  max-width: 500px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* NAV */
+nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--bg2);
+  display: flex;
+  justify-content: space-around;
+  border-top: 1px solid var(--border);
+  z-index: 100;
+  height: 70px;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0.35;
+  flex: 1;
+  transition: opacity 0.2s;
+  gap: 3px;
+  position: relative;
+}
+.nav-item.active { opacity: 1; }
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 30px; height: 2px;
+  background: var(--primary);
+  border-radius: 0 0 4px 4px;
+}
+.nav-label { font-size: 9px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+
+/* CARDS */
+.card {
+  background: var(--card);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  padding: 22px;
+  margin-bottom: 14px;
+}
+.card-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 14px;
+}
+
+/* BUTTONS */
+.btn {
+  padding: 15px;
+  border-radius: 16px;
+  border: none;
+  font-weight: 800;
+  cursor: pointer;
+  width: 100%;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: transform 0.15s, box-shadow 0.15s;
+  font-family: 'Space Grotesk', sans-serif;
+}
+.btn:active { transform: translateY(2px) !important; }
+.btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 0 var(--primary-dark); }
+.btn-primary:active { box-shadow: 0 1px 0 var(--primary-dark); }
+.btn-success { background: var(--correct); color: white; box-shadow: 0 4px 0 var(--secondary-dark); }
+.btn-success:active { box-shadow: 0 1px 0 var(--secondary-dark); }
+.btn-danger { background: var(--error); color: white; box-shadow: 0 4px 0 var(--error-dark); }
+.btn-danger:active { box-shadow: 0 1px 0 var(--error-dark); }
+.btn-purple { background: var(--purple); color: white; box-shadow: 0 4px 0 var(--purple-dark); }
+.btn-purple:active { box-shadow: 0 1px 0 var(--purple-dark); }
+.btn-ghost { background: var(--card2); color: var(--text); border: 1px solid var(--border); box-shadow: none; }
+
+/* HOME TAB */
+.level-hero {
+  text-align: center;
+  padding: 30px 20px;
+  background: var(--card);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.level-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(59,130,246,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+.level-number {
+  font-family: 'Syne', sans-serif;
+  font-size: 72px;
+  font-weight: 800;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.level-label { font-size: 13px; color: var(--text2); font-weight: 600; margin-bottom: 6px; }
+.level-task { font-size: 12px; color: var(--text2); margin-bottom: 24px; }
+.xp-bar-wrap { background: var(--card2); border-radius: 10px; height: 8px; overflow: hidden; margin-bottom: 24px; }
+.xp-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--purple)); border-radius: 10px; transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+
+/* STREAKS */
+.streak-row { display: flex; gap: 8px; justify-content: center; margin-bottom: 14px; }
+.streak-day {
+  flex: 1;
+  padding: 10px 6px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text2);
+  transition: all 0.3s;
+}
+.streak-day.done { background: #052E16; border-color: #065F46; color: var(--secondary); }
+.streak-day .day-icon { font-size: 18px; display: block; margin-bottom: 3px; }
+
+/* PRACTICE VIEW */
+#view-practice {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.practice-header {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  gap: 14px;
+  flex-shrink: 0;
+}
+.btn-close {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  width: 38px; height: 38px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: none;
+  padding: 0;
+}
+.progress-bar-wrap { flex: 1; background: var(--card2); border-radius: 10px; height: 10px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--purple)); border-radius: 10px; transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+.hearts-display { display: flex; gap: 3px; flex-shrink: 0; }
+.heart { font-size: 20px; transition: all 0.3s; }
+.heart.lost { filter: grayscale(1); opacity: 0.2; transform: scale(0.8); }
+
+.practice-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 20px 20px;
+  max-width: 500px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* LEARNING PHASE */
+#learning-phase { flex: 1; display: flex; flex-direction: column; gap: 14px; }
+.phrase-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px 18px;
+  animation: fadeInUp 0.4s ease both;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.phrase-pt { font-size: 15px; color: var(--text2); margin-bottom: 5px; }
+.phrase-target { font-size: 18px; font-weight: 700; color: var(--text); }
+
+/* TASK PHASE */
+#task-phase { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.task-label { font-size: 11px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; text-align: center; margin-bottom: 10px; }
+.task-question {
+  font-family: 'Syne', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 24px;
+  line-height: 1.3;
+}
+.drop-zone {
+  min-height: 90px;
+  border: 2px dashed var(--border);
+  border-radius: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px;
+  margin-bottom: 16px;
+  transition: border-color 0.3s;
+  background: var(--card);
+}
+.drop-zone.has-words { border-color: var(--primary); border-style: solid; }
+.word-bank { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 20px; }
+.chip {
+  background: var(--card2);
+  padding: 11px 16px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 14px;
+  border: 1.5px solid var(--border);
+  box-shadow: 0 3px 0 #000;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Space Grotesk', sans-serif;
+  animation: popIn 0.25s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.7); }
+  to { opacity: 1; transform: scale(1); }
+}
+.chip:active { transform: scale(0.93); }
+.chip.used { opacity: 0.15; pointer-events: none; box-shadow: none; }
+.chip.in-zone {
+  background: var(--bg2);
+  border-color: var(--primary);
+  cursor: pointer;
+}
+.chip.in-zone:active { transform: scale(0.93); }
+
+/* FEEDBACK BANNER */
+#feedback-banner {
+  position: fixed;
+  bottom: -160px;
+  left: 0; right: 0;
+  padding: 22px 20px;
+  transition: bottom 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  z-index: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+#feedback-banner.show { bottom: 0; }
+#feedback-banner.correct { background: #052E16; border-top: 2px solid #065F46; }
+#feedback-banner.wrong { background: #450A0A; border-top: 2px solid #7F1D1D; }
+.feedback-left { flex: 1; }
+.feedback-icon { font-size: 24px; margin-bottom: 4px; }
+.feedback-title { font-weight: 800; font-size: 16px; margin-bottom: 2px; }
+.feedback-correct { color: var(--correct); }
+.feedback-wrong { color: var(--error); }
+.feedback-answer { font-size: 13px; color: var(--text2); }
+#btn-next { width: auto; padding: 14px 24px; flex-shrink: 0; }
+
+/* GAME OVER */
+#view-gameover {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 700;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 30px;
+  backdrop-filter: blur(6px);
+}
+.gameover-icon { font-size: 64px; margin-bottom: 16px; }
+.gameover-title { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+.gameover-sub { color: var(--text2); font-size: 14px; margin-bottom: 32px; }
+
+/* LEVEL UP */
+#view-levelup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  z-index: 700;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 30px;
+  backdrop-filter: blur(6px);
+  animation: fadeIn 0.4s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.levelup-number { font-family: 'Syne', sans-serif; font-size: 96px; font-weight: 800; color: var(--gold); line-height: 1; animation: bounceIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.2s both; }
+@keyframes bounceIn { from { opacity:0; transform: scale(0.3); } to { opacity:1; transform: scale(1); } }
+.levelup-stars { font-size: 36px; letter-spacing: 8px; margin: 10px 0; animation: bounceIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.4s both; }
+.levelup-title { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; margin-bottom: 6px; animation: bounceIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.5s both; }
+.levelup-xp { color: var(--gold); font-weight: 700; font-size: 15px; margin-bottom: 32px; animation: bounceIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.6s both; }
+
+/* RANKING */
+.rank-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  margin-bottom: 8px;
+  transition: all 0.2s;
+  animation: fadeInUp 0.3s ease both;
+}
+.rank-pos { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; width: 28px; text-align: center; color: var(--text2); }
+.rank-pos.gold { color: #F59E0B; }
+.rank-pos.silver { color: #94A3B8; }
+.rank-pos.bronze { color: #C27803; }
+.rank-avatar { width: 38px; height: 38px; border-radius: 12px; background: linear-gradient(135deg, var(--primary), var(--purple)); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px; flex-shrink: 0; }
+.rank-name { flex: 1; font-weight: 700; font-size: 14px; }
+.rank-xp { font-weight: 800; font-size: 13px; color: var(--secondary); }
+.rank-self { border-color: var(--primary); background: rgba(59,130,246,0.06); }
+
+/* PREMIUM */
+.premium-hero {
+  background: linear-gradient(135deg, #1E1040 0%, #2D1B69 100%);
+  border: 1px solid #4C1D95;
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 14px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.premium-hero::before {
+  content: '';
+  position: absolute;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(139,92,246,0.2) 0%, transparent 70%);
+  top: -100px; left: 50%; transform: translateX(-50%);
+}
+.premium-badge { display: inline-block; background: rgba(139,92,246,0.3); border: 1px solid rgba(139,92,246,0.5); padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 700; color: #C4B5FD; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px; }
+.premium-price { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; color: white; }
+.premium-price small { font-size: 14px; color: rgba(255,255,255,0.6); font-family: 'Space Grotesk', sans-serif; font-weight: 400; }
+.feature-list { text-align: left; }
+.feature-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 14px; font-weight: 600; }
+.feature-item:last-child { border-bottom: none; }
+.feature-icon { font-size: 20px; width: 32px; text-align: center; }
+
+/* SETTINGS */
+.setting-label { font-size: 11px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+.lang-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.lang-btn {
+  padding: 14px;
+  border-radius: 14px;
+  background: var(--card2);
+  border: 1.5px solid var(--border);
+  color: var(--text);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Space Grotesk', sans-serif;
+  text-align: center;
+}
+.lang-btn.active { background: rgba(59,130,246,0.12); border-color: var(--primary); color: var(--primary); }
+.lang-btn:active { transform: scale(0.96); }
+.profile-avatar {
+  width: 64px; height: 64px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, var(--primary), var(--purple));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 800;
+  margin: 0 auto 14px;
+}
+
+/* TOAST */
+#toast {
+  position: fixed;
+  top: 80px;
+  left: 50%; transform: translateX(-50%) translateY(-20px);
+  background: var(--card2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  z-index: 999;
+  opacity: 0;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* SHAKE ANIMATION */
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+.shake { animation: shake 0.4s ease; }
+</style>
 </head>
 <body>
 
-<div id="view-auth" class="container" style="justify-content: center; text-align: center;">
-    <h1 style="font-size: 32px; font-weight: 900; margin-bottom: 20px;">FLUENT<span style="color:var(--primary)">GO</span></h1>
-    <input type="email" id="email" placeholder="E-mail" style="width:100%; padding:14px; border-radius:12px; margin-bottom:10px; background:#0F172A; color:white; border:1px solid #475569;">
-    <input type="password" id="password" placeholder="Senha" style="width:100%; padding:14px; border-radius:12px; margin-bottom:10px; background:#0F172A; color:white; border:1px solid #475569;">
-    <button id="btn-auth" class="btn-check">ENTRAR / CADASTRAR</button>
+<!-- AUTH -->
+<div id="view-auth" style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:30px 24px; background:var(--bg); position:relative; overflow:hidden;">
+  <div style="position:absolute;inset:0;background:radial-gradient(circle at 30% 20%, rgba(59,130,246,0.1) 0%, transparent 50%);pointer-events:none;"></div>
+  <div style="position:absolute;inset:0;background:radial-gradient(circle at 70% 80%, rgba(139,92,246,0.08) 0%, transparent 50%);pointer-events:none;"></div>
+  <div style="font-family:'Syne',sans-serif;font-size:44px;font-weight:800;letter-spacing:-1px;margin-bottom:6px;">FLUENT<span style="color:var(--primary)">GO</span></div>
+  <div style="color:var(--text2);font-size:14px;margin-bottom:40px;">Aprenda idiomas de verdade.</div>
+  <div style="width:100%;max-width:360px;">
+    <div class="input-group"><label>E-mail</label><input type="email" id="auth-email" class="input-field" placeholder="seu@email.com"></div>
+    <div class="input-group"><label>Senha</label><input type="password" id="auth-password" class="input-field" placeholder="••••••••"></div>
+    <div id="auth-error" class="auth-error"></div>
+    <button id="btn-auth" class="btn btn-primary">Entrar / Cadastrar</button>
+  </div>
 </div>
 
-<div id="view-app" class="hidden" style="height: 100%; display: flex; flex-direction: column;">
-    <header>
-        <div style="font-weight:900;"><span id="ui-user-head" style="font-size:10px; display:block; opacity:0.6;">...</span>FLUENTGO <span id="ui-lang-tag" style="color:var(--primary); font-size:10px;">EN</span></div>
-        <div style="font-weight: 800; color: var(--secondary);">🔥 <span id="ui-xp">0</span></div>
-    </header>
-
-    <main id="tab-home" class="container">
-        <div class="card" style="margin-top: 40px;">
-            <h1 id="ui-lvl" style="font-size: 4.5rem; font-weight: 900; color: var(--gold); line-height: 1;">1</h1>
-            <h2 id="ui-lvl-txt">Nível 1</h2>
-            <p id="ui-task" style="color: #94a3b8; margin-bottom: 30px;">Tarefa 1 de 10</p>
-            <button id="btn-start" class="btn-check">PRATICAR AGORA</button>
-        </div>
-    </main>
-
-    <main id="tab-premium" class="container hidden">
-        <h2 style="margin-bottom:20px; text-align:center;">Assine o <span style="color:#a855f7">Premium</span></h2>
-        
-        <div class="premium-card">
-            <span class="premium-tag">POPULAR</span>
-            <h3 style="font-size:22px;">Plano Mensal</h3>
-            <p style="margin: 10px 0; opacity: 0.9;">Sem anúncios, Vidas Infinitas e Ranking exclusivo.</p>
-            <div style="font-size:24px; font-weight:900; margin-bottom:15px;">R$ 14,90<small style="font-size:12px; opacity:0.7;">/mês</small></div>
-            <button class="btn-check" style="background:white; color:#7c3aed;" onclick="alert('Redirecionando para pagamento...')">ASSINAR AGORA</button>
-        </div>
-
-        <div class="card" style="text-align:left;">
-            <h4 style="margin-bottom:10px;">O que você ganha:</h4>
-            <p style="font-size:14px; margin-bottom:8px;">✅ Ofensiva Protegida</p>
-            <p style="font-size:14px; margin-bottom:8px;">✅ Lições Offline</p>
-            <p style="font-size:14px; margin-bottom:8px;">✅ Selo Premium no Perfil</p>
-        </div>
-    </main>
-
-    <main id="tab-ranking" class="container hidden">
-        <h3 style="text-align:center; margin-bottom:20px;">🏆 RANKING GLOBAL</h3>
-        <div id="ranking-list"></div>
-    </main>
-
-    <main id="tab-settings" class="container hidden">
-        <div class="card">
-            <h3 style="text-align:left; font-size: 13px; color: var(--primary);">👤 NOME</h3>
-            <input type="text" id="input-username" style="width:100%; padding:10px; margin:10px 0; background:#0F172A; color:white; border:1px solid #475569; border-radius:10px;">
-            <button id="btn-save-name" class="btn-check" style="padding: 10px; font-size: 12px;">SALVAR</button>
-        </div>
-        <div class="card">
-            <h3 style="text-align:left; font-size: 13px; margin-bottom:15px;">🌍 IDIOMA</h3>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <button class="btn-lang" onclick="setLang('English')">English</button>
-                <button class="btn-lang" onclick="setLang('Spanish')">Español</button>
-                <button class="btn-lang" onclick="setLang('French')">Français</button>
-                <button class="btn-lang" onclick="setLang('Italian')">Italiano</button>
-            </div>
-            <button id="btn-logout" class="btn-check" style="background:var(--error); margin-top:20px; font-size:12px;">SAIR</button>
-        </div>
-    </main>
-
-    <nav>
-        <div id="nav-home" class="active">🏠<span>Home</span></div>
-        <div id="nav-premium">💎<span>Premium</span></div>
-        <div id="nav-ranking">🏆<span>Ranking</span></div>
-        <div id="nav-settings">⚙️<span>Ajustes</span></div>
-    </nav>
-</div>
-
-<div id="view-practice" class="hidden" style="position:fixed; inset:0; background:var(--bg); z-index:999; display: flex; flex-direction: column;">
-    <div class="container">
-        <div id="learning-phase" style="flex:1; display:flex; flex-direction:column; justify-content:center; text-align:center;">
-            <div class="card" style="border:2px solid var(--primary);">
-                <p style="color:var(--primary); font-weight:800; font-size:12px; margin-bottom:15px;">ESTUDE ESTAS FRASES</p>
-                <div id="learning-list" style="text-align:left; font-size:17px; line-height:1.6;"></div>
-            </div>
-            <button id="btn-start-tasks" class="btn-check">COMEÇAR TAREFAS</button>
-        </div>
-
-        <div id="task-phase" class="hidden" style="flex:1; display:flex; flex-direction:column; justify-content:center;">
-            <div style="background:#334155; height:10px; border-radius:10px; overflow:hidden; margin-bottom:30px;">
-                <div id="ui-prog" style="width:0%; height:100%; background:var(--secondary); transition:0.4s;"></div>
-            </div>
-            <h2 id="q-text" style="font-size: 1.8rem; font-weight:900; text-align:center; margin-bottom:20px;"></h2>
-            <div id="drop-zone" class="word-area"></div>
-            <div id="word-bank" style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px;"></div>
-            <button id="btn-verify" class="btn-check" style="margin-top:20px;">VERIFICAR</button>
-        </div>
+<!-- APP -->
+<div id="view-app" class="hidden" style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+  <header>
+    <div class="header-logo">FLUENT<span>GO</span></div>
+    <div class="header-stats">
+      <div class="stat-pill"><span class="icon">🔥</span><span id="ui-streak">0</span></div>
+      <div class="stat-pill"><span class="icon">⚡</span><span id="ui-xp">0</span></div>
     </div>
+  </header>
+
+  <!-- HOME -->
+  <div id="tab-home" class="tab-content">
+    <div class="level-hero">
+      <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Seu Nível</div>
+      <div class="level-number" id="ui-lvl">1</div>
+      <div class="level-label" id="ui-lvl-txt">Nível 1</div>
+      <div class="level-task" id="ui-task">Tarefa 1 de 10</div>
+      <div class="xp-bar-wrap"><div class="xp-bar-fill" id="ui-xp-bar" style="width:0%"></div></div>
+      <button id="btn-start" class="btn btn-primary">🎯 Praticar Agora</button>
+    </div>
+
+    <!-- STREAK SEMANAL -->
+    <div class="card">
+      <div class="card-title">🔥 Sequência Semanal</div>
+      <div class="streak-row" id="streak-row"></div>
+    </div>
+
+    <!-- STATS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="card" style="text-align:center;margin-bottom:0;padding:18px;">
+        <div style="font-size:28px;font-weight:800;color:var(--gold)" id="ui-lvl-stat">1</div>
+        <div style="font-size:11px;color:var(--text2);font-weight:600;margin-top:4px;">NÍVEL</div>
+      </div>
+      <div class="card" style="text-align:center;margin-bottom:0;padding:18px;">
+        <div style="font-size:28px;font-weight:800;color:var(--secondary)" id="ui-xp-stat">0</div>
+        <div style="font-size:11px;color:var(--text2);font-weight:600;margin-top:4px;">XP TOTAL</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PREMIUM -->
+  <div id="tab-premium" class="tab-content hidden">
+    <div class="premium-hero">
+      <div class="premium-badge">💎 Premium</div>
+      <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:6px;">Desbloqueie tudo</div>
+      <div style="color:rgba(255,255,255,0.7);font-size:13px;margin-bottom:20px;">Aprenda sem limites com o plano Premium</div>
+      <div class="premium-price">R$ 14,90<small>/mês</small></div>
+      <div style="color:rgba(255,255,255,0.5);font-size:12px;margin-bottom:20px;">Cancele quando quiser</div>
+      <button class="btn btn-purple" onclick="alert('Redirecionando para pagamento...')">Assinar Agora</button>
+    </div>
+    <div class="card feature-list">
+      <div class="card-title">O que você recebe</div>
+      <div class="feature-item"><span class="feature-icon">🔥</span><span>Ofensiva Protegida — salva seu streak</span></div>
+      <div class="feature-item"><span class="feature-icon">❤️</span><span>Vidas Infinitas — erre sem punição</span></div>
+      <div class="feature-item"><span class="feature-icon">📶</span><span>Lições Offline — aprenda sem internet</span></div>
+      <div class="feature-item"><span class="feature-icon">💎</span><span>Selo Premium no Perfil</span></div>
+      <div class="feature-item"><span class="feature-icon">🏆</span><span>Liga Exclusiva no Ranking</span></div>
+    </div>
+  </div>
+
+  <!-- RANKING -->
+  <div id="tab-ranking" class="tab-content hidden">
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;">🏆 Ranking Global</div>
+      <div style="font-size:13px;color:var(--text2);margin-top:4px;">Top jogadores da semana</div>
+    </div>
+    <div id="ranking-list"></div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div id="tab-settings" class="tab-content hidden">
+    <div class="card" style="text-align:center;">
+      <div class="profile-avatar" id="ui-avatar">?</div>
+      <div style="font-weight:800;font-size:18px;" id="ui-profile-name">Estudante</div>
+      <div style="font-size:12px;color:var(--text2);margin-top:4px;" id="ui-profile-lang">English</div>
+    </div>
+
+    <div class="card">
+      <div class="setting-label">👤 Nome de Usuário</div>
+      <input type="text" id="input-username" class="input-field" placeholder="Seu nome" style="margin-bottom:12px;">
+      <button id="btn-save-name" class="btn btn-primary" style="padding:12px;font-size:12px;">Salvar Nome</button>
+    </div>
+
+    <div class="card">
+      <div class="setting-label" style="margin-bottom:12px;">🌍 Idioma para Aprender</div>
+      <div class="lang-grid" id="lang-grid">
+        <button class="lang-btn" onclick="setLang('English')">🇺🇸 English</button>
+        <button class="lang-btn" onclick="setLang('Spanish')">🇪🇸 Español</button>
+        <button class="lang-btn" onclick="setLang('French')">🇫🇷 Français</button>
+        <button class="lang-btn" onclick="setLang('Italian')">🇮🇹 Italiano</button>
+      </div>
+    </div>
+
+    <button id="btn-logout" class="btn btn-danger" style="font-size:13px;">Sair da Conta</button>
+  </div>
+
+  <nav>
+    <div class="nav-item active" id="nav-home">🏠<span class="nav-label">Home</span></div>
+    <div class="nav-item" id="nav-premium">💎<span class="nav-label">Premium</span></div>
+    <div class="nav-item" id="nav-ranking">🏆<span class="nav-label">Ranking</span></div>
+    <div class="nav-item" id="nav-settings">⚙️<span class="nav-label">Ajustes</span></div>
+  </nav>
 </div>
 
-<div id="feedback-banner">
-    <h3 id="feedback-msg"></h3>
-    <button id="btn-next" class="btn-check" style="width:auto; padding: 15px 30px;">PRÓXIMO</button>
+<!-- PRACTICE VIEW -->
+<div id="view-practice" class="hidden">
+  <div class="practice-header">
+    <button class="btn btn-close" id="btn-close-practice">✕</button>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="ui-prog" style="width:0%"></div>
+    </div>
+    <div class="hearts-display" id="hearts-display"></div>
+  </div>
+  <div class="practice-body">
+
+    <!-- LEARNING PHASE -->
+    <div id="learning-phase" style="flex:1;display:flex;flex-direction:column;gap:14px;">
+      <div style="text-align:center;padding:10px 0;">
+        <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:6px;">Estude estas frases</div>
+        <div style="font-size:13px;color:var(--text2);">Memorize antes de praticar</div>
+      </div>
+      <div id="learning-list"></div>
+      <button id="btn-start-tasks" class="btn btn-primary" style="margin-top:auto;">Começar Tarefas →</button>
+    </div>
+
+    <!-- TASK PHASE -->
+    <div id="task-phase" class="hidden" style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+      <div class="task-label" id="task-label">Monte a tradução</div>
+      <div class="task-question" id="q-text"></div>
+      <div class="drop-zone" id="drop-zone"></div>
+      <div class="word-bank" id="word-bank"></div>
+      <button id="btn-verify" class="btn btn-primary">Verificar</button>
+    </div>
+
+  </div>
 </div>
+
+<!-- FEEDBACK BANNER -->
+<div id="feedback-banner">
+  <div class="feedback-left">
+    <div class="feedback-icon" id="feedback-icon"></div>
+    <div class="feedback-title" id="feedback-title"></div>
+    <div class="feedback-answer" id="feedback-answer"></div>
+  </div>
+  <button id="btn-next" class="btn btn-success">Próximo</button>
+</div>
+
+<!-- GAME OVER -->
+<div id="view-gameover" class="hidden">
+  <div class="gameover-icon">💔</div>
+  <div class="gameover-title">Suas vidas acabaram!</div>
+  <div class="gameover-sub" style="max-width:260px;">Não desista! Tente novamente e complete a lição.</div>
+  <div style="width:100%;max-width:300px;display:flex;flex-direction:column;gap:10px;">
+    <button class="btn btn-primary" id="btn-retry">Tentar Novamente</button>
+    <button class="btn btn-ghost" id="btn-gameover-home">Ir para Home</button>
+  </div>
+</div>
+
+<!-- LEVEL UP -->
+<div id="view-levelup" class="hidden">
+  <div style="font-size:14px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;">Nível</div>
+  <div class="levelup-number" id="levelup-num">2</div>
+  <div class="levelup-stars">⭐⭐⭐</div>
+  <div class="levelup-title">Você subiu de nível!</div>
+  <div class="levelup-xp" id="levelup-xp">+100 XP conquistados</div>
+  <button class="btn btn-primary" id="btn-levelup-ok" style="max-width:280px;">Continuar →</button>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getDatabase, ref, onValue, update, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, onValue, update, set, off } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-const firebaseConfig = { apiKey: "AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw", authDomain: "fluentgo-35024.firebaseapp.com", databaseURL: "https://fluentgo-35024-default-rtdb.firebaseio.com", projectId: "fluentgo-35024", appId: "1:613715387990:web:0345ade26374dd32d1fdf7" };
+const firebaseConfig = {
+  apiKey: "AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw",
+  authDomain: "fluentgo-35024.firebaseapp.com",
+  databaseURL: "https://fluentgo-35024-default-rtdb.firebaseio.com",
+  projectId: "fluentgo-35024",
+  appId: "1:613715387990:web:0345ade26374dd32d1fdf7"
+};
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-let user = { username: "Estudante", xp: 0, lvl: 1, task: 1, lang: "English" };
-let currentSelection = [];
-let currentTaskNum = 1;
+// ─── STATE ───────────────────────────────────────────────────────────────
+const DEFAULT_USER = { username: "Estudante", xp: 0, lvl: 1, task: 1, lang: "English", streak: 0, lastPracticeDate: "", streakDays: [] };
+let user = { ...DEFAULT_USER };
+let currentUID = null;
+let currentTaskNum = 0;
 let currentPhrase = {};
+let currentSelection = [];
+let hearts = 3;
+let MAX_HEARTS = 3;
+let rankingRef = null;
+let userRef = null;
 
-// --- GERADOR INFINITO ---
+// ─── AUDIO ───────────────────────────────────────────────────────────────
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+function getAudioCtx() { if (!audioCtx) audioCtx = new AudioCtx(); return audioCtx; }
+
+function playCorrect() {
+  try {
+    const ctx = getAudioCtx();
+    [523, 659, 784].forEach((freq, i) => {
+      const o = ctx.createOscillator(); const g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.frequency.value = freq; o.type = 'sine';
+      const t = ctx.currentTime + i * 0.12;
+      g.gain.setValueAtTime(0.18, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+      o.start(t); o.stop(t + 0.2);
+    });
+  } catch(e) {}
+}
+
+function playWrong() {
+  try {
+    const ctx = getAudioCtx();
+    [220, 180].forEach((freq, i) => {
+      const o = ctx.createOscillator(); const g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.frequency.value = freq; o.type = 'sawtooth';
+      const t = ctx.currentTime + i * 0.15;
+      g.gain.setValueAtTime(0.12, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+      o.start(t); o.stop(t + 0.25);
+    });
+  } catch(e) {}
+}
+
+function playLevelUp() {
+  try {
+    const ctx = getAudioCtx();
+    [523, 659, 784, 1046].forEach((freq, i) => {
+      const o = ctx.createOscillator(); const g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.frequency.value = freq; o.type = 'sine';
+      const t = ctx.currentTime + i * 0.15;
+      g.gain.setValueAtTime(0.2, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+      o.start(t); o.stop(t + 0.3);
+    });
+  } catch(e) {}
+}
+
+// ─── SENTENCE FACTORY ────────────────────────────────────────────────────
 const FACTORY = {
-    subjects: [{pt:"O gato", en:"the cat", es:"el gato", fr:"le chat", it:"il gatto"}, {pt:"O médico", en:"the doctor", es:"el médico", fr:"le médecin", it:"il medico"}, {pt:"A menina", en:"the girl", es:"la niña", fr:"la fille", it:"la ragazza"}],
-    verbs: [{pt:"come", en:"eats", es:"come", fr:"mange", it:"mangia"}, {pt:"bebe", en:"drinks", es:"bebe", fr:"boit", it:"beve"}, {pt:"vê", en:"sees", es:"ve", fr:"voit", it:"vede"}],
-    objects: [{pt:"pão", en:"bread", es:"pan", fr:"du pain", it:"pane"}, {pt:"leite", en:"milk", es:"leche", fr:"du lait", it:"latte"}, {pt:"água", en:"water", es:"agua", fr:"de l'eau", it:"acqua"}]
+  subjects: [
+    {pt:"O gato", en:"The cat", es:"El gato", fr:"Le chat", it:"Il gatto"},
+    {pt:"O médico", en:"The doctor", es:"El médico", fr:"Le médecin", it:"Il medico"},
+    {pt:"A menina", en:"The girl", es:"La niña", fr:"La fille", it:"La ragazza"},
+    {pt:"O homem", en:"The man", es:"El hombre", fr:"L'homme", it:"L'uomo"},
+    {pt:"A mulher", en:"The woman", es:"La mujer", fr:"La femme", it:"La donna"},
+    {pt:"O cachorro", en:"The dog", es:"El perro", fr:"Le chien", it:"Il cane"},
+  ],
+  verbs: [
+    {pt:"come", en:"eats", es:"come", fr:"mange", it:"mangia"},
+    {pt:"bebe", en:"drinks", es:"bebe", fr:"boit", it:"beve"},
+    {pt:"vê", en:"sees", es:"ve", fr:"voit", it:"vede"},
+    {pt:"compra", en:"buys", es:"compra", fr:"achète", it:"compra"},
+    {pt:"tem", en:"has", es:"tiene", fr:"a", it:"ha"},
+  ],
+  objects: [
+    {pt:"pão", en:"bread", es:"pan", fr:"du pain", it:"pane"},
+    {pt:"leite", en:"milk", es:"leche", fr:"du lait", it:"latte"},
+    {pt:"água", en:"water", es:"agua", fr:"de l'eau", it:"acqua"},
+    {pt:"livros", en:"books", es:"libros", fr:"des livres", it:"libri"},
+    {pt:"uma maçã", en:"an apple", es:"una manzana", fr:"une pomme", it:"una mela"},
+  ]
 };
+
+function getLangKey() {
+  return { English: 'en', Spanish: 'es', French: 'fr', Italian: 'it' }[user.lang] || 'en';
+}
 
 function getSentence() {
-    const s = FACTORY.subjects[Math.floor(Math.random()*3)];
-    const v = FACTORY.verbs[Math.floor(Math.random()*3)];
-    const o = FACTORY.objects[Math.floor(Math.random()*3)];
-    const k = user.lang === 'English' ? 'en' : user.lang === 'Spanish' ? 'es' : user.lang === 'French' ? 'fr' : 'it';
-    return { pt: `${s.pt} ${v.pt} ${o.pt}`, target: `${s[k]} ${v[k]} ${o[k]}` };
+  const k = getLangKey();
+  const s = FACTORY.subjects[Math.floor(Math.random() * FACTORY.subjects.length)];
+  const v = FACTORY.verbs[Math.floor(Math.random() * FACTORY.verbs.length)];
+  const o = FACTORY.objects[Math.floor(Math.random() * FACTORY.objects.length)];
+  return { pt: `${s.pt} ${v.pt} ${o.pt}`, target: `${s[k]} ${v[k]} ${o[k]}` };
 }
 
-// --- CORE ---
-onAuthStateChanged(auth, u => {
-    if(u) {
-        onValue(ref(db, 'users/'+u.uid), snap => {
-            if(snap.exists()) { user = {...user, ...snap.val()}; updateUI(); }
-            else { set(ref(db, 'users/'+u.uid), user); }
-            document.getElementById('view-auth').classList.add('hidden');
-            document.getElementById('view-app').classList.remove('hidden');
-        });
-        onValue(ref(db, 'users'), snap => { if(snap.exists()) renderRanking(snap.val()); });
-    } else {
-        document.getElementById('view-app').classList.add('hidden');
-        document.getElementById('view-auth').classList.remove('hidden');
-    }
+// ─── TOAST ───────────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.innerText = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ─── STREAK ──────────────────────────────────────────────────────────────
+function updateStreak() {
+  const today = new Date().toISOString().split('T')[0];
+  const last = user.lastPracticeDate;
+  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+
+  if (last === today) return; // já praticou hoje
+
+  if (last === yesterday) {
+    user.streak = (user.streak || 0) + 1;
+  } else if (last !== today) {
+    user.streak = 1; // reset ou primeiro dia
+  }
+
+  // Atualiza dias da semana
+  const days = user.streakDays || [];
+  if (!days.includes(today)) days.push(today);
+  // Mantém só os últimos 7 dias
+  const cutoff = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
+  user.streakDays = days.filter(d => d >= cutoff);
+  user.lastPracticeDate = today;
+}
+
+function renderStreakRow() {
+  const row = document.getElementById('streak-row');
+  const days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+  const today = new Date();
+  const streakDays = user.streakDays || [];
+
+  row.innerHTML = '';
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    const dateStr = d.toISOString().split('T')[0];
+    const done = streakDays.includes(dateStr);
+    const isToday = i === 0;
+    const div = document.createElement('div');
+    div.className = 'streak-day' + (done ? ' done' : '');
+    div.innerHTML = `<span class="day-icon">${done ? '🔥' : (isToday ? '⭕' : '○')}</span>${days[d.getDay()]}`;
+    row.appendChild(div);
+  }
+}
+
+// ─── HEARTS ──────────────────────────────────────────────────────────────
+function renderHearts() {
+  const container = document.getElementById('hearts-display');
+  container.innerHTML = '';
+  for (let i = 0; i < MAX_HEARTS; i++) {
+    const h = document.createElement('span');
+    h.className = 'heart' + (i >= hearts ? ' lost' : '');
+    h.innerText = '❤️';
+    container.appendChild(h);
+  }
+}
+
+function loseHeart() {
+  hearts--;
+  renderHearts();
+  if (hearts <= 0) {
+    setTimeout(() => {
+      hideFeedback();
+      document.getElementById('view-gameover').classList.remove('hidden');
+    }, 800);
+    return false;
+  }
+  return true;
+}
+
+// ─── UI UPDATE ────────────────────────────────────────────────────────────
+function updateUI() {
+  const xpInLevel = (user.xp % 1000);
+  const xpPct = (xpInLevel / 1000) * 100;
+
+  document.getElementById('ui-lvl').innerText = user.lvl;
+  document.getElementById('ui-lvl-txt').innerText = `Nível ${user.lvl}`;
+  document.getElementById('ui-task').innerText = `Tarefa ${user.task} de 10`;
+  document.getElementById('ui-xp').innerText = user.xp;
+  document.getElementById('ui-streak').innerText = user.streak || 0;
+  document.getElementById('ui-xp-bar').style.width = xpPct + '%';
+  document.getElementById('ui-lvl-stat').innerText = user.lvl;
+  document.getElementById('ui-xp-stat').innerText = user.xp;
+  document.getElementById('ui-profile-name').innerText = user.username;
+  document.getElementById('ui-profile-lang').innerText = user.lang;
+  document.getElementById('ui-avatar').innerText = (user.username || 'E')[0].toUpperCase();
+  document.getElementById('input-username').value = user.username || '';
+
+  // Lang buttons active state
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.innerText.includes(user.lang.substring(0, 3)));
+  });
+
+  renderStreakRow();
+}
+
+// ─── AUTH ─────────────────────────────────────────────────────────────────
+onAuthStateChanged(auth, async (u) => {
+  // Cleanup previous listeners
+  if (userRef) off(userRef);
+  if (rankingRef) off(rankingRef);
+
+  if (u) {
+    currentUID = u.uid;
+    userRef = ref(db, 'users/' + u.uid);
+
+    onValue(userRef, (snap) => {
+      if (snap.exists()) {
+        user = { ...DEFAULT_USER, ...snap.val() };
+      } else {
+        user = { ...DEFAULT_USER };
+        set(ref(db, 'users/' + u.uid), user);
+      }
+      updateUI();
+    });
+
+    rankingRef = ref(db, 'users');
+    onValue(rankingRef, (snap) => {
+      if (snap.exists()) renderRanking(snap.val(), u.uid);
+    });
+
+    document.getElementById('view-auth').classList.add('hidden');
+    document.getElementById('view-app').classList.remove('hidden');
+  } else {
+    currentUID = null;
+    document.getElementById('view-app').classList.add('hidden');
+    document.getElementById('view-auth').classList.remove('hidden');
+  }
 });
 
-function updateUI() {
-    document.getElementById('ui-user-head').innerText = `Olá, ${user.username}`;
-    document.getElementById('ui-xp').innerText = user.xp;
-    document.getElementById('ui-lvl').innerText = user.lvl;
-    document.getElementById('ui-lvl-txt').innerText = `Nível ${user.lvl}`;
-    document.getElementById('ui-task').innerText = `Tarefa ${user.task} de 10`;
-    document.getElementById('ui-lang-tag').innerText = user.lang.substring(0,2).toUpperCase();
-}
+document.getElementById('btn-auth').onclick = async () => {
+  const email = document.getElementById('auth-email').value.trim();
+  const pass = document.getElementById('auth-password').value;
+  const errEl = document.getElementById('auth-error');
+  errEl.innerText = '';
 
-// --- PRÁTICA ---
-document.getElementById('btn-start').onclick = () => {
-    currentTaskNum = 1;
-    document.getElementById('view-practice').classList.remove('hidden');
-    document.getElementById('learning-phase').classList.remove('hidden');
-    document.getElementById('task-phase').classList.add('hidden');
-    
-    let html = "";
-    for(let i=0; i<3; i++){
-        let temp = getSentence();
-        html += `<p style='margin-bottom:10px'><strong>${temp.pt}</strong><br><span style="color:var(--secondary)">${temp.target}</span></p>`;
+  if (!email || !pass) { errEl.innerText = 'Preencha e-mail e senha.'; return; }
+
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch (e) {
+    if (e.code === 'auth/user-not-found' || e.code === 'auth/invalid-credential') {
+      try {
+        await createUserWithEmailAndPassword(auth, email, pass);
+      } catch (e2) {
+        errEl.innerText = 'Erro: ' + (e2.message || 'Tente novamente.');
+      }
+    } else {
+      errEl.innerText = 'Senha incorreta ou e-mail inválido.';
     }
-    document.getElementById('learning-list').innerHTML = html;
+  }
 };
 
+// ─── NAVIGATION ───────────────────────────────────────────────────────────
+const TABS = ['home', 'premium', 'ranking', 'settings'];
+TABS.forEach(t => {
+  document.getElementById('nav-' + t).onclick = () => {
+    TABS.forEach(x => {
+      document.getElementById('tab-' + x).classList.add('hidden');
+      document.getElementById('nav-' + x).classList.remove('active');
+    });
+    document.getElementById('tab-' + t).classList.remove('hidden');
+    document.getElementById('nav-' + t).classList.add('active');
+  };
+});
+
+// ─── PRACTICE ─────────────────────────────────────────────────────────────
+document.getElementById('btn-start').onclick = startPractice;
+document.getElementById('btn-close-practice').onclick = () => {
+  document.getElementById('view-practice').classList.add('hidden');
+  hideFeedback();
+};
+
+function startPractice() {
+  currentTaskNum = 0;
+  hearts = MAX_HEARTS;
+  renderHearts();
+  document.getElementById('view-practice').classList.remove('hidden');
+  document.getElementById('learning-phase').classList.remove('hidden');
+  document.getElementById('task-phase').classList.add('hidden');
+  hideFeedback();
+
+  // Generate 3 example sentences
+  const list = document.getElementById('learning-list');
+  list.innerHTML = '';
+  for (let i = 0; i < 3; i++) {
+    const s = getSentence();
+    const card = document.createElement('div');
+    card.className = 'phrase-card';
+    card.style.animationDelay = (i * 0.1) + 's';
+    card.innerHTML = `<div class="phrase-pt">🇧🇷 ${s.pt}</div><div class="phrase-target">🌍 ${s.target}</div>`;
+    list.appendChild(card);
+  }
+}
+
 document.getElementById('btn-start-tasks').onclick = () => {
-    document.getElementById('learning-phase').classList.add('hidden');
-    document.getElementById('task-phase').classList.remove('hidden');
-    nextTask();
+  document.getElementById('learning-phase').classList.add('hidden');
+  document.getElementById('task-phase').classList.remove('hidden');
+  nextTask();
 };
 
 function nextTask() {
-    currentSelection = [];
-    currentPhrase = getSentence();
-    document.getElementById('q-text').innerText = currentPhrase.pt;
-    document.getElementById('drop-zone').innerHTML = "";
-    document.getElementById('ui-prog').style.width = (currentTaskNum * 10) + "%";
-    
-    const bank = document.getElementById('word-bank'); bank.innerHTML = "";
-    const words = [...currentPhrase.target.split(" "), "a", "is", "the"].sort(() => Math.random() - 0.5);
-    words.forEach(w => {
-        const b = document.createElement('button'); b.className = "chip"; b.innerText = w;
-        b.onclick = () => {
-            const m = new SpeechSynthesisUtterance(w);
-            m.lang = user.lang === 'Spanish' ? 'es-ES' : user.lang === 'French' ? 'fr-FR' : user.lang === 'Italian' ? 'it-IT' : 'en-US';
-            window.speechSynthesis.speak(m);
-            currentSelection.push(w); b.classList.add('used');
-            const s = document.createElement('span'); s.className = "chip"; s.innerText = w;
-            document.getElementById('drop-zone').appendChild(s);
-        };
-        bank.appendChild(b);
-    });
+  currentTaskNum++;
+  currentSelection = [];
+  currentPhrase = getSentence();
+
+  document.getElementById('q-text').innerText = currentPhrase.pt;
+  document.getElementById('drop-zone').innerHTML = '';
+  document.getElementById('drop-zone').classList.remove('has-words');
+  document.getElementById('ui-prog').style.width = ((currentTaskNum - 1) / 10 * 100) + '%';
+
+  // Build word bank with distractors
+  const correctWords = currentPhrase.target.split(' ');
+  const distractors = ['a', 'is', 'the', 'and', 'not', 'very'].filter(w => !correctWords.includes(w)).slice(0, 2);
+  const words = [...correctWords, ...distractors].sort(() => Math.random() - 0.5);
+
+  const bank = document.getElementById('word-bank');
+  bank.innerHTML = '';
+  words.forEach((w, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'chip';
+    btn.innerText = w;
+    btn.dataset.word = w;
+    btn.dataset.idx = idx;
+    btn.style.animationDelay = (idx * 0.05) + 's';
+    btn.onclick = () => selectWord(btn, w);
+    bank.appendChild(btn);
+  });
+}
+
+function selectWord(btn, word) {
+  // Speak word
+  try {
+    const utter = new SpeechSynthesisUtterance(word);
+    const langMap = { English: 'en-US', Spanish: 'es-ES', French: 'fr-FR', Italian: 'it-IT' };
+    utter.lang = langMap[user.lang] || 'en-US';
+    window.speechSynthesis.speak(utter);
+  } catch(e) {}
+
+  // Add to selection
+  currentSelection.push({ word, btnEl: btn });
+  btn.classList.add('used');
+
+  const zone = document.getElementById('drop-zone');
+  zone.classList.add('has-words');
+
+  const chip = document.createElement('span');
+  chip.className = 'chip in-zone';
+  chip.innerText = word;
+  chip.onclick = () => {
+    // Remove from selection
+    const idx = currentSelection.findIndex(s => s.btnEl === btn);
+    if (idx !== -1) currentSelection.splice(idx, 1);
+    btn.classList.remove('used');
+    chip.remove();
+    if (zone.children.length === 0) zone.classList.remove('has-words');
+  };
+  zone.appendChild(chip);
 }
 
 document.getElementById('btn-verify').onclick = () => {
-    const banner = document.getElementById('feedback-banner');
-    if(currentSelection.join(" ") === currentPhrase.target) {
-        banner.className = "show correct-bg"; 
-        banner.style.background = "#065F46";
-        document.getElementById('feedback-msg').innerText = "Excelente!";
-    } else {
-        banner.className = "show wrong-bg";
-        banner.style.background = "#991B1B";
-        document.getElementById('feedback-msg').innerText = "Resposta: " + currentPhrase.target;
-    }
+  if (currentSelection.length === 0) { showToast('Selecione as palavras!'); return; }
+
+  const answer = currentSelection.map(s => s.word).join(' ');
+  const correct = answer === currentPhrase.target;
+
+  showFeedback(correct, currentPhrase.target);
+
+  if (correct) {
+    playCorrect();
+    document.getElementById('ui-prog').style.width = (currentTaskNum / 10 * 100) + '%';
+  } else {
+    playWrong();
+    const alive = loseHeart();
+    if (!alive) return;
+    // Shake drop zone
+    const dz = document.getElementById('drop-zone');
+    dz.classList.add('shake');
+    setTimeout(() => dz.classList.remove('shake'), 400);
+  }
 };
+
+function showFeedback(correct, answer) {
+  const banner = document.getElementById('feedback-banner');
+  const icon = document.getElementById('feedback-icon');
+  const title = document.getElementById('feedback-title');
+  const ans = document.getElementById('feedback-answer');
+  const btnNext = document.getElementById('btn-next');
+
+  if (correct) {
+    banner.className = 'correct show';
+    icon.innerText = '✅';
+    title.className = 'feedback-title feedback-correct';
+    title.innerText = ['Excelente!', 'Perfeito!', 'Muito bem!', 'Arrasou!'][Math.floor(Math.random()*4)];
+    ans.innerText = '';
+    btnNext.className = 'btn btn-success';
+  } else {
+    banner.className = 'wrong show';
+    icon.innerText = '❌';
+    title.className = 'feedback-title feedback-wrong';
+    title.innerText = 'Quase lá!';
+    ans.innerText = 'Correto: ' + answer;
+    btnNext.className = 'btn btn-danger';
+  }
+}
+
+function hideFeedback() {
+  document.getElementById('feedback-banner').className = '';
+}
 
 document.getElementById('btn-next').onclick = async () => {
-    document.getElementById('feedback-banner').classList.remove('show');
-    if(currentTaskNum < 10) { currentTaskNum++; nextTask(); }
-    else {
-        user.xp += 100; user.task = 1; user.lvl++;
-        await update(ref(db, 'users/'+auth.currentUser.uid), user);
-        document.getElementById('view-practice').classList.add('hidden');
+  hideFeedback();
+  if (currentTaskNum < 10) {
+    nextTask();
+  } else {
+    // Lição concluída!
+    updateStreak();
+    user.xp += 100;
+    user.task = (user.task % 10) + 1;
+    const oldLvl = user.lvl;
+    user.lvl = Math.floor(user.xp / 1000) + 1;
+
+    await update(ref(db, 'users/' + currentUID), {
+      xp: user.xp,
+      task: user.task,
+      lvl: user.lvl,
+      streak: user.streak,
+      lastPracticeDate: user.lastPracticeDate,
+      streakDays: user.streakDays || []
+    });
+
+    document.getElementById('view-practice').classList.add('hidden');
+
+    if (user.lvl > oldLvl) {
+      playLevelUp();
+      document.getElementById('levelup-num').innerText = user.lvl;
+      document.getElementById('levelup-xp').innerText = `+100 XP conquistados`;
+      document.getElementById('view-levelup').classList.remove('hidden');
     }
+    updateUI();
+  }
 };
 
-// --- NAVEGAÇÃO ---
-const tabs = ['home', 'premium', 'ranking', 'settings'];
-tabs.forEach(t => { document.getElementById('nav-'+t).onclick = () => {
-    tabs.forEach(x => { document.getElementById('tab-'+x).classList.add('hidden'); document.getElementById('nav-'+x).classList.remove('active'); });
-    document.getElementById('tab-'+t).classList.remove('hidden'); document.getElementById('nav-'+t).classList.add('active');
-};});
+// ─── GAME OVER ────────────────────────────────────────────────────────────
+document.getElementById('btn-retry').onclick = () => {
+  document.getElementById('view-gameover').classList.add('hidden');
+  startPractice();
+};
+document.getElementById('btn-gameover-home').onclick = () => {
+  document.getElementById('view-gameover').classList.add('hidden');
+};
 
-// --- AUTH E AJUSTES ---
-document.getElementById('btn-auth').onclick = async () => {
-    const e = document.getElementById('email').value, p = document.getElementById('password').value;
-    try { await signInWithEmailAndPassword(auth, e, p); } catch { await createUserWithEmailAndPassword(auth,e,p); }
+// ─── LEVEL UP ─────────────────────────────────────────────────────────────
+document.getElementById('btn-levelup-ok').onclick = () => {
+  document.getElementById('view-levelup').classList.add('hidden');
 };
-window.setLang = (l) => update(ref(db, 'users/'+auth.currentUser.uid), {lang: l});
-document.getElementById('btn-save-name').onclick = () => {
-    const n = document.getElementById('input-username').value;
-    if(n) update(ref(db, 'users/'+auth.currentUser.uid), {username: n});
-};
-function renderRanking(all) {
-    const sorted = Object.values(all).sort((a,b) => b.xp - a.xp).slice(0,5);
-    document.getElementById('ranking-list').innerHTML = sorted.map((u, i) => `
-        <div style="display:flex; justify-content:space-between; padding:12px; background:rgba(255,255,255,0.05); border-radius:15px; margin-bottom:5px;">
-            <span>${i+1}º ${u.username}</span><strong>${u.xp} XP</strong>
-        </div>`).join('');
+
+// ─── RANKING ──────────────────────────────────────────────────────────────
+function renderRanking(allUsers, myUID) {
+  const sorted = Object.entries(allUsers)
+    .map(([uid, data]) => ({ uid, ...data }))
+    .sort((a, b) => b.xp - a.xp)
+    .slice(0, 10);
+
+  const colors = ['gold', 'silver', 'bronze'];
+  const medals = ['🥇', '🥈', '🥉'];
+
+  document.getElementById('ranking-list').innerHTML = sorted.map((u, i) => `
+    <div class="rank-item ${u.uid === myUID ? 'rank-self' : ''}" style="animation-delay:${i*0.05}s">
+      <div class="rank-pos ${colors[i] || ''}">${medals[i] || (i+1) + 'º'}</div>
+      <div class="rank-avatar">${(u.username || 'E')[0].toUpperCase()}</div>
+      <div class="rank-name">${u.username || 'Estudante'}${u.uid === myUID ? ' 👈' : ''}</div>
+      <div class="rank-xp">${u.xp} XP</div>
+    </div>
+  `).join('');
 }
-document.getElementById('btn-logout').onclick = () => signOut(auth).then(() => location.reload());
+
+// ─── SETTINGS ─────────────────────────────────────────────────────────────
+document.getElementById('btn-save-name').onclick = async () => {
+  const name = document.getElementById('input-username').value.trim();
+  if (!name) { showToast('Digite um nome!'); return; }
+  user.username = name;
+  await update(ref(db, 'users/' + currentUID), { username: name });
+  showToast('Nome salvo! ✓');
+  updateUI();
+};
+
+window.setLang = async (lang) => {
+  user.lang = lang;
+  await update(ref(db, 'users/' + currentUID), { lang });
+  updateUI();
+  showToast(`Idioma: ${lang} ✓`);
+};
+
+document.getElementById('btn-logout').onclick = () => {
+  if (userRef) off(userRef);
+  if (rankingRef) off(rankingRef);
+  signOut(auth).then(() => location.reload());
+};
 </script>
 </body>
 </html>
