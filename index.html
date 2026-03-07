@@ -9,664 +9,319 @@
 :root {
   --primary: #3B82F6;
   --primary-dark: #1D4ED8;
-  --secondary: #10B981;
-  --secondary-dark: #059669;
-  --bg: #080E1A;
-  --bg2: #0D1625;
-  --card: #111827;
-  --card2: #1A2436;
-  --border: #1E2D45;
-  --text: #F1F5F9;
-  --text2: #94A3B8;
-  --gold: #F59E0B;
-  --gold-dark: #D97706;
-  --error: #EF4444;
-  --error-dark: #B91C1C;
-  --correct: #10B981;
-  --heart: #F43F5E;
-  --purple: #8B5CF6;
-  --purple-dark: #6D28D9;
+  --primary-light: #60A5FA;
+  --blue: #1CB0F6;
+  --blue-dark: #0096D6;
+  --yellow: #FFD900;
+  --yellow-dark: #C09800;
+  --red: #FF4B4B;
+  --red-dark: #CC0000;
+  --orange: #FF9600;
+  --purple: #CE82FF;
+  --bg: #131F2E;
+  --bg2: #1A2B3C;
+  --card: #1E3347;
+  --card2: #243D54;
+  --border: #2A4A6B;
+  --text: #FFFFFF;
+  --text2: #7BA7C2;
+  --text3: #4A7A9B;
 }
-
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
 html, body { height: 100%; overflow: hidden; }
 body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; display: flex; flex-direction: column; }
-
-/* SCROLLBAR */
 ::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-
-/* HIDDEN */
 .hidden { display: none !important; }
 
-/* AUTH VIEW */
+/* ─── AUTH ─── */
 #view-auth {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 30px 24px;
-  background: var(--bg);
-  position: relative;
-  overflow: hidden;
+  flex: 1; display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  padding: 30px 24px; position: relative; overflow: hidden;
 }
-#view-auth::before {
-  content: '';
-  position: absolute;
-  width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
-  top: -100px; left: -100px;
-  pointer-events: none;
-}
-#view-auth::after {
-  content: '';
-  position: absolute;
-  width: 400px; height: 400px;
-  background: radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%);
-  bottom: -100px; right: -100px;
-  pointer-events: none;
-}
-.auth-logo {
-  font-family: 'Syne', sans-serif;
-  font-size: 42px;
-  font-weight: 800;
-  letter-spacing: -1px;
-  margin-bottom: 8px;
-}
-.auth-logo span { color: var(--primary); }
-.auth-sub { color: var(--text2); font-size: 14px; margin-bottom: 40px; }
-.auth-box { width: 100%; max-width: 360px; }
-.input-group { margin-bottom: 12px; }
-.input-group label { display: block; font-size: 11px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-.input-field {
-  width: 100%;
-  padding: 14px 16px;
-  border-radius: 14px;
-  background: var(--card);
-  color: var(--text);
-  border: 1.5px solid var(--border);
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 15px;
-  transition: border-color 0.2s;
-  outline: none;
-}
-.input-field:focus { border-color: var(--primary); }
-.auth-error { color: var(--error); font-size: 12px; margin-bottom: 10px; min-height: 16px; text-align: center; }
+#view-auth::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 30% 20%, rgba(59,130,246,0.08), transparent 60%), radial-gradient(ellipse at 70% 80%, rgba(28,176,246,0.06), transparent 60%); pointer-events:none; }
+.auth-logo { font-family:'Syne',sans-serif; font-size:48px; font-weight:800; margin-bottom:6px; }
+.auth-logo span { color:var(--primary); }
+.auth-sub { color:var(--text2); font-size:15px; margin-bottom:44px; }
+.input-field { width:100%; padding:15px 18px; border-radius:16px; background:var(--card); color:var(--text); border:2px solid var(--border); font-family:'Space Grotesk',sans-serif; font-size:16px; outline:none; transition:border-color 0.2s; margin-bottom:12px; }
+.input-field:focus { border-color:var(--blue); }
+.auth-error { color:var(--red); font-size:13px; text-align:center; min-height:18px; margin-bottom:10px; }
 
-/* APP VIEW */
-#view-app {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
+/* ─── BUTTONS ─── */
+.btn { padding:16px; border-radius:16px; border:none; font-weight:800; cursor:pointer; width:100%; font-size:15px; letter-spacing:0.3px; transition:transform 0.1s, box-shadow 0.1s; font-family:'Space Grotesk',sans-serif; }
+.btn:active { transform:translateY(3px) !important; }
+.btn-green { background:var(--primary); color:#fff; box-shadow:0 5px 0 var(--primary-dark); }
+.btn-green:active { box-shadow:0 1px 0 var(--primary-dark); }
+.btn-blue { background:var(--blue); color:#fff; box-shadow:0 5px 0 var(--blue-dark); }
+.btn-blue:active { box-shadow:0 1px 0 var(--blue-dark); }
+.btn-red { background:var(--red); color:#fff; box-shadow:0 5px 0 var(--red-dark); }
+.btn-red:active { box-shadow:0 1px 0 var(--red-dark); }
+.btn-ghost { background:transparent; color:var(--text2); border:2px solid var(--border); box-shadow:none; }
+.btn-ghost:active { background:var(--card); }
+.btn-yellow { background:var(--yellow); color:#333; box-shadow:0 5px 0 var(--yellow-dark); }
+.btn-yellow:active { box-shadow:0 1px 0 var(--yellow-dark); }
 
-/* HEADER */
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 20px;
-  background: var(--bg2);
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-  gap: 12px;
-}
-.header-logo {
-  font-family: 'Syne', sans-serif;
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-}
-.header-logo span { color: var(--primary); }
-.header-stats { display: flex; align-items: center; gap: 14px; }
-.stat-pill {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 700;
-}
-.stat-pill .icon { font-size: 14px; }
+/* ─── APP ─── */
+#view-app { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+header { display:flex; justify-content:space-between; align-items:center; padding:14px 20px; background:var(--bg2); border-bottom:1px solid var(--border); flex-shrink:0; }
+.hlogo { font-family:'Syne',sans-serif; font-size:20px; font-weight:800; }
+.hlogo span { color:var(--primary); }
+.hstats { display:flex; gap:12px; }
+.hstat { display:flex; align-items:center; gap:5px; font-size:14px; font-weight:700; }
+.hstat .si { font-size:18px; }
 
-/* TABS */
-.tab-content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px 16px 90px;
-  max-width: 500px;
-  margin: 0 auto;
-  width: 100%;
-}
+nav { position:fixed; bottom:0; left:0; right:0; background:var(--bg2); display:flex; border-top:1px solid var(--border); z-index:100; height:68px; }
+.ni { display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1; cursor:pointer; opacity:0.35; gap:2px; transition:opacity 0.2s; position:relative; }
+.ni.active { opacity:1; }
+.ni.active::after { content:''; position:absolute; top:0; left:50%; transform:translateX(-50%); width:28px; height:3px; background:var(--primary); border-radius:0 0 6px 6px; }
+.ni-icon { font-size:22px; }
+.ni-label { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
 
-/* NAV */
-nav {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  background: var(--bg2);
-  display: flex;
-  justify-content: space-around;
-  border-top: 1px solid var(--border);
-  z-index: 100;
-  height: 70px;
-  padding-bottom: env(safe-area-inset-bottom, 0);
-}
-.nav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  cursor: pointer;
-  opacity: 0.35;
-  flex: 1;
-  transition: opacity 0.2s;
-  gap: 3px;
-  position: relative;
-}
-.nav-item.active { opacity: 1; }
-.nav-item.active::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 50%; transform: translateX(-50%);
-  width: 30px; height: 2px;
-  background: var(--primary);
-  border-radius: 0 0 4px 4px;
-}
-.nav-label { font-size: 9px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+.tab { flex:1; overflow-y:auto; padding:20px 16px 90px; max-width:520px; margin:0 auto; width:100%; }
 
-/* CARDS */
-.card {
-  background: var(--card);
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  padding: 22px;
-  margin-bottom: 14px;
-}
-.card-title {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--primary);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 14px;
-}
+/* ─── TRILHA (HOME) ─── */
+.unit-block { margin-bottom:28px; }
+.unit-header { background:var(--card); border-radius:18px; padding:16px 20px; margin-bottom:16px; border:1px solid var(--border); display:flex; align-items:center; gap:14px; }
+.unit-icon { font-size:28px; width:52px; height:52px; background:var(--card2); border-radius:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.unit-title { font-family:'Syne',sans-serif; font-size:16px; font-weight:800; margin-bottom:3px; }
+.unit-sub { font-size:12px; color:var(--text2); }
+.unit-progress { height:6px; background:var(--card2); border-radius:6px; overflow:hidden; margin-top:8px; }
+.unit-progress-fill { height:100%; background:var(--primary); border-radius:6px; transition:width 0.5s; }
 
-/* BUTTONS */
-.btn {
-  padding: 15px;
-  border-radius: 16px;
-  border: none;
-  font-weight: 800;
-  cursor: pointer;
-  width: 100%;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  transition: transform 0.15s, box-shadow 0.15s;
-  font-family: 'Space Grotesk', sans-serif;
+/* NÓS DA TRILHA */
+.trail { display:flex; flex-direction:column; align-items:center; gap:10px; padding:0 10px; }
+.trail-row { display:flex; justify-content:center; gap:12px; width:100%; }
+.lesson-node {
+  width:68px; height:68px; border-radius:50%; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; cursor:pointer; position:relative;
+  transition:transform 0.15s; font-size:24px; flex-shrink:0;
+  border: none; font-family:'Space Grotesk',sans-serif;
 }
-.btn:active { transform: translateY(2px) !important; }
-.btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 0 var(--primary-dark); }
-.btn-primary:active { box-shadow: 0 1px 0 var(--primary-dark); }
-.btn-success { background: var(--correct); color: white; box-shadow: 0 4px 0 var(--secondary-dark); }
-.btn-success:active { box-shadow: 0 1px 0 var(--secondary-dark); }
-.btn-danger { background: var(--error); color: white; box-shadow: 0 4px 0 var(--error-dark); }
-.btn-danger:active { box-shadow: 0 1px 0 var(--error-dark); }
-.btn-purple { background: var(--purple); color: white; box-shadow: 0 4px 0 var(--purple-dark); }
-.btn-purple:active { box-shadow: 0 1px 0 var(--purple-dark); }
-.btn-ghost { background: var(--card2); color: var(--text); border: 1px solid var(--border); box-shadow: none; }
+.lesson-node:active { transform:scale(0.92); }
+.lesson-node.done { background:var(--primary); box-shadow:0 5px 0 var(--primary-dark); color:#fff; }
+.lesson-node.active { background:var(--blue); box-shadow:0 5px 0 var(--blue-dark); color:#fff; animation:pulse 2s infinite; }
+.lesson-node.locked { background:var(--card2); box-shadow:0 5px 0 var(--bg); color:var(--text3); cursor:not-allowed; }
+.lesson-node.boss { width:78px; height:78px; font-size:30px; }
+.lesson-node.boss.done { background:linear-gradient(135deg, var(--yellow), var(--orange)); box-shadow:0 5px 0 var(--yellow-dark); }
+.lesson-node.boss.active { background:linear-gradient(135deg, var(--yellow), var(--orange)); box-shadow:0 5px 0 var(--yellow-dark); animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{box-shadow:0 5px 0 var(--blue-dark), 0 0 0 0 rgba(28,176,246,0.4);} 50%{box-shadow:0 5px 0 var(--blue-dark), 0 0 0 10px rgba(28,176,246,0);} }
+.node-stars { font-size:10px; letter-spacing:-1px; margin-top:1px; }
+.node-badge { position:absolute; top:-4px; right:-4px; background:var(--yellow); color:#333; border-radius:10px; font-size:9px; font-weight:800; padding:2px 5px; }
 
-/* HOME TAB */
-.level-hero {
-  text-align: center;
-  padding: 30px 20px;
-  background: var(--card);
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  margin-bottom: 14px;
-  position: relative;
-  overflow: hidden;
-}
-.level-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 50% 0%, rgba(59,130,246,0.08) 0%, transparent 60%);
-  pointer-events: none;
-}
-.level-number {
-  font-family: 'Syne', sans-serif;
-  font-size: 72px;
-  font-weight: 800;
-  color: var(--gold);
-  line-height: 1;
-  margin-bottom: 4px;
-}
-.level-label { font-size: 13px; color: var(--text2); font-weight: 600; margin-bottom: 6px; }
-.level-task { font-size: 12px; color: var(--text2); margin-bottom: 24px; }
-.xp-bar-wrap { background: var(--card2); border-radius: 10px; height: 8px; overflow: hidden; margin-bottom: 24px; }
-.xp-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--purple)); border-radius: 10px; transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1); }
-
-/* STREAKS */
-.streak-row { display: flex; gap: 8px; justify-content: center; margin-bottom: 14px; }
-.streak-day {
-  flex: 1;
-  padding: 10px 6px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  text-align: center;
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--text2);
-  transition: all 0.3s;
-}
-.streak-day.done { background: #052E16; border-color: #065F46; color: var(--secondary); }
-.streak-day .day-icon { font-size: 18px; display: block; margin-bottom: 3px; }
-
-/* PRACTICE VIEW */
+/* ─── PRÁTICA ─── */
 #view-practice {
-  position: fixed;
-  inset: 0;
-  background: var(--bg);
-  z-index: 500;
-  display: flex;
-  flex-direction: column;
-  animation: slideUp 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  position:fixed; inset:0; background:var(--bg); z-index:500;
+  display:flex; flex-direction:column;
+  animation:slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
 }
-@keyframes slideUp {
-  from { transform: translateY(100%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
+@keyframes slideUp { from{transform:translateY(40px);opacity:0;} to{transform:translateY(0);opacity:1;} }
+.prac-header { display:flex; align-items:center; padding:16px 20px; gap:12px; flex-shrink:0; }
+.btn-x { width:40px; height:40px; border-radius:12px; background:var(--card); border:2px solid var(--border); color:var(--text2); font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:'Space Grotesk',sans-serif; font-weight:800; transition:background 0.15s; }
+.btn-x:hover { background:var(--card2); }
+.prog-wrap { flex:1; background:var(--card2); border-radius:10px; height:14px; overflow:hidden; border:2px solid var(--border); }
+.prog-fill { height:100%; background:linear-gradient(90deg,var(--primary),var(--primary-light)); border-radius:8px; transition:width 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+.hearts { display:flex; gap:2px; flex-shrink:0; }
+.heart { font-size:22px; transition:all 0.3s; }
+.heart.lost { filter:grayscale(1); opacity:0.2; transform:scale(0.8); }
 
-.practice-header {
-  display: flex;
-  align-items: center;
-  padding: 16px 20px;
-  gap: 14px;
-  flex-shrink: 0;
-}
-.btn-close {
-  background: var(--card);
-  border: 1px solid var(--border);
-  color: var(--text2);
-  width: 38px; height: 38px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  cursor: pointer;
-  flex-shrink: 0;
-  box-shadow: none;
-  padding: 0;
-}
-.progress-bar-wrap { flex: 1; background: var(--card2); border-radius: 10px; height: 10px; overflow: hidden; }
-.progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--purple)); border-radius: 10px; transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1); }
-.hearts-display { display: flex; gap: 3px; flex-shrink: 0; }
-.heart { font-size: 20px; transition: all 0.3s; }
-.heart.lost { filter: grayscale(1); opacity: 0.2; transform: scale(0.8); }
+.prac-body { flex:1; overflow-y:auto; display:flex; flex-direction:column; padding:10px 20px 160px; max-width:520px; margin:0 auto; width:100%; }
 
-.practice-body {
-  flex: 1;
-  overflow-y: auto;
-  padding: 10px 20px 20px;
-  max-width: 500px;
-  margin: 0 auto;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
+/* TIPOS DE EXERCÍCIO */
+.ex-label { font-size:12px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+.ex-question { font-family:'Syne',sans-serif; font-size:24px; font-weight:800; line-height:1.3; margin-bottom:20px; }
+.ex-question.small { font-size:19px; }
 
-/* LEARNING PHASE */
-#learning-phase { flex: 1; display: flex; flex-direction: column; gap: 14px; }
-.phrase-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 16px 18px;
-  animation: fadeInUp 0.4s ease both;
-}
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.phrase-pt { font-size: 15px; color: var(--text2); margin-bottom: 5px; }
-.phrase-target { font-size: 18px; font-weight: 700; color: var(--text); }
+/* Tradução montagem */
+.drop-zone { min-height:80px; background:var(--card); border:2px solid var(--border); border-radius:18px; display:flex; flex-wrap:wrap; align-content:flex-start; gap:8px; padding:14px; margin-bottom:14px; transition:border-color 0.2s; }
+.drop-zone.active { border-color:var(--blue); }
+.word-bank { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:16px; }
+.wchip { background:var(--card); border:2px solid var(--border); border-bottom:4px solid var(--border); color:var(--text); border-radius:12px; padding:10px 14px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Space Grotesk',sans-serif; transition:all 0.1s; animation:popIn 0.2s cubic-bezier(0.34,1.56,0.64,1) both; }
+.wchip:active { transform:scale(0.94); border-bottom-width:1px; }
+.wchip.used { opacity:0.15; pointer-events:none; border-bottom-width:2px; }
+.wchip.placed { background:var(--card2); border-color:var(--blue); border-bottom-color:var(--blue-dark); cursor:pointer; }
+@keyframes popIn { from{opacity:0;transform:scale(0.6);} to{opacity:1;transform:scale(1);} }
 
-/* TASK PHASE */
-#task-phase { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-.task-label { font-size: 11px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; text-align: center; margin-bottom: 10px; }
-.task-question {
-  font-family: 'Syne', sans-serif;
-  font-size: 26px;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 24px;
-  line-height: 1.3;
-}
-.drop-zone {
-  min-height: 90px;
-  border: 2px dashed var(--border);
-  border-radius: 18px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 14px;
-  margin-bottom: 16px;
-  transition: border-color 0.3s;
-  background: var(--card);
-}
-.drop-zone.has-words { border-color: var(--primary); border-style: solid; }
-.word-bank { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 20px; }
-.chip {
-  background: var(--card2);
-  padding: 11px 16px;
-  border-radius: 12px;
-  font-weight: 700;
-  font-size: 14px;
-  border: 1.5px solid var(--border);
-  box-shadow: 0 3px 0 #000;
-  cursor: pointer;
-  transition: all 0.15s;
-  font-family: 'Space Grotesk', sans-serif;
-  animation: popIn 0.25s cubic-bezier(0.34,1.56,0.64,1) both;
-}
-@keyframes popIn {
-  from { opacity: 0; transform: scale(0.7); }
-  to { opacity: 1; transform: scale(1); }
-}
-.chip:active { transform: scale(0.93); }
-.chip.used { opacity: 0.15; pointer-events: none; box-shadow: none; }
-.chip.in-zone {
-  background: var(--bg2);
-  border-color: var(--primary);
-  cursor: pointer;
-}
-.chip.in-zone:active { transform: scale(0.93); }
+/* Múltipla escolha */
+.mc-grid { display:flex; flex-direction:column; gap:10px; margin-bottom:16px; }
+.mc-opt { background:var(--card); border:2px solid var(--border); border-bottom:4px solid var(--border); border-radius:16px; padding:16px 18px; cursor:pointer; font-size:16px; font-weight:600; text-align:left; font-family:'Space Grotesk',sans-serif; color:var(--text); transition:all 0.15s; display:flex; align-items:center; gap:12px; }
+.mc-opt:active { transform:scale(0.98); }
+.mc-opt.selected { background:rgba(28,176,246,0.1); border-color:var(--blue); border-bottom-color:var(--blue-dark); }
+.mc-opt.correct { background:rgba(59,130,246,0.1); border-color:var(--primary); border-bottom-color:var(--primary-dark); }
+.mc-opt.wrong { background:rgba(255,75,75,0.1); border-color:var(--red); border-bottom-color:var(--red-dark); }
+.mc-opt-icon { width:32px; height:32px; border-radius:8px; background:var(--card2); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
 
-/* FEEDBACK BANNER */
-#feedback-banner {
-  position: fixed;
-  bottom: -160px;
-  left: 0; right: 0;
-  padding: 22px 20px;
-  transition: bottom 0.4s cubic-bezier(0.34,1.56,0.64,1);
-  z-index: 600;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-}
-#feedback-banner.show { bottom: 0; }
-#feedback-banner.correct { background: #052E16; border-top: 2px solid #065F46; }
-#feedback-banner.wrong { background: #450A0A; border-top: 2px solid #7F1D1D; }
-.feedback-left { flex: 1; }
-.feedback-icon { font-size: 24px; margin-bottom: 4px; }
-.feedback-title { font-weight: 800; font-size: 16px; margin-bottom: 2px; }
-.feedback-correct { color: var(--correct); }
-.feedback-wrong { color: var(--error); }
-.feedback-answer { font-size: 13px; color: var(--text2); }
-#btn-next { width: auto; padding: 14px 24px; flex-shrink: 0; }
+/* Pares (match) */
+.match-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+.match-item { background:var(--card); border:2px solid var(--border); border-bottom:4px solid var(--border); border-radius:14px; padding:14px 10px; cursor:pointer; font-size:14px; font-weight:700; text-align:center; font-family:'Space Grotesk',sans-serif; color:var(--text); transition:all 0.15s; }
+.match-item:active { transform:scale(0.96); }
+.match-item.selected { background:rgba(28,176,246,0.1); border-color:var(--blue); border-bottom-color:var(--blue-dark); }
+.match-item.matched { background:rgba(59,130,246,0.1); border-color:var(--primary); border-bottom-color:var(--primary-dark); opacity:0.5; pointer-events:none; }
+.match-item.wrong { background:rgba(255,75,75,0.1); border-color:var(--red); animation:shake 0.3s ease; }
 
-/* GAME OVER */
+/* Preencher lacuna */
+.fill-sentence { font-size:20px; font-weight:700; line-height:1.6; margin-bottom:20px; text-align:center; }
+.fill-blank { display:inline-block; min-width:100px; border-bottom:3px solid var(--blue); color:var(--blue); padding:0 6px; font-weight:800; }
+.fill-options { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:16px; }
+.fill-opt { background:var(--card); border:2px solid var(--border); border-bottom:4px solid var(--border); border-radius:14px; padding:12px 20px; cursor:pointer; font-size:15px; font-weight:700; font-family:'Space Grotesk',sans-serif; color:var(--text); transition:all 0.15s; }
+.fill-opt:active { transform:scale(0.95); }
+.fill-opt.selected { background:rgba(28,176,246,0.1); border-color:var(--blue); }
+.fill-opt.correct { background:rgba(59,130,246,0.1); border-color:var(--primary); }
+.fill-opt.wrong { background:rgba(255,75,75,0.1); border-color:var(--red); }
+
+/* Ouça e escreva */
+.listen-box { display:flex; flex-direction:column; align-items:center; gap:16px; margin-bottom:24px; }
+.btn-listen { width:90px; height:90px; border-radius:50%; background:var(--blue); box-shadow:0 6px 0 var(--blue-dark); border:none; font-size:36px; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; justify-content:center; }
+.btn-listen:active { transform:translateY(4px); box-shadow:0 2px 0 var(--blue-dark); }
+.btn-listen.playing { animation:wave 0.6s ease infinite alternate; }
+@keyframes wave { from{transform:scale(1);} to{transform:scale(1.08);} }
+.type-input { width:100%; padding:16px; background:var(--card); border:2px solid var(--border); border-radius:16px; color:var(--text); font-family:'Space Grotesk',sans-serif; font-size:17px; outline:none; transition:border-color 0.2s; }
+.type-input:focus { border-color:var(--blue); }
+.type-input.correct-input { border-color:var(--primary); background:rgba(59,130,246,0.05); }
+.type-input.wrong-input { border-color:var(--red); background:rgba(255,75,75,0.05); }
+
+/* ─── FEEDBACK ─── */
+#feedback { position:fixed; bottom:-180px; left:0; right:0; padding:24px 20px 28px; z-index:600; transition:bottom 0.4s cubic-bezier(0.34,1.56,0.64,1); display:flex; justify-content:space-between; align-items:center; gap:16px; }
+#feedback.show { bottom:0; }
+#feedback.correct { background:#0D1E3D; border-top:2px solid #1D4ED8; }
+#feedback.wrong { background:#3D0B0B; border-top:2px solid #6B1A1A; }
+.fb-left { flex:1; }
+.fb-icon { font-size:28px; margin-bottom:4px; }
+.fb-title { font-family:'Syne',sans-serif; font-size:18px; font-weight:800; margin-bottom:3px; }
+.fb-title.c { color:var(--primary); }
+.fb-title.w { color:var(--red); }
+.fb-answer { font-size:13px; color:var(--text2); }
+#btn-next { width:auto; min-width:120px; padding:14px 24px; }
+
+/* ─── TELA DE RESULTADO ─── */
+#view-result {
+  position:fixed; inset:0; background:var(--bg); z-index:700;
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  text-align:center; padding:30px;
+  animation:fadeIn 0.4s ease;
+}
+@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+.result-stars { font-size:48px; letter-spacing:6px; margin-bottom:20px; animation:bounceIn 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.2s both; }
+.result-title { font-family:'Syne',sans-serif; font-size:32px; font-weight:800; margin-bottom:8px; animation:bounceIn 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.3s both; }
+.result-subtitle { color:var(--text2); font-size:15px; margin-bottom:32px; animation:bounceIn 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.4s both; }
+.result-stats { display:flex; gap:16px; margin-bottom:36px; animation:bounceIn 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.5s both; }
+.rstat { background:var(--card); border:2px solid var(--border); border-radius:18px; padding:16px 22px; text-align:center; }
+.rstat-val { font-family:'Syne',sans-serif; font-size:28px; font-weight:800; }
+.rstat-val.xp { color:var(--yellow); }
+.rstat-val.acc { color:var(--primary); }
+.rstat-val.streak { color:var(--orange); }
+.rstat-label { font-size:11px; color:var(--text2); font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-top:4px; }
+.result-btns { display:flex; flex-direction:column; gap:10px; width:100%; max-width:320px; animation:bounceIn 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.6s both; }
+@keyframes bounceIn { from{opacity:0;transform:scale(0.5);} to{opacity:1;transform:scale(1);} }
+
+/* ─── GAME OVER ─── */
 #view-gameover {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.85);
-  z-index: 700;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 30px;
-  backdrop-filter: blur(6px);
+  position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:700;
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  text-align:center; padding:30px; backdrop-filter:blur(8px);
 }
-.gameover-icon { font-size: 64px; margin-bottom: 16px; }
-.gameover-title { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; margin-bottom: 8px; }
-.gameover-sub { color: var(--text2); font-size: 14px; margin-bottom: 32px; }
+.go-icon { font-size:80px; margin-bottom:16px; animation:shake 0.5s ease 0.2s; }
+.go-title { font-family:'Syne',sans-serif; font-size:30px; font-weight:800; margin-bottom:8px; color:var(--red); }
+.go-sub { color:var(--text2); font-size:14px; margin-bottom:32px; max-width:260px; }
 
-/* LEVEL UP */
-#view-levelup {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.9);
-  z-index: 700;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 30px;
-  backdrop-filter: blur(6px);
-  animation: fadeIn 0.4s ease;
-}
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-.levelup-number { font-family: 'Syne', sans-serif; font-size: 96px; font-weight: 800; color: var(--gold); line-height: 1; animation: bounceIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.2s both; }
-@keyframes bounceIn { from { opacity:0; transform: scale(0.3); } to { opacity:1; transform: scale(1); } }
-.levelup-stars { font-size: 36px; letter-spacing: 8px; margin: 10px 0; animation: bounceIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.4s both; }
-.levelup-title { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; margin-bottom: 6px; animation: bounceIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.5s both; }
-.levelup-xp { color: var(--gold); font-weight: 700; font-size: 15px; margin-bottom: 32px; animation: bounceIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.6s both; }
+/* ─── RANKING ─── */
+.rank-item { display:flex; align-items:center; gap:14px; padding:14px 16px; background:var(--card); border:1px solid var(--border); border-radius:18px; margin-bottom:8px; }
+.rank-pos { font-family:'Syne',sans-serif; font-size:20px; font-weight:800; width:32px; text-align:center; }
+.rank-avatar { width:42px; height:42px; border-radius:14px; background:linear-gradient(135deg,var(--blue),var(--purple)); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:800; flex-shrink:0; }
+.rank-name { flex:1; font-weight:700; font-size:15px; }
+.rank-xp { font-weight:800; font-size:13px; color:var(--primary); }
+.rank-self { border-color:var(--blue); background:rgba(28,176,246,0.06); }
 
-/* RANKING */
-.rank-item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 14px 16px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  margin-bottom: 8px;
-  transition: all 0.2s;
-  animation: fadeInUp 0.3s ease both;
-}
-.rank-pos { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; width: 28px; text-align: center; color: var(--text2); }
-.rank-pos.gold { color: #F59E0B; }
-.rank-pos.silver { color: #94A3B8; }
-.rank-pos.bronze { color: #C27803; }
-.rank-avatar { width: 38px; height: 38px; border-radius: 12px; background: linear-gradient(135deg, var(--primary), var(--purple)); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px; flex-shrink: 0; }
-.rank-name { flex: 1; font-weight: 700; font-size: 14px; }
-.rank-xp { font-weight: 800; font-size: 13px; color: var(--secondary); }
-.rank-self { border-color: var(--primary); background: rgba(59,130,246,0.06); }
+/* ─── SETTINGS ─── */
+.scard { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:22px; margin-bottom:14px; }
+.slabel { font-size:11px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; display:block; }
+.lang-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.lang-btn { padding:14px; border-radius:14px; background:var(--card2); border:2px solid var(--border); color:var(--text); font-weight:700; font-size:13px; cursor:pointer; font-family:'Space Grotesk',sans-serif; transition:all 0.2s; }
+.lang-btn.active { background:rgba(59,130,246,0.1); border-color:var(--primary); color:var(--primary); }
+.lang-btn:active { transform:scale(0.96); }
+.profile-av { width:72px; height:72px; border-radius:20px; background:linear-gradient(135deg,var(--blue),var(--purple)); display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:800; margin:0 auto 14px; }
+.divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
 
-/* PREMIUM */
-.premium-hero {
-  background: linear-gradient(135deg, #1E1040 0%, #2D1B69 100%);
-  border: 1px solid #4C1D95;
-  border-radius: 20px;
-  padding: 24px;
-  margin-bottom: 14px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-.premium-hero::before {
-  content: '';
-  position: absolute;
-  width: 300px; height: 300px;
-  background: radial-gradient(circle, rgba(139,92,246,0.2) 0%, transparent 70%);
-  top: -100px; left: 50%; transform: translateX(-50%);
-}
-.premium-badge { display: inline-block; background: rgba(139,92,246,0.3); border: 1px solid rgba(139,92,246,0.5); padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 700; color: #C4B5FD; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px; }
-.premium-price { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; color: white; }
-.premium-price small { font-size: 14px; color: rgba(255,255,255,0.6); font-family: 'Space Grotesk', sans-serif; font-weight: 400; }
-.feature-list { text-align: left; }
-.feature-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 14px; font-weight: 600; }
-.feature-item:last-child { border-bottom: none; }
-.feature-icon { font-size: 20px; width: 32px; text-align: center; }
+/* ─── TOAST ─── */
+#toast { position:fixed; top:80px; left:50%; transform:translateX(-50%) translateY(-10px); background:var(--card2); border:1px solid var(--border); color:var(--text); padding:10px 20px; border-radius:20px; font-size:13px; font-weight:700; z-index:999; opacity:0; transition:all 0.3s; white-space:nowrap; pointer-events:none; }
+#toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
-/* SETTINGS */
-.setting-label { font-size: 11px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
-.lang-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.lang-btn {
-  padding: 14px;
-  border-radius: 14px;
-  background: var(--card2);
-  border: 1.5px solid var(--border);
-  color: var(--text);
-  font-weight: 700;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-family: 'Space Grotesk', sans-serif;
-  text-align: center;
-}
-.lang-btn.active { background: rgba(59,130,246,0.12); border-color: var(--primary); color: var(--primary); }
-.lang-btn:active { transform: scale(0.96); }
-.profile-avatar {
-  width: 64px; height: 64px;
-  border-radius: 18px;
-  background: linear-gradient(135deg, var(--primary), var(--purple));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 26px;
-  font-weight: 800;
-  margin: 0 auto 14px;
-}
+/* ─── STREAK DIAS ─── */
+.streak-days { display:flex; gap:6px; justify-content:center; }
+.sd { flex:1; background:var(--card2); border:1px solid var(--border); border-radius:12px; padding:8px 4px; text-align:center; font-size:10px; font-weight:700; color:var(--text2); }
+.sd.done { background:#0D1E3D; border-color:#1D4ED8; color:var(--primary); }
+.sd-icon { font-size:18px; display:block; margin-bottom:3px; }
 
-/* TOAST */
-#toast {
-  position: fixed;
-  top: 80px;
-  left: 50%; transform: translateX(-50%) translateY(-20px);
-  background: var(--card2);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 10px 20px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 700;
-  z-index: 999;
-  opacity: 0;
-  transition: all 0.3s;
-  white-space: nowrap;
-}
-#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+/* ANIMAÇÕES */
+@keyframes shake { 0%,100%{transform:translateX(0);} 20%{transform:translateX(-8px);} 40%{transform:translateX(8px);} 60%{transform:translateX(-5px);} 80%{transform:translateX(5px);} }
+.shake { animation:shake 0.35s ease; }
+@keyframes correctPop { 0%{transform:scale(1);} 50%{transform:scale(1.2);} 100%{transform:scale(1);} }
+.correct-pop { animation:correctPop 0.3s ease; }
 
-/* SHAKE ANIMATION */
-@keyframes shake {
-  0%,100% { transform: translateX(0); }
-  20% { transform: translateX(-8px); }
-  40% { transform: translateX(8px); }
-  60% { transform: translateX(-6px); }
-  80% { transform: translateX(6px); }
-}
-.shake { animation: shake 0.4s ease; }
+/* MISC */
+.section-title { font-family:'Syne',sans-serif; font-size:13px; font-weight:800; color:var(--text2); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+.xp-bar { height:8px; background:var(--card2); border-radius:8px; overflow:hidden; margin-top:8px; }
+.xp-fill { height:100%; background:linear-gradient(90deg,var(--primary),var(--primary-light)); border-radius:8px; transition:width 0.6s; }
 </style>
 </head>
 <body>
 
-<!-- AUTH -->
-<div id="view-auth" style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:30px 24px; background:var(--bg); position:relative; overflow:hidden;">
-  <div style="position:absolute;inset:0;background:radial-gradient(circle at 30% 20%, rgba(59,130,246,0.1) 0%, transparent 50%);pointer-events:none;"></div>
-  <div style="position:absolute;inset:0;background:radial-gradient(circle at 70% 80%, rgba(139,92,246,0.08) 0%, transparent 50%);pointer-events:none;"></div>
-  <div style="font-family:'Syne',sans-serif;font-size:44px;font-weight:800;letter-spacing:-1px;margin-bottom:6px;">FLUENT<span style="color:var(--primary)">GO</span></div>
-  <div style="color:var(--text2);font-size:14px;margin-bottom:40px;">Aprenda idiomas de verdade.</div>
+<!-- ═══════════════ AUTH ═══════════════ -->
+<div id="view-auth" style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:30px 24px;">
+  <div class="auth-logo">FLUENT<span>GO</span></div>
+  <div class="auth-sub">Aprenda idiomas de verdade 🌍</div>
   <div style="width:100%;max-width:360px;">
-    <div class="input-group"><label>E-mail</label><input type="email" id="auth-email" class="input-field" placeholder="seu@email.com"></div>
-    <div class="input-group"><label>Senha</label><input type="password" id="auth-password" class="input-field" placeholder="••••••••"></div>
+    <input type="email" id="auth-email" class="input-field" placeholder="E-mail">
+    <input type="password" id="auth-password" class="input-field" placeholder="Senha (mín. 6 caracteres)">
     <div id="auth-error" class="auth-error"></div>
-    <button id="btn-auth" class="btn btn-primary">Entrar / Cadastrar</button>
+    <button id="btn-auth" class="btn btn-green">Entrar / Cadastrar</button>
   </div>
 </div>
 
-<!-- APP -->
+<!-- ═══════════════ APP ═══════════════ -->
 <div id="view-app" class="hidden" style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
   <header>
-    <div class="header-logo">FLUENT<span>GO</span></div>
-    <div class="header-stats">
-      <div class="stat-pill"><span class="icon">🔥</span><span id="ui-streak">0</span></div>
-      <div class="stat-pill"><span class="icon">⚡</span><span id="ui-xp">0</span></div>
+    <div class="hlogo">FLUENT<span>GO</span></div>
+    <div class="hstats">
+      <div class="hstat"><span class="si">🔥</span><span id="h-streak">0</span></div>
+      <div class="hstat"><span class="si">❤️</span><span id="h-hearts">5</span></div>
+      <div class="hstat"><span class="si">⚡</span><span id="h-xp">0</span></div>
     </div>
   </header>
 
-  <!-- HOME -->
-  <div id="tab-home" class="tab-content">
-    <div class="level-hero">
-      <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Seu Nível</div>
-      <div class="level-number" id="ui-lvl">1</div>
-      <div class="level-label" id="ui-lvl-txt">Nível 1</div>
-      <div class="level-task" id="ui-task">Tarefa 1 de 10</div>
-      <div class="xp-bar-wrap"><div class="xp-bar-fill" id="ui-xp-bar" style="width:0%"></div></div>
-      <button id="btn-start" class="btn btn-primary">🎯 Praticar Agora</button>
-    </div>
-
-    <!-- STREAK SEMANAL -->
-    <div class="card">
-      <div class="card-title">🔥 Sequência Semanal</div>
-      <div class="streak-row" id="streak-row"></div>
-    </div>
-
-    <!-- STATS -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <div class="card" style="text-align:center;margin-bottom:0;padding:18px;">
-        <div style="font-size:28px;font-weight:800;color:var(--gold)" id="ui-lvl-stat">1</div>
-        <div style="font-size:11px;color:var(--text2);font-weight:600;margin-top:4px;">NÍVEL</div>
-      </div>
-      <div class="card" style="text-align:center;margin-bottom:0;padding:18px;">
-        <div style="font-size:28px;font-weight:800;color:var(--secondary)" id="ui-xp-stat">0</div>
-        <div style="font-size:11px;color:var(--text2);font-weight:600;margin-top:4px;">XP TOTAL</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PREMIUM -->
-  <div id="tab-premium" class="tab-content hidden">
-    <div class="premium-hero">
-      <div class="premium-badge">💎 Premium</div>
-      <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:6px;">Desbloqueie tudo</div>
-      <div style="color:rgba(255,255,255,0.7);font-size:13px;margin-bottom:20px;">Aprenda sem limites com o plano Premium</div>
-      <div class="premium-price">R$ 14,90<small>/mês</small></div>
-      <div style="color:rgba(255,255,255,0.5);font-size:12px;margin-bottom:20px;">Cancele quando quiser</div>
-      <button class="btn btn-purple" onclick="alert('Redirecionando para pagamento...')">Assinar Agora</button>
-    </div>
-    <div class="card feature-list">
-      <div class="card-title">O que você recebe</div>
-      <div class="feature-item"><span class="feature-icon">🔥</span><span>Ofensiva Protegida — salva seu streak</span></div>
-      <div class="feature-item"><span class="feature-icon">❤️</span><span>Vidas Infinitas — erre sem punição</span></div>
-      <div class="feature-item"><span class="feature-icon">📶</span><span>Lições Offline — aprenda sem internet</span></div>
-      <div class="feature-item"><span class="feature-icon">💎</span><span>Selo Premium no Perfil</span></div>
-      <div class="feature-item"><span class="feature-icon">🏆</span><span>Liga Exclusiva no Ranking</span></div>
-    </div>
+  <!-- HOME: TRILHA -->
+  <div id="tab-home" class="tab">
+    <div class="section-title" style="margin-bottom:16px;">📚 Trilha de Aprendizado</div>
+    <div id="trail-container"></div>
   </div>
 
   <!-- RANKING -->
-  <div id="tab-ranking" class="tab-content hidden">
+  <div id="tab-ranking" class="tab hidden">
     <div style="text-align:center;margin-bottom:20px;">
-      <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;">🏆 Ranking Global</div>
-      <div style="font-size:13px;color:var(--text2);margin-top:4px;">Top jogadores da semana</div>
+      <div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;">🏆 Ranking</div>
+      <div style="font-size:13px;color:var(--text2);margin-top:4px;">Melhores da semana</div>
     </div>
     <div id="ranking-list"></div>
   </div>
 
   <!-- SETTINGS -->
-  <div id="tab-settings" class="tab-content hidden">
-    <div class="card" style="text-align:center;">
-      <div class="profile-avatar" id="ui-avatar">?</div>
-      <div style="font-weight:800;font-size:18px;" id="ui-profile-name">Estudante</div>
-      <div style="font-size:12px;color:var(--text2);margin-top:4px;" id="ui-profile-lang">English</div>
+  <div id="tab-settings" class="tab hidden">
+    <div class="scard" style="text-align:center;">
+      <div class="profile-av" id="ui-avatar">?</div>
+      <div style="font-weight:800;font-size:20px;" id="ui-pname">Estudante</div>
+      <div style="font-size:13px;color:var(--text2);margin-top:4px;" id="ui-plang">English</div>
+      <div class="xp-bar" style="margin-top:14px;"><div class="xp-fill" id="ui-xpbar" style="width:0%"></div></div>
+      <div style="font-size:12px;color:var(--text2);margin-top:6px;"><span id="ui-pxp">0</span> XP • Nível <span id="ui-plvl">1</span></div>
     </div>
 
-    <div class="card">
-      <div class="setting-label">👤 Nome de Usuário</div>
-      <input type="text" id="input-username" class="input-field" placeholder="Seu nome" style="margin-bottom:12px;">
-      <button id="btn-save-name" class="btn btn-primary" style="padding:12px;font-size:12px;">Salvar Nome</button>
+    <div class="scard">
+      <span class="slabel">👤 Seu nome</span>
+      <input type="text" id="input-uname" class="input-field" placeholder="Como quer ser chamado?">
+      <button id="btn-savename" class="btn btn-green" style="padding:12px;font-size:13px;">Salvar</button>
     </div>
 
-    <div class="card">
-      <div class="setting-label" style="margin-bottom:12px;">🌍 Idioma para Aprender</div>
+    <div class="scard">
+      <span class="slabel">🌍 Idioma para aprender</span>
       <div class="lang-grid" id="lang-grid">
         <button class="lang-btn" onclick="setLang('English')">🇺🇸 English</button>
         <button class="lang-btn" onclick="setLang('Spanish')">🇪🇸 Español</button>
@@ -675,82 +330,70 @@ nav {
       </div>
     </div>
 
-    <button id="btn-logout" class="btn btn-danger" style="font-size:13px;">Sair da Conta</button>
+    <div class="scard">
+      <span class="slabel">🔥 Sequência Semanal</span>
+      <div class="streak-days" id="streak-days"></div>
+    </div>
+
+    <button id="btn-logout" class="btn btn-ghost" style="margin-top:4px;">Sair da conta</button>
   </div>
 
   <nav>
-    <div class="nav-item active" id="nav-home">🏠<span class="nav-label">Home</span></div>
-    <div class="nav-item" id="nav-premium">💎<span class="nav-label">Premium</span></div>
-    <div class="nav-item" id="nav-ranking">🏆<span class="nav-label">Ranking</span></div>
-    <div class="nav-item" id="nav-settings">⚙️<span class="nav-label">Ajustes</span></div>
+    <div class="ni active" id="ni-home"><span class="ni-icon">🏠</span><span class="ni-label">Aprender</span></div>
+    <div class="ni" id="ni-ranking"><span class="ni-icon">🏆</span><span class="ni-label">Ranking</span></div>
+    <div class="ni" id="ni-settings"><span class="ni-icon">⚙️</span><span class="ni-label">Perfil</span></div>
   </nav>
 </div>
 
-<!-- PRACTICE VIEW -->
+<!-- ═══════════════ PRÁTICA ═══════════════ -->
 <div id="view-practice" class="hidden">
-  <div class="practice-header">
-    <button class="btn btn-close" id="btn-close-practice">✕</button>
-    <div class="progress-bar-wrap">
-      <div class="progress-bar-fill" id="ui-prog" style="width:0%"></div>
-    </div>
-    <div class="hearts-display" id="hearts-display"></div>
+  <div class="prac-header">
+    <button class="btn-x" id="btn-close">✕</button>
+    <div class="prog-wrap"><div class="prog-fill" id="prog" style="width:0%"></div></div>
+    <div class="hearts" id="hearts"></div>
   </div>
-  <div class="practice-body">
-
-    <!-- LEARNING PHASE -->
-    <div id="learning-phase" style="flex:1;display:flex;flex-direction:column;gap:14px;">
-      <div style="text-align:center;padding:10px 0;">
-        <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:6px;">Estude estas frases</div>
-        <div style="font-size:13px;color:var(--text2);">Memorize antes de praticar</div>
-      </div>
-      <div id="learning-list"></div>
-      <button id="btn-start-tasks" class="btn btn-primary" style="margin-top:auto;">Começar Tarefas →</button>
-    </div>
-
-    <!-- TASK PHASE -->
-    <div id="task-phase" class="hidden" style="flex:1;display:flex;flex-direction:column;justify-content:center;">
-      <div class="task-label" id="task-label">Monte a tradução</div>
-      <div class="task-question" id="q-text"></div>
-      <div class="drop-zone" id="drop-zone"></div>
-      <div class="word-bank" id="word-bank"></div>
-      <button id="btn-verify" class="btn btn-primary">Verificar</button>
-    </div>
-
+  <div class="prac-body" id="prac-body">
+    <!-- conteúdo gerado dinamicamente -->
   </div>
 </div>
 
-<!-- FEEDBACK BANNER -->
-<div id="feedback-banner">
-  <div class="feedback-left">
-    <div class="feedback-icon" id="feedback-icon"></div>
-    <div class="feedback-title" id="feedback-title"></div>
-    <div class="feedback-answer" id="feedback-answer"></div>
+<!-- ═══════════════ FEEDBACK ═══════════════ -->
+<div id="feedback">
+  <div class="fb-left">
+    <div class="fb-icon" id="fb-icon"></div>
+    <div class="fb-title" id="fb-title"></div>
+    <div class="fb-answer" id="fb-answer"></div>
   </div>
-  <button id="btn-next" class="btn btn-success">Próximo</button>
+  <button id="btn-next" class="btn btn-green">Continuar</button>
 </div>
 
-<!-- GAME OVER -->
+<!-- ═══════════════ RESULTADO ═══════════════ -->
+<div id="view-result" class="hidden">
+  <div class="result-stars" id="res-stars">⭐⭐⭐</div>
+  <div class="result-title" id="res-title">Lição Completa!</div>
+  <div class="result-subtitle" id="res-sub">Você arrasou nessa lição</div>
+  <div class="result-stats">
+    <div class="rstat"><div class="rstat-val xp" id="res-xp">+0</div><div class="rstat-label">XP</div></div>
+    <div class="rstat"><div class="rstat-val acc" id="res-acc">100%</div><div class="rstat-label">Acertos</div></div>
+    <div class="rstat"><div class="rstat-val streak" id="res-streak">0</div><div class="rstat-label">🔥 Streak</div></div>
+  </div>
+  <div class="result-btns">
+    <button class="btn btn-green" id="btn-res-continue">Continuar</button>
+    <button class="btn btn-ghost" id="btn-res-replay">Repetir lição</button>
+  </div>
+</div>
+
+<!-- ═══════════════ GAME OVER ═══════════════ -->
 <div id="view-gameover" class="hidden">
-  <div class="gameover-icon">💔</div>
-  <div class="gameover-title">Suas vidas acabaram!</div>
-  <div class="gameover-sub" style="max-width:260px;">Não desista! Tente novamente e complete a lição.</div>
-  <div style="width:100%;max-width:300px;display:flex;flex-direction:column;gap:10px;">
-    <button class="btn btn-primary" id="btn-retry">Tentar Novamente</button>
-    <button class="btn btn-ghost" id="btn-gameover-home">Ir para Home</button>
+  <div class="go-icon">💔</div>
+  <div class="go-title">Suas vidas acabaram!</div>
+  <div class="go-sub">Não desanime — pratique novamente para completar a lição.</div>
+  <div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:300px;">
+    <button class="btn btn-green" id="btn-go-retry">Tentar novamente</button>
+    <button class="btn btn-ghost" id="btn-go-home">Ir para a trilha</button>
   </div>
 </div>
 
-<!-- LEVEL UP -->
-<div id="view-levelup" class="hidden">
-  <div style="font-size:14px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;">Nível</div>
-  <div class="levelup-number" id="levelup-num">2</div>
-  <div class="levelup-stars">⭐⭐⭐</div>
-  <div class="levelup-title">Você subiu de nível!</div>
-  <div class="levelup-xp" id="levelup-xp">+100 XP conquistados</div>
-  <button class="btn btn-primary" id="btn-levelup-ok" style="max-width:280px;">Continuar →</button>
-</div>
-
-<!-- TOAST -->
 <div id="toast"></div>
 
 <script type="module">
@@ -758,521 +401,1030 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getDatabase, ref, onValue, update, set, off } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw",
-  authDomain: "fluentgo-35024.firebaseapp.com",
-  databaseURL: "https://fluentgo-35024-default-rtdb.firebaseio.com",
-  projectId: "fluentgo-35024",
-  appId: "1:613715387990:web:0345ade26374dd32d1fdf7"
+const FB = { apiKey:"AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw", authDomain:"fluentgo-35024.firebaseapp.com", databaseURL:"https://fluentgo-35024-default-rtdb.firebaseio.com", projectId:"fluentgo-35024", appId:"1:613715387990:web:0345ade26374dd32d1fdf7" };
+const fbApp = initializeApp(FB);
+const auth = getAuth(fbApp);
+const db = getDatabase(fbApp);
+
+// ═══════════════════════════════════════════════════════════
+//  DADOS DO CURSO — Unidades e Lições
+// ═══════════════════════════════════════════════════════════
+const COURSE = {
+  English: [
+    {
+      id:'u1', title:'Apresentações', icon:'👋', color:'#1CB0F6',
+      lessons:[
+        { id:'u1l1', title:'Olá!', xp:10, exercises: () => makeExercises('en','greetings') },
+        { id:'u1l2', title:'Quem sou eu', xp:10, exercises: () => makeExercises('en','identity') },
+        { id:'u1l3', title:'Família', xp:10, exercises: () => makeExercises('en','family') },
+        { id:'u1l4', title:'Revisão', xp:15, boss:true, exercises: () => makeBossExercises('en',['greetings','identity','family']) },
+      ]
+    },
+    {
+      id:'u2', title:'Vida Cotidiana', icon:'🏠', color:'#3B82F6',
+      lessons:[
+        { id:'u2l1', title:'Em casa', xp:10, exercises: () => makeExercises('en','home') },
+        { id:'u2l2', title:'Comida', xp:10, exercises: () => makeExercises('en','food') },
+        { id:'u2l3', title:'Rotina', xp:10, exercises: () => makeExercises('en','routine') },
+        { id:'u2l4', title:'Revisão', xp:15, boss:true, exercises: () => makeBossExercises('en',['home','food','routine']) },
+      ]
+    },
+    {
+      id:'u3', title:'Viagem', icon:'✈️', color:'#FF9600',
+      lessons:[
+        { id:'u3l1', title:'No aeroporto', xp:10, exercises: () => makeExercises('en','travel') },
+        { id:'u3l2', title:'Hotel', xp:10, exercises: () => makeExercises('en','hotel') },
+        { id:'u3l3', title:'Transporte', xp:10, exercises: () => makeExercises('en','transport') },
+        { id:'u3l4', title:'Revisão', xp:15, boss:true, exercises: () => makeBossExercises('en',['travel','hotel','transport']) },
+      ]
+    },
+  ],
+  Spanish: [
+    {
+      id:'u1', title:'Presentaciones', icon:'👋', color:'#1CB0F6',
+      lessons:[
+        { id:'u1l1', title:'¡Hola!', xp:10, exercises: () => makeExercises('es','greetings') },
+        { id:'u1l2', title:'Identidad', xp:10, exercises: () => makeExercises('es','identity') },
+        { id:'u1l3', title:'Familia', xp:10, exercises: () => makeExercises('es','family') },
+        { id:'u1l4', title:'Revisión', xp:15, boss:true, exercises: () => makeBossExercises('es',['greetings','identity','family']) },
+      ]
+    },
+    {
+      id:'u2', title:'Vida Diaria', icon:'🏠', color:'#3B82F6',
+      lessons:[
+        { id:'u2l1', title:'En casa', xp:10, exercises: () => makeExercises('es','home') },
+        { id:'u2l2', title:'Comida', xp:10, exercises: () => makeExercises('es','food') },
+        { id:'u2l3', title:'Rutina', xp:10, exercises: () => makeExercises('es','routine') },
+        { id:'u2l4', title:'Revisión', xp:15, boss:true, exercises: () => makeBossExercises('es',['home','food','routine']) },
+      ]
+    },
+  ],
+  French: [
+    {
+      id:'u1', title:'Présentations', icon:'👋', color:'#1CB0F6',
+      lessons:[
+        { id:'u1l1', title:'Bonjour!', xp:10, exercises: () => makeExercises('fr','greetings') },
+        { id:'u1l2', title:'Identité', xp:10, exercises: () => makeExercises('fr','identity') },
+        { id:'u1l3', title:'Famille', xp:10, exercises: () => makeExercises('fr','family') },
+        { id:'u1l4', title:'Révision', xp:15, boss:true, exercises: () => makeBossExercises('fr',['greetings','identity','family']) },
+      ]
+    },
+    {
+      id:'u2', title:'Vie Quotidienne', icon:'🏠', color:'#3B82F6',
+      lessons:[
+        { id:'u2l1', title:'À la maison', xp:10, exercises: () => makeExercises('fr','home') },
+        { id:'u2l2', title:'Nourriture', xp:10, exercises: () => makeExercises('fr','food') },
+        { id:'u2l3', title:'Routine', xp:10, exercises: () => makeExercises('fr','routine') },
+        { id:'u2l4', title:'Révision', xp:15, boss:true, exercises: () => makeBossExercises('fr',['home','food','routine']) },
+      ]
+    },
+  ],
+  Italian: [
+    {
+      id:'u1', title:'Presentazioni', icon:'👋', color:'#1CB0F6',
+      lessons:[
+        { id:'u1l1', title:'Ciao!', xp:10, exercises: () => makeExercises('it','greetings') },
+        { id:'u1l2', title:'Identità', xp:10, exercises: () => makeExercises('it','identity') },
+        { id:'u1l3', title:'Famiglia', xp:10, exercises: () => makeExercises('it','family') },
+        { id:'u1l4', title:'Revisione', xp:15, boss:true, exercises: () => makeBossExercises('it',['greetings','identity','family']) },
+      ]
+    },
+    {
+      id:'u2', title:'Vita Quotidiana', icon:'🏠', color:'#3B82F6',
+      lessons:[
+        { id:'u2l1', title:'A casa', xp:10, exercises: () => makeExercises('it','home') },
+        { id:'u2l2', title:'Cibo', xp:10, exercises: () => makeExercises('it','food') },
+        { id:'u2l3', title:'Routine', xp:10, exercises: () => makeExercises('it','routine') },
+        { id:'u2l4', title:'Revisione', xp:15, boss:true, exercises: () => makeBossExercises('it',['home','food','routine']) },
+      ]
+    },
+  ],
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getDatabase(app);
-
-// ─── STATE ───────────────────────────────────────────────────────────────
-const DEFAULT_USER = { username: "Estudante", xp: 0, lvl: 1, task: 1, lang: "English", streak: 0, lastPracticeDate: "", streakDays: [] };
-let user = { ...DEFAULT_USER };
-let currentUID = null;
-let currentTaskNum = 0;
-let currentPhrase = {};
-let currentSelection = [];
-let hearts = 3;
-let MAX_HEARTS = 3;
-let rankingRef = null;
-let userRef = null;
-
-// ─── AUDIO ───────────────────────────────────────────────────────────────
-const AudioCtx = window.AudioContext || window.webkitAudioContext;
-let audioCtx = null;
-function getAudioCtx() { if (!audioCtx) audioCtx = new AudioCtx(); return audioCtx; }
-
-function playCorrect() {
-  try {
-    const ctx = getAudioCtx();
-    [523, 659, 784].forEach((freq, i) => {
-      const o = ctx.createOscillator(); const g = ctx.createGain();
-      o.connect(g); g.connect(ctx.destination);
-      o.frequency.value = freq; o.type = 'sine';
-      const t = ctx.currentTime + i * 0.12;
-      g.gain.setValueAtTime(0.18, t);
-      g.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
-      o.start(t); o.stop(t + 0.2);
-    });
-  } catch(e) {}
-}
-
-function playWrong() {
-  try {
-    const ctx = getAudioCtx();
-    [220, 180].forEach((freq, i) => {
-      const o = ctx.createOscillator(); const g = ctx.createGain();
-      o.connect(g); g.connect(ctx.destination);
-      o.frequency.value = freq; o.type = 'sawtooth';
-      const t = ctx.currentTime + i * 0.15;
-      g.gain.setValueAtTime(0.12, t);
-      g.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
-      o.start(t); o.stop(t + 0.25);
-    });
-  } catch(e) {}
-}
-
-function playLevelUp() {
-  try {
-    const ctx = getAudioCtx();
-    [523, 659, 784, 1046].forEach((freq, i) => {
-      const o = ctx.createOscillator(); const g = ctx.createGain();
-      o.connect(g); g.connect(ctx.destination);
-      o.frequency.value = freq; o.type = 'sine';
-      const t = ctx.currentTime + i * 0.15;
-      g.gain.setValueAtTime(0.2, t);
-      g.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
-      o.start(t); o.stop(t + 0.3);
-    });
-  } catch(e) {}
-}
-
-// ─── SENTENCE FACTORY ────────────────────────────────────────────────────
-const FACTORY = {
-  subjects: [
-    {pt:"O gato", en:"The cat", es:"El gato", fr:"Le chat", it:"Il gatto"},
-    {pt:"O médico", en:"The doctor", es:"El médico", fr:"Le médecin", it:"Il medico"},
-    {pt:"A menina", en:"The girl", es:"La niña", fr:"La fille", it:"La ragazza"},
-    {pt:"O homem", en:"The man", es:"El hombre", fr:"L'homme", it:"L'uomo"},
-    {pt:"A mulher", en:"The woman", es:"La mujer", fr:"La femme", it:"La donna"},
-    {pt:"O cachorro", en:"The dog", es:"El perro", fr:"Le chien", it:"Il cane"},
-  ],
-  verbs: [
-    {pt:"come", en:"eats", es:"come", fr:"mange", it:"mangia"},
-    {pt:"bebe", en:"drinks", es:"bebe", fr:"boit", it:"beve"},
-    {pt:"vê", en:"sees", es:"ve", fr:"voit", it:"vede"},
-    {pt:"compra", en:"buys", es:"compra", fr:"achète", it:"compra"},
-    {pt:"tem", en:"has", es:"tiene", fr:"a", it:"ha"},
-  ],
-  objects: [
-    {pt:"pão", en:"bread", es:"pan", fr:"du pain", it:"pane"},
-    {pt:"leite", en:"milk", es:"leche", fr:"du lait", it:"latte"},
-    {pt:"água", en:"water", es:"agua", fr:"de l'eau", it:"acqua"},
-    {pt:"livros", en:"books", es:"libros", fr:"des livres", it:"libri"},
-    {pt:"uma maçã", en:"an apple", es:"una manzana", fr:"une pomme", it:"una mela"},
-  ]
+// ═══════════════════════════════════════════════════════════
+//  BANCO DE FRASES POR TEMA E IDIOMA
+// ═══════════════════════════════════════════════════════════
+const PHRASES = {
+  en: {
+    greetings:[
+      {pt:'Olá, tudo bem?', target:'Hello, how are you?', words:['Hello','how','are','you','is','the']},
+      {pt:'Bom dia!', target:'Good morning!', words:['Good','morning','night','day','afternoon']},
+      {pt:'Boa noite, até amanhã.', target:'Good night, see you tomorrow.', words:['Good','night','see','you','tomorrow','morning','bye']},
+      {pt:'Prazer em te conhecer.', target:'Nice to meet you.', words:['Nice','to','meet','you','see','know']},
+      {pt:'Tchau, até logo!', target:'Bye, see you soon!', words:['Bye','see','you','soon','later','night']},
+    ],
+    identity:[
+      {pt:'Meu nome é João.', target:'My name is John.', words:['My','name','is','John','am','I','the']},
+      {pt:'Eu tenho vinte anos.', target:'I am twenty years old.', words:['I','am','twenty','years','old','have','is']},
+      {pt:'Eu sou brasileiro.', target:'I am Brazilian.', words:['I','am','Brazilian','from','is','a']},
+      {pt:'Eu falo português.', target:'I speak Portuguese.', words:['I','speak','Portuguese','English','know','can']},
+      {pt:'Onde você mora?', target:'Where do you live?', words:['Where','do','you','live','are','come','from']},
+    ],
+    family:[
+      {pt:'Ela é minha mãe.', target:'She is my mother.', words:['She','is','my','mother','father','his','her']},
+      {pt:'Eu tenho dois irmãos.', target:'I have two brothers.', words:['I','have','two','brothers','sisters','three','one']},
+      {pt:'Meu pai trabalha muito.', target:'My father works a lot.', words:['My','father','works','a','lot','mother','hard']},
+      {pt:'Nós somos uma família.', target:'We are a family.', words:['We','are','a','family','one','big','happy']},
+      {pt:'Minha irmã é professora.', target:'My sister is a teacher.', words:['My','sister','is','a','teacher','brother','doctor']},
+    ],
+    home:[
+      {pt:'A casa é grande.', target:'The house is big.', words:['The','house','is','big','small','a','my']},
+      {pt:'A cozinha fica no andar de baixo.', target:'The kitchen is downstairs.', words:['The','kitchen','is','downstairs','upstairs','bathroom','bedroom']},
+      {pt:'Eu durmo no meu quarto.', target:'I sleep in my bedroom.', words:['I','sleep','in','my','bedroom','bathroom','kitchen']},
+      {pt:'O cachorro está no jardim.', target:'The dog is in the garden.', words:['The','dog','is','in','the','garden','house','cat']},
+      {pt:'Nós vivemos perto do parque.', target:'We live near the park.', words:['We','live','near','the','park','school','far','from']},
+    ],
+    food:[
+      {pt:'Eu gosto de maçã.', target:'I like apples.', words:['I','like','apples','oranges','love','eat','bananas']},
+      {pt:'O café da manhã está pronto.', target:'Breakfast is ready.', words:['Breakfast','is','ready','lunch','dinner','not','almost']},
+      {pt:'Ela bebe leite toda manhã.', target:'She drinks milk every morning.', words:['She','drinks','milk','every','morning','coffee','water','night']},
+      {pt:'Eu quero um copo de água.', target:'I want a glass of water.', words:['I','want','a','glass','of','water','juice','milk']},
+      {pt:'O restaurante serve pizza.', target:'The restaurant serves pizza.', words:['The','restaurant','serves','pizza','pasta','salad','soup']},
+    ],
+    routine:[
+      {pt:'Eu acordo cedo toda manhã.', target:'I wake up early every morning.', words:['I','wake','up','early','every','morning','late','afternoon']},
+      {pt:'Ela vai ao trabalho de ônibus.', target:'She goes to work by bus.', words:['She','goes','to','work','by','bus','car','train']},
+      {pt:'Nós jantamos às sete horas.', target:'We have dinner at seven.', words:['We','have','dinner','at','seven','lunch','breakfast','six']},
+      {pt:'Ele lê antes de dormir.', target:'He reads before sleeping.', words:['He','reads','before','sleeping','eating','waking','after','up']},
+      {pt:'Eu me exercito três vezes por semana.', target:'I exercise three times a week.', words:['I','exercise','three','times','a','week','day','month','two']},
+    ],
+    travel:[
+      {pt:'Eu preciso do meu passaporte.', target:'I need my passport.', words:['I','need','my','passport','ticket','bag','visa']},
+      {pt:'Onde fica o portão de embarque?', target:'Where is the boarding gate?', words:['Where','is','the','boarding','gate','departure','lounge','exit']},
+      {pt:'Minha bagagem está perdida.', target:'My luggage is lost.', words:['My','luggage','is','lost','delayed','found','heavy','passport']},
+      {pt:'Quando parte o próximo voo?', target:'When does the next flight leave?', words:['When','does','the','next','flight','leave','arrive','bus']},
+      {pt:'Eu tenho um bilhete de ida e volta.', target:'I have a round trip ticket.', words:['I','have','a','round','trip','ticket','one','way','return']},
+    ],
+    hotel:[
+      {pt:'Eu tenho uma reserva.', target:'I have a reservation.', words:['I','have','a','reservation','booking','room','key','card']},
+      {pt:'Qual é o horário do check-out?', target:'What is the check-out time?', words:['What','is','the','check-out','time','check-in','room','service']},
+      {pt:'O quarto tem vista para o mar.', target:'The room has a sea view.', words:['The','room','has','a','sea','view','city','pool','garden']},
+      {pt:'Eu preciso de mais toalhas.', target:'I need more towels.', words:['I','need','more','towels','pillows','soap','blankets','hangers']},
+      {pt:'O café da manhã está incluído?', target:'Is breakfast included?', words:['Is','breakfast','included','dinner','parking','wifi','pool','free']},
+    ],
+    transport:[
+      {pt:'Onde fica a estação de metrô?', target:'Where is the subway station?', words:['Where','is','the','subway','station','bus','stop','train']},
+      {pt:'Quanto custa uma passagem?', target:'How much does a ticket cost?', words:['How','much','does','a','ticket','cost','ride','trip','fare']},
+      {pt:'Eu quero alugar um carro.', target:'I want to rent a car.', words:['I','want','to','rent','a','car','bike','bus','taxi']},
+      {pt:'O trem está atrasado.', target:'The train is delayed.', words:['The','train','is','delayed','canceled','on','time','bus','flight']},
+      {pt:'Pode me levar ao hotel?', target:'Can you take me to the hotel?', words:['Can','you','take','me','to','the','hotel','airport','station']},
+    ],
+  },
+  es: {
+    greetings:[
+      {pt:'Olá, tudo bem?', target:'¡Hola, cómo estás?', words:['¡Hola','cómo','estás','eres','qué','tal','bien']},
+      {pt:'Bom dia!', target:'¡Buenos días!', words:['¡Buenos','días','tardes','noches','dia','mañana']},
+      {pt:'Prazer em te conhecer.', target:'Mucho gusto en conocerte.', words:['Mucho','gusto','en','conocerte','verte','hablar','placer']},
+      {pt:'Tchau, até logo!', target:'¡Adiós, hasta luego!', words:['¡Adiós','hasta','luego','pronto','mañana','tarde','bye']},
+      {pt:'Boa noite!', target:'¡Buenas noches!', words:['¡Buenas','noches','tardes','días','noche','tarde']},
+    ],
+    identity:[
+      {pt:'Meu nome é Ana.', target:'Mi nombre es Ana.', words:['Mi','nombre','es','Ana','soy','llamo','me']},
+      {pt:'Eu sou mexicano.', target:'Soy mexicano.', words:['Soy','mexicano','española','brasileño','de','soy','muy']},
+      {pt:'Eu tenho trinta anos.', target:'Tengo treinta años.', words:['Tengo','treinta','años','veinte','cuarenta','soy','tiene']},
+      {pt:'Eu falo espanhol.', target:'Hablo español.', words:['Hablo','español','inglés','francés','bien','mal','poco']},
+      {pt:'Onde você mora?', target:'¿Dónde vives?', words:['¿Dónde','vives','trabajas','estudias','estás','vas','comes']},
+    ],
+    family:[
+      {pt:'Ela é minha mãe.', target:'Ella es mi madre.', words:['Ella','es','mi','madre','padre','hermana','él','su']},
+      {pt:'Eu tenho dois irmãos.', target:'Tengo dos hermanos.', words:['Tengo','dos','hermanos','hermanas','hijos','tres','uno']},
+      {pt:'Meu pai trabalha muito.', target:'Mi padre trabaja mucho.', words:['Mi','padre','trabaja','mucho','madre','poco','duro','bien']},
+      {pt:'Nós somos uma família.', target:'Somos una familia.', words:['Somos','una','familia','unida','grande','feliz','pequeña']},
+      {pt:'Minha irmã é médica.', target:'Mi hermana es médica.', words:['Mi','hermana','es','médica','profesora','doctora','enfermera']},
+    ],
+    home:[
+      {pt:'A casa é grande.', target:'La casa es grande.', words:['La','casa','es','grande','pequeña','bonita','mi','tu']},
+      {pt:'Eu durmo no meu quarto.', target:'Duermo en mi habitación.', words:['Duermo','en','mi','habitación','cocina','baño','sala','jardín']},
+      {pt:'O cachorro está no jardim.', target:'El perro está en el jardín.', words:['El','perro','está','en','el','jardín','gato','parque','casa']},
+      {pt:'A cozinha é moderna.', target:'La cocina es moderna.', words:['La','cocina','es','moderna','nueva','grande','pequeña','antigua']},
+      {pt:'Nós vivemos perto do parque.', target:'Vivimos cerca del parque.', words:['Vivimos','cerca','del','parque','lejos','colegio','mercado','metro']},
+    ],
+    food:[
+      {pt:'Eu gosto de tacos.', target:'Me gustan los tacos.', words:['Me','gustan','los','tacos','encantan','burritos','tamales','tortillas']},
+      {pt:'O café da manhã está pronto.', target:'El desayuno está listo.', words:['El','desayuno','está','listo','almuerzo','cena','casi','no']},
+      {pt:'Ela bebe café toda manhã.', target:'Ella bebe café cada mañana.', words:['Ella','bebe','café','cada','mañana','leche','agua','tarde']},
+      {pt:'Eu quero um copo de água.', target:'Quiero un vaso de agua.', words:['Quiero','un','vaso','de','agua','jugo','leche','café','té']},
+      {pt:'A comida está deliciosa.', target:'La comida está deliciosa.', words:['La','comida','está','deliciosa','rica','buena','mala','fría']},
+    ],
+    routine:[
+      {pt:'Eu acordo cedo toda manhã.', target:'Me despierto temprano cada mañana.', words:['Me','despierto','temprano','cada','mañana','tarde','noche','día']},
+      {pt:'Ela vai ao trabalho de metrô.', target:'Ella va al trabajo en metro.', words:['Ella','va','al','trabajo','en','metro','autobús','coche','tren']},
+      {pt:'Nós jantamos às oito horas.', target:'Cenamos a las ocho.', words:['Cenamos','a','las','ocho','siete','nueve','diez','comemos']},
+      {pt:'Ele lê antes de dormir.', target:'Él lee antes de dormir.', words:['Él','lee','antes','de','dormir','comer','trabajar','estudiar']},
+      {pt:'Eu me exercito toda semana.', target:'Hago ejercicio cada semana.', words:['Hago','ejercicio','cada','semana','día','mes','tarde','mañana']},
+    ],
+  },
+  fr: {
+    greetings:[
+      {pt:'Olá, tudo bem?', target:'Bonjour, comment allez-vous?', words:['Bonjour','comment','allez-vous','vas-tu','ça','va','bien','salut']},
+      {pt:'Bom dia!', target:'Bonjour!', words:['Bonjour','Bonsoir','Salut','Bonne','nuit','journée']},
+      {pt:'Prazer em te conhecer.', target:'Enchanté de vous rencontrer.', words:['Enchanté','de','vous','rencontrer','te','voir','parler','plaisir']},
+      {pt:'Tchau, até logo!', target:'Au revoir, à bientôt!', words:['Au','revoir','à','bientôt','demain','plus','tard','bye']},
+      {pt:'Boa noite!', target:'Bonne nuit!', words:['Bonne','nuit','soirée','journée','chance','bonsoir']},
+    ],
+    identity:[
+      {pt:'Meu nome é Marie.', target:'Je m\'appelle Marie.', words:["Je","m'appelle","Marie","suis","nom","est","mon"]},
+      {pt:'Eu sou francesa.', target:'Je suis française.', words:['Je','suis','française','français','brésilien','de','très']},
+      {pt:'Eu tenho trinta anos.', target:'J\'ai trente ans.', words:["J'ai","trente","ans","vingt","quarante","suis","a"]},
+      {pt:'Eu falo francês.', target:'Je parle français.', words:['Je','parle','français','anglais','espagnol','bien','mal','un','peu']},
+      {pt:'Onde você mora?', target:'Où habitez-vous?', words:['Où','habitez-vous','travaillez','allez','venez','êtes','vivez']},
+    ],
+    family:[
+      {pt:'Ela é minha mãe.', target:'Elle est ma mère.', words:['Elle','est','ma','mère','père','sœur','son','sa','il']},
+      {pt:'Eu tenho deux irmãos.', target:'J\'ai deux frères.', words:["J'ai","deux","frères","sœurs","fils","trois","un","fille"]},
+      {pt:'Meu pai trabalha muito.', target:'Mon père travaille beaucoup.', words:['Mon','père','travaille','beaucoup','mère','peu','dur','bien']},
+      {pt:'Nós somos uma família.', target:'Nous sommes une famille.', words:['Nous','sommes','une','famille','unie','grande','heureuse','petite']},
+      {pt:'Minha irmã é médica.', target:'Ma sœur est médecin.', words:['Ma','sœur','est','médecin','professeure','infirmière','avocate']},
+    ],
+    home:[
+      {pt:'A casa é grande.', target:'La maison est grande.', words:['La','maison','est','grande','petite','belle','ma','notre']},
+      {pt:'Eu durmo no meu quarto.', target:'Je dors dans ma chambre.', words:['Je','dors','dans','ma','chambre','cuisine','salle','bain','jardin']},
+      {pt:'O gato está no jardim.', target:'Le chat est dans le jardin.', words:['Le','chat','est','dans','le','jardin','chien','parc','maison']},
+      {pt:'A cozinha é moderna.', target:'La cuisine est moderne.', words:['La','cuisine','est','moderne','nouvelle','grande','petite','vieille']},
+      {pt:'Nós vivemos perto do parque.', target:'Nous vivons près du parc.', words:['Nous','vivons','près','du','parc','loin','école','marché','métro']},
+    ],
+    food:[
+      {pt:'Eu gosto de croissant.', target:'J\'aime les croissants.', words:["J'aime","les","croissants","adore","baguettes","macarons","gâteaux"]},
+      {pt:'O café da manhã está pronto.', target:'Le petit déjeuner est prêt.', words:['Le','petit','déjeuner','est','prêt','dîner','déjeuner','presque','pas']},
+      {pt:'Ela bebe café toda manhã.', target:'Elle boit du café chaque matin.', words:['Elle','boit','du','café','chaque','matin','lait','eau','soir']},
+      {pt:'Eu quero um copo de água.', target:'Je veux un verre d\'eau.', words:["Je","veux","un","verre","d'eau","jus","lait","thé","café"]},
+      {pt:'A comida está deliciosa.', target:'La nourriture est délicieuse.', words:['La','nourriture','est','délicieuse','bonne','mauvaise','froide','chaude']},
+    ],
+    routine:[
+      {pt:'Eu acordo cedo toda manhã.', target:'Je me réveille tôt chaque matin.', words:['Je','me','réveille','tôt','chaque','matin','tard','soir','nuit']},
+      {pt:'Ela vai ao trabalho de metrô.', target:'Elle va au travail en métro.', words:['Elle','va','au','travail','en','métro','bus','voiture','train']},
+      {pt:'Nós jantamos às oito horas.', target:'Nous dînons à huit heures.', words:['Nous','dînons','à','huit','heures','sept','neuf','dix','déjeunons']},
+      {pt:'Ele lê antes de dormir.', target:'Il lit avant de dormir.', words:['Il','lit','avant','de','dormir','manger','travailler','étudier']},
+      {pt:'Eu me exercito toda semana.', target:'Je fais du sport chaque semaine.', words:['Je','fais','du','sport','chaque','semaine','jour','mois','soir']},
+    ],
+  },
+  it: {
+    greetings:[
+      {pt:'Olá, tudo bem?', target:'Ciao, come stai?', words:['Ciao','come','stai','sei','va','tutto','bene','salve']},
+      {pt:'Bom dia!', target:'Buongiorno!', words:['Buongiorno','Buonasera','Buonanotte','Salve','Ciao','Pronto']},
+      {pt:'Prazer em te conhecer.', target:'Piacere di conoscerti.', words:['Piacere','di','conoscerti','vederti','parlarti','molto','è','un']},
+      {pt:'Tchau, até logo!', target:'Ciao, a presto!', words:['Ciao','a','presto','domani','dopo','dopo','più','tardi','arrivederci']},
+      {pt:'Boa noite!', target:'Buonanotte!', words:['Buonanotte','Buonasera','Buongiorno','Arrivederci','Salve']},
+    ],
+    identity:[
+      {pt:'Meu nome é Luca.', target:'Mi chiamo Luca.', words:['Mi','chiamo','Luca','sono','nome','è','il','mio']},
+      {pt:'Eu sou italiano.', target:'Sono italiano.', words:['Sono','italiano','italiana','brasiliano','di','molto','anche']},
+      {pt:'Eu tenho trinta anos.', target:'Ho trent\'anni.', words:["Ho","trent'anni","vent'anni","quarant'anni","sono","anni","ho"]},
+      {pt:'Eu falo italiano.', target:'Parlo italiano.', words:['Parlo','italiano','inglese','spagnolo','bene','male','un','po']},
+      {pt:'Onde você mora?', target:'Dove abiti?', words:['Dove','abiti','lavori','studi','sei','vai','vivi','mangi']},
+    ],
+    family:[
+      {pt:'Ela é minha mãe.', target:'Lei è mia madre.', words:['Lei','è','mia','madre','padre','sorella','suo','sua','lui']},
+      {pt:'Eu tenho dois irmãos.', target:'Ho due fratelli.', words:['Ho','due','fratelli','sorelle','figli','tre','uno','quattro']},
+      {pt:'Meu pai trabalha muito.', target:'Mio padre lavora molto.', words:['Mio','padre','lavora','molto','madre','poco','tanto','duro']},
+      {pt:'Nós somos uma família.', target:'Siamo una famiglia.', words:['Siamo','una','famiglia','unita','grande','felice','piccola','bella']},
+      {pt:'Minha irmã é médica.', target:'Mia sorella è medico.', words:['Mia','sorella','è','medico','professoressa','dottoressa','infermiera']},
+    ],
+    home:[
+      {pt:'A casa é grande.', target:'La casa è grande.', words:['La','casa','è','grande','piccola','bella','mia','nostra']},
+      {pt:'Eu durmo no meu quarto.', target:'Dormo nella mia camera.', words:['Dormo','nella','mia','camera','cucina','bagno','sala','giardino']},
+      {pt:'Il gatto è in giardino.', target:'Il gatto è in giardino.', words:['Il','gatto','è','in','giardino','cane','parco','casa','cortile']},
+      {pt:'A cozinha é moderna.', target:'La cucina è moderna.', words:['La','cucina','è','moderna','nuova','grande','piccola','vecchia']},
+      {pt:'Nós vivemos perto do parque.', target:'Viviamo vicino al parco.', words:['Viviamo','vicino','al','parco','lontano','scuola','mercato','metro']},
+    ],
+    food:[
+      {pt:'Eu gosto de pizza.', target:'Mi piace la pizza.', words:['Mi','piace','la','pizza','pasta','adoro','lasagna','gelato']},
+      {pt:'O café da manhã está pronto.', target:'La colazione è pronta.', words:['La','colazione','è','pronta','pranzo','cena','quasi','non']},
+      {pt:'Ela beve caffè ogni mattina.', target:'Lei beve caffè ogni mattina.', words:['Lei','beve','caffè','ogni','mattina','latte','acqua','sera','tè']},
+      {pt:'Eu quero um copo de água.', target:'Voglio un bicchiere d\'acqua.', words:["Voglio","un","bicchiere","d'acqua","succo","latte","tè","caffè"]},
+      {pt:'La comida está deliciosa.', target:'Il cibo è delizioso.', words:['Il','cibo','è','delizioso','buono','cattivo','freddo','caldo']},
+    ],
+    routine:[
+      {pt:'Eu acordo cedo toda manhã.', target:'Mi sveglio presto ogni mattina.', words:['Mi','sveglio','presto','ogni','mattina','tardi','sera','notte']},
+      {pt:'Ela vai ao trabalho de metrô.', target:'Lei va al lavoro in metro.', words:['Lei','va','al','lavoro','in','metro','autobus','macchina','treno']},
+      {pt:'Nós jantamos às otto.', target:'Ceniamo alle otto.', words:['Ceniamo','alle','otto','sette','nove','dieci','pranziamo','mangiamo']},
+      {pt:'Ele lê prima di dormire.', target:'Lui legge prima di dormire.', words:['Lui','legge','prima','di','dormire','mangiare','lavorare','studiare']},
+      {pt:'Eu me exercito toda semana.', target:'Faccio sport ogni settimana.', words:['Faccio','sport','ogni','settimana','giorno','mese','sera','mattina']},
+    ],
+  },
 };
+
+// ═══════════════════════════════════════════════════════════
+//  GERADOR DE EXERCÍCIOS
+// ═══════════════════════════════════════════════════════════
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+function pick(arr, n) { return shuffle(arr).slice(0, n); }
+
+function makeExercises(lang, topic) {
+  const bank = PHRASES[lang][topic] || PHRASES[lang].greetings;
+  const selected = pick(bank, Math.min(bank.length, 5));
+  const exercises = [];
+
+  selected.forEach((phrase, i) => {
+    const type = i % 3; // Alterna tipos
+    if (type === 0) {
+      exercises.push({ type:'translate', ...phrase });
+    } else if (type === 1) {
+      exercises.push({ type:'multiple', ...phrase, options: buildMCOptions(phrase, bank, lang) });
+    } else {
+      exercises.push({ type:'fill', ...phrase, fillWord: pickFillWord(phrase.target) });
+    }
+  });
+
+  // Garante pelo menos um de cada tipo
+  if (exercises.length < 5) {
+    const extra = bank[Math.floor(Math.random() * bank.length)];
+    exercises.push({ type:'translate', ...extra });
+  }
+
+  return exercises;
+}
+
+function makeBossExercises(lang, topics) {
+  const all = topics.flatMap(t => PHRASES[lang][t] || []);
+  const selected = pick(all, 8);
+  return selected.map((phrase, i) => {
+    const types = ['translate','multiple','fill','translate','multiple'];
+    const type = types[i % types.length];
+    if (type === 'multiple') return { type, ...phrase, options: buildMCOptions(phrase, all, lang) };
+    if (type === 'fill') return { type, ...phrase, fillWord: pickFillWord(phrase.target) };
+    return { type:'translate', ...phrase };
+  });
+}
+
+function buildMCOptions(phrase, bank, lang) {
+  const correct = phrase.target;
+  const wrong = bank.filter(p => p.target !== correct).map(p => p.target);
+  const options = [correct, ...pick(wrong, 3)];
+  return shuffle(options);
+}
+
+function pickFillWord(sentence) {
+  const words = sentence.split(' ');
+  // Pega palavra do meio (mais interessante)
+  const idx = Math.floor(words.length / 2);
+  return { word: words[idx], index: idx };
+}
+
+// ═══════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════
+const DEFAULT = { username:'Estudante', xp:0, lvl:1, lang:'English', streak:0, lastPracticeDate:'', streakDays:[], progress:{}, hearts:5, lastHeartTime:'' };
+let user = { ...DEFAULT };
+let uid = null;
+let userRef = null, rankRef = null;
+
+// State de sessão de prática
+let session = { lessonId:null, lessonObj:null, exercises:[], idx:0, errors:0, correct:0 };
+let hearts = 5;
+const MAX_HEARTS = 5;
+
+// ═══════════════════════════════════════════════════════════
+//  ÁUDIO
+// ═══════════════════════════════════════════════════════════
+let actx = null;
+function ac() { if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)(); return actx; }
+
+function tone(freqs, type='sine', vol=0.18) {
+  try {
+    const ctx = ac();
+    freqs.forEach(([freq, time, dur]) => {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.frequency.value = freq; o.type = type;
+      const t = ctx.currentTime + time;
+      g.gain.setValueAtTime(vol, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      o.start(t); o.stop(t + dur);
+    });
+  } catch(e) {}
+}
+
+const sndCorrect  = () => tone([[523,0,.15],[659,.12,.15],[784,.24,.2]]);
+const sndWrong    = () => tone([[220,0,.2],[180,.18,.25]],'sawtooth',0.1);
+const sndLevelUp  = () => tone([[523,0,.15],[659,.12,.15],[784,.24,.15],[1046,.36,.3]]);
+const sndComplete = () => tone([[784,0,.1],[880,.1,.1],[988,.2,.1],[1046,.3,.3]]);
+
+function speak(text) {
+  try {
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = {English:'en-US',Spanish:'es-ES',French:'fr-FR',Italian:'it-IT'}[user.lang]||'en-US';
+    u.rate = 0.85;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(u);
+  } catch(e) {}
+}
+
+// ═══════════════════════════════════════════════════════════
+//  FIREBASE
+// ═══════════════════════════════════════════════════════════
+onAuthStateChanged(auth, u => {
+  if (userRef) off(userRef);
+  if (rankRef)  off(rankRef);
+
+  if (u) {
+    uid = u.uid;
+    userRef = ref(db, 'users/' + uid);
+    onValue(userRef, snap => {
+      user = snap.exists() ? { ...DEFAULT, ...snap.val() } : { ...DEFAULT };
+      if (!snap.exists()) set(userRef, user);
+      hearts = user.hearts ?? MAX_HEARTS;
+      updateUI();
+      renderTrail();
+    });
+    rankRef = ref(db, 'users');
+    onValue(rankRef, snap => {
+      if (snap.exists()) renderRanking(snap.val());
+    });
+    show('view-app');
+    hide('view-auth');
+  } else {
+    uid = null;
+    hide('view-app');
+    show('view-auth');
+  }
+});
+
+async function saveUser(fields) {
+  user = { ...user, ...fields };
+  if (uid) await update(ref(db,'users/'+uid), fields);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  UI HELPERS
+// ═══════════════════════════════════════════════════════════
+function show(id) { document.getElementById(id).classList.remove('hidden'); }
+function hide(id) { document.getElementById(id).classList.add('hidden'); }
+function el(id)   { return document.getElementById(id); }
+function toast(msg, dur=2000) {
+  const t = el('toast'); t.innerText = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+
+function updateUI() {
+  const lvl = Math.floor(user.xp / 500) + 1;
+  const xpInLvl = user.xp % 500;
+  el('h-streak').innerText = user.streak || 0;
+  el('h-hearts').innerText = hearts;
+  el('h-xp').innerText = user.xp;
+  el('ui-pname').innerText = user.username;
+  el('ui-plang').innerText = user.lang;
+  el('ui-avatar').innerText = (user.username||'E')[0].toUpperCase();
+  el('ui-pxp').innerText = user.xp;
+  el('ui-plvl').innerText = lvl;
+  el('ui-xpbar').style.width = (xpInLvl / 500 * 100) + '%';
+  el('input-uname').value = user.username || '';
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.innerText.includes(user.lang.slice(0,3)));
+  });
+  renderStreakDays();
+}
+
+function renderStreakDays() {
+  const wrap = el('streak-days');
+  const days = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  const today = new Date();
+  const done = user.streakDays || [];
+  wrap.innerHTML = '';
+  for (let i=6; i>=0; i--) {
+    const d = new Date(today); d.setDate(today.getDate()-i);
+    const ds = d.toISOString().split('T')[0];
+    const ok = done.includes(ds);
+    const div = document.createElement('div');
+    div.className = 'sd' + (ok?' done':'');
+    div.innerHTML = `<span class="sd-icon">${ok?'🔥':'○'}</span>${days[d.getDay()]}`;
+    wrap.appendChild(div);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  TRILHA
+// ═══════════════════════════════════════════════════════════
+function getLessonStatus(lessonId, unitIdx, lessonIdx) {
+  const prog = user.progress || {};
+  if (prog[lessonId] && prog[lessonId].stars > 0) return 'done';
+  // Primeira lição sempre disponível
+  if (unitIdx === 0 && lessonIdx === 0) return 'active';
+  // Lição anterior completa?
+  const units = COURSE[user.lang] || COURSE.English;
+  let prevId = null;
+  if (lessonIdx > 0) {
+    prevId = units[unitIdx].lessons[lessonIdx-1].id;
+  } else if (unitIdx > 0) {
+    const prevUnit = units[unitIdx-1];
+    prevId = prevUnit.lessons[prevUnit.lessons.length-1].id;
+  }
+  if (!prevId) return 'active';
+  return (prog[prevId] && prog[prevId].stars > 0) ? 'active' : 'locked';
+}
+
+function getLessonStars(lessonId) {
+  const p = (user.progress||{})[lessonId];
+  return p ? p.stars : 0;
+}
+
+// Padrão de zigzag igual ao Duolingo
+const ZIG = [
+  [0], [1], [0], [2], [1], [0], [1], // padrão zigzag
+];
+
+function renderTrail() {
+  const container = el('trail-container');
+  container.innerHTML = '';
+  const units = COURSE[user.lang] || COURSE.English;
+
+  units.forEach((unit, ui) => {
+    const block = document.createElement('div');
+    block.className = 'unit-block';
+
+    // Header da unidade
+    const prog = unit.lessons.filter(l => (user.progress||{})[l.id]?.stars > 0).length;
+    const pct = (prog / unit.lessons.length * 100).toFixed(0);
+    block.innerHTML = `
+      <div class="unit-header">
+        <div class="unit-icon">${unit.icon}</div>
+        <div style="flex:1">
+          <div class="unit-title">${unit.title}</div>
+          <div class="unit-sub">Seção ${ui+1} • ${prog}/${unit.lessons.length} lições</div>
+          <div class="unit-progress"><div class="unit-progress-fill" style="width:${pct}%"></div></div>
+        </div>
+      </div>
+    `;
+
+    // Nós das lições em zigzag
+    const trail = document.createElement('div');
+    trail.className = 'trail';
+
+    unit.lessons.forEach((lesson, li) => {
+      const status = getLessonStatus(lesson.id, ui, li);
+      const stars = getLessonStars(lesson.id);
+
+      // Posição zigzag
+      const zigOffsets = [0, 60, 100, 60, 0, -60, -100, -60];
+      const offset = zigOffsets[li % zigOffsets.length];
+
+      const row = document.createElement('div');
+      row.className = 'trail-row';
+      row.style.paddingLeft = offset > 0 ? offset+'px' : '0';
+      row.style.paddingRight = offset < 0 ? Math.abs(offset)+'px' : '0';
+
+      const node = document.createElement('button');
+      node.className = `lesson-node ${status}${lesson.boss?' boss':''}`;
+      node.innerHTML = status === 'locked' ? '🔒' :
+                       lesson.boss ? (stars>0?'⭐':'🏆') :
+                       (stars>0 ? (stars>=3?'⭐':'✓') : '▶');
+
+      if (status !== 'locked') {
+        node.onclick = () => startLesson(lesson, ui, li);
+      }
+
+      // Stars badge
+      if (stars > 0 && !lesson.boss) {
+        const badge = document.createElement('div');
+        badge.className = 'node-stars';
+        badge.innerText = '⭐'.repeat(stars);
+        node.appendChild(badge);
+      }
+
+      // Tooltip
+      node.title = lesson.title;
+
+      row.appendChild(node);
+      trail.appendChild(row);
+
+      // Separador com nome da lição abaixo do nó
+      const lbl = document.createElement('div');
+      lbl.style.cssText = 'font-size:11px;font-weight:700;color:var(--text2);text-align:center;margin-top:-4px;margin-bottom:6px;';
+      lbl.innerText = lesson.title;
+      trail.appendChild(lbl);
+    });
+
+    block.appendChild(trail);
+    container.appendChild(block);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+//  INICIAR LIÇÃO
+// ═══════════════════════════════════════════════════════════
+function startLesson(lesson, unitIdx, lessonIdx) {
+  session.lessonId = lesson.id;
+  session.lessonObj = lesson;
+  session.exercises = lesson.exercises();
+  session.idx = 0;
+  session.errors = 0;
+  session.correct = 0;
+  hearts = MAX_HEARTS;
+
+  renderHearts();
+  hideFeedback();
+
+  show('view-practice');
+  hide('view-result');
+  hide('view-gameover');
+
+  loadExercise();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  RENDERIZAR EXERCÍCIO
+// ═══════════════════════════════════════════════════════════
+function loadExercise() {
+  const total = session.exercises.length;
+  const idx   = session.idx;
+
+  // Progresso
+  el('prog').style.width = (idx / total * 100) + '%';
+
+  if (idx >= total) {
+    finishLesson();
+    return;
+  }
+
+  const ex = session.exercises[idx];
+  const body = el('prac-body');
+  body.innerHTML = '';
+
+  if (ex.type === 'translate')  renderTranslate(ex, body);
+  else if (ex.type === 'multiple') renderMultiple(ex, body);
+  else if (ex.type === 'fill')   renderFill(ex, body);
+
+  // Scroll topo
+  body.scrollTop = 0;
+}
+
+// ─── TIPO 1: MONTAGEM DE FRASE ───────────────────────────
+function renderTranslate(ex, body) {
+  speak(ex.pt);
+
+  body.innerHTML = `
+    <div class="ex-label">Traduza para ${user.lang}</div>
+    <div class="ex-question">${ex.pt}</div>
+    <div class="drop-zone" id="drop-zone"></div>
+    <div class="word-bank" id="word-bank"></div>
+    <button class="btn btn-blue" id="btn-check" style="margin-top:8px;">Verificar</button>
+  `;
+
+  const zone = el('drop-zone');
+  const bank = el('word-bank');
+  const selected = []; // [{word, bankBtn, zoneChip}]
+
+  // Gera chips do banco
+  const words = shuffle(ex.words || [...ex.target.split(' '), 'a','the','is'].slice(0, ex.target.split(' ').length + 2));
+  words.forEach(w => {
+    const btn = document.createElement('button');
+    btn.className = 'wchip';
+    btn.innerText = w;
+    btn.onclick = () => {
+      if (btn.classList.contains('used')) return;
+      speak(w);
+      btn.classList.add('used');
+      zone.classList.add('active');
+      const chip = document.createElement('button');
+      chip.className = 'wchip placed';
+      chip.innerText = w;
+      chip.onclick = () => {
+        const i = selected.findIndex(s => s.bankBtn === btn);
+        if (i !== -1) selected.splice(i, 1);
+        btn.classList.remove('used');
+        chip.remove();
+        if (zone.children.length === 0) zone.classList.remove('active');
+      };
+      zone.appendChild(chip);
+      selected.push({ word: w, bankBtn: btn, zoneChip: chip });
+    };
+    bank.appendChild(btn);
+  });
+
+  el('btn-check').onclick = () => {
+    if (selected.length === 0) { toast('Selecione as palavras! 👆'); return; }
+    const answer = selected.map(s => s.word).join(' ');
+    const correct = answer.toLowerCase() === ex.target.toLowerCase();
+    handleAnswer(correct, ex.target);
+    // Desabilitar interação
+    zone.querySelectorAll('.wchip').forEach(c => c.style.pointerEvents = 'none');
+    bank.querySelectorAll('.wchip').forEach(c => c.style.pointerEvents = 'none');
+    el('btn-check').style.display = 'none';
+  };
+}
+
+// ─── TIPO 2: MÚLTIPLA ESCOLHA ────────────────────────────
+function renderMultiple(ex, body) {
+  speak(ex.pt);
+
+  body.innerHTML = `
+    <div class="ex-label">Escolha a tradução correta</div>
+    <div class="ex-question">${ex.pt}</div>
+    <div class="mc-grid" id="mc-grid"></div>
+  `;
+
+  const grid = el('mc-grid');
+  const emojis = ['🅰️','🅱️','🅲️','🅳️'];
+
+  ex.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'mc-opt';
+    btn.innerHTML = `<div class="mc-opt-icon">${emojis[i]}</div><span>${opt}</span>`;
+    btn.onclick = () => {
+      // Deselect others
+      grid.querySelectorAll('.mc-opt').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+
+      // Bloqueia duplo clique
+      grid.querySelectorAll('.mc-opt').forEach(b => b.style.pointerEvents = 'none');
+
+      const correct = opt === ex.target;
+      if (correct) { btn.classList.remove('selected'); btn.classList.add('correct'); speak(ex.target); }
+      else {
+        btn.classList.remove('selected'); btn.classList.add('wrong');
+        // Mostra correta
+        grid.querySelectorAll('.mc-opt').forEach(b => {
+          if (b.querySelector('span').innerText === ex.target) b.classList.add('correct');
+        });
+      }
+      handleAnswer(correct, ex.target);
+    };
+    grid.appendChild(btn);
+  });
+}
+
+// ─── TIPO 3: PREENCHER LACUNA ────────────────────────────
+function renderFill(ex, body) {
+  const words = ex.target.split(' ');
+  const fillIdx = ex.fillWord.index;
+  const fillWord = words[fillIdx];
+
+  // Monta frase com lacuna
+  const sentenceHtml = words.map((w, i) =>
+    i === fillIdx ? `<span class="fill-blank" id="fill-blank">___</span>` : w
+  ).join(' ');
+
+  // Opções erradas
+  const allWords = Object.values(PHRASES[getLangKey()] || PHRASES.en)
+    .flat().flatMap(p => p.target.split(' '))
+    .filter(w => w.toLowerCase() !== fillWord.toLowerCase() && w.length > 2);
+  const wrongs = pick([...new Set(allWords)], 3);
+  const options = shuffle([fillWord, ...wrongs]);
+
+  body.innerHTML = `
+    <div class="ex-label">Complete a frase</div>
+    <div class="ex-question small" style="text-align:center">${ex.pt}</div>
+    <div class="fill-sentence">${sentenceHtml}</div>
+    <div class="fill-options" id="fill-opts"></div>
+  `;
+
+  const opts = el('fill-opts');
+  options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'fill-opt';
+    btn.innerText = opt;
+    btn.onclick = () => {
+      opts.querySelectorAll('.fill-opt').forEach(b => b.style.pointerEvents = 'none');
+      const correct = opt === fillWord;
+      btn.classList.add(correct ? 'correct' : 'wrong');
+      el('fill-blank').innerText = opt;
+      el('fill-blank').style.color = correct ? 'var(--primary)' : 'var(--red)';
+      el('fill-blank').style.borderColor = correct ? 'var(--primary)' : 'var(--red)';
+      if (!correct) {
+        // Mostra correta
+        opts.querySelectorAll('.fill-opt').forEach(b => {
+          if (b.innerText === fillWord) b.classList.add('correct');
+        });
+      }
+      if (correct) speak(ex.target);
+      handleAnswer(correct, ex.target);
+    };
+    opts.appendChild(btn);
+  });
+}
 
 function getLangKey() {
-  return { English: 'en', Spanish: 'es', French: 'fr', Italian: 'it' }[user.lang] || 'en';
+  return {English:'en',Spanish:'es',French:'fr',Italian:'it'}[user.lang]||'en';
 }
 
-function getSentence() {
-  const k = getLangKey();
-  const s = FACTORY.subjects[Math.floor(Math.random() * FACTORY.subjects.length)];
-  const v = FACTORY.verbs[Math.floor(Math.random() * FACTORY.verbs.length)];
-  const o = FACTORY.objects[Math.floor(Math.random() * FACTORY.objects.length)];
-  return { pt: `${s.pt} ${v.pt} ${o.pt}`, target: `${s[k]} ${v[k]} ${o[k]}` };
-}
+// ═══════════════════════════════════════════════════════════
+//  RESPOSTA
+// ═══════════════════════════════════════════════════════════
+function handleAnswer(correct, answer) {
+  if (correct) {
+    sndCorrect();
+    session.correct++;
+    showFeedback(true, answer);
+  } else {
+    sndWrong();
+    session.errors++;
+    hearts--;
+    el('h-hearts').innerText = hearts;
+    renderHearts();
 
-// ─── TOAST ───────────────────────────────────────────────────────────────
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.innerText = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2000);
-}
-
-// ─── STREAK ──────────────────────────────────────────────────────────────
-function updateStreak() {
-  const today = new Date().toISOString().split('T')[0];
-  const last = user.lastPracticeDate;
-  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-
-  if (last === today) return; // já praticou hoje
-
-  if (last === yesterday) {
-    user.streak = (user.streak || 0) + 1;
-  } else if (last !== today) {
-    user.streak = 1; // reset ou primeiro dia
-  }
-
-  // Atualiza dias da semana
-  const days = user.streakDays || [];
-  if (!days.includes(today)) days.push(today);
-  // Mantém só os últimos 7 dias
-  const cutoff = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
-  user.streakDays = days.filter(d => d >= cutoff);
-  user.lastPracticeDate = today;
-}
-
-function renderStreakRow() {
-  const row = document.getElementById('streak-row');
-  const days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-  const today = new Date();
-  const streakDays = user.streakDays || [];
-
-  row.innerHTML = '';
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date(today);
-    d.setDate(today.getDate() - i);
-    const dateStr = d.toISOString().split('T')[0];
-    const done = streakDays.includes(dateStr);
-    const isToday = i === 0;
-    const div = document.createElement('div');
-    div.className = 'streak-day' + (done ? ' done' : '');
-    div.innerHTML = `<span class="day-icon">${done ? '🔥' : (isToday ? '⭕' : '○')}</span>${days[d.getDay()]}`;
-    row.appendChild(div);
+    if (hearts <= 0) {
+      showFeedback(false, answer, true);
+    } else {
+      showFeedback(false, answer);
+      // Shake
+      const body = el('prac-body');
+      body.classList.add('shake');
+      setTimeout(() => body.classList.remove('shake'), 350);
+    }
   }
 }
 
-// ─── HEARTS ──────────────────────────────────────────────────────────────
+function showFeedback(correct, answer, gameOver=false) {
+  const fb = el('feedback');
+  el('fb-icon').innerText = correct ? '✅' : '❌';
+
+  if (correct) {
+    fb.className = 'correct show';
+    el('fb-title').className = 'fb-title c';
+    el('fb-title').innerText = ['Excelente!','Perfeito!','Muito bem!','Arrasou!','Isso aí!'][Math.floor(Math.random()*5)];
+    el('fb-answer').innerText = '';
+    el('btn-next').className = 'btn btn-green';
+    el('btn-next').innerText = 'Continuar';
+  } else {
+    fb.className = 'wrong show';
+    el('fb-title').className = 'fb-title w';
+    el('fb-title').innerText = gameOver ? 'Sem vidas!' : 'Quase lá!';
+    el('fb-answer').innerText = 'Correto: ' + answer;
+    el('btn-next').className = 'btn btn-red';
+    el('btn-next').innerText = gameOver ? 'Ver resultado' : 'Continuar';
+  }
+
+  el('btn-next')._gameOver = gameOver;
+}
+
+function hideFeedback() {
+  el('feedback').className = '';
+}
+
+el('btn-next').onclick = () => {
+  const gameOver = el('btn-next')._gameOver;
+  hideFeedback();
+  if (gameOver) {
+    hide('view-practice');
+    show('view-gameover');
+  } else {
+    session.idx++;
+    loadExercise();
+  }
+};
+
 function renderHearts() {
-  const container = document.getElementById('hearts-display');
-  container.innerHTML = '';
+  const wrap = el('hearts');
+  wrap.innerHTML = '';
   for (let i = 0; i < MAX_HEARTS; i++) {
     const h = document.createElement('span');
     h.className = 'heart' + (i >= hearts ? ' lost' : '');
     h.innerText = '❤️';
-    container.appendChild(h);
+    wrap.appendChild(h);
   }
 }
 
-function loseHeart() {
-  hearts--;
-  renderHearts();
-  if (hearts <= 0) {
-    setTimeout(() => {
-      hideFeedback();
-      document.getElementById('view-gameover').classList.remove('hidden');
-    }, 800);
-    return false;
+// ═══════════════════════════════════════════════════════════
+//  FIM DE LIÇÃO
+// ═══════════════════════════════════════════════════════════
+async function finishLesson() {
+  hide('view-practice');
+  hideFeedback();
+  sndComplete();
+
+  const total = session.exercises.length;
+  const acc = total > 0 ? Math.round(session.correct / total * 100) : 0;
+  const stars = acc >= 90 ? 3 : acc >= 60 ? 2 : 1;
+  const xpEarned = session.lessonObj.xp * stars;
+
+  // Streak
+  const today = new Date().toISOString().split('T')[0];
+  const yesterday = new Date(Date.now()-86400000).toISOString().split('T')[0];
+  let newStreak = user.streak || 0;
+  const days = [...(user.streakDays||[])];
+  if (!days.includes(today)) {
+    newStreak = (user.lastPracticeDate === yesterday) ? newStreak+1 : 1;
+    days.push(today);
   }
-  return true;
-}
+  const cutoff = new Date(Date.now()-7*86400000).toISOString().split('T')[0];
 
-// ─── UI UPDATE ────────────────────────────────────────────────────────────
-function updateUI() {
-  const xpInLevel = (user.xp % 1000);
-  const xpPct = (xpInLevel / 1000) * 100;
+  const oldXp  = user.xp;
+  const newXp  = oldXp + xpEarned;
+  const oldLvl = Math.floor(oldXp/500)+1;
+  const newLvl = Math.floor(newXp/500)+1;
 
-  document.getElementById('ui-lvl').innerText = user.lvl;
-  document.getElementById('ui-lvl-txt').innerText = `Nível ${user.lvl}`;
-  document.getElementById('ui-task').innerText = `Tarefa ${user.task} de 10`;
-  document.getElementById('ui-xp').innerText = user.xp;
-  document.getElementById('ui-streak').innerText = user.streak || 0;
-  document.getElementById('ui-xp-bar').style.width = xpPct + '%';
-  document.getElementById('ui-lvl-stat').innerText = user.lvl;
-  document.getElementById('ui-xp-stat').innerText = user.xp;
-  document.getElementById('ui-profile-name').innerText = user.username;
-  document.getElementById('ui-profile-lang').innerText = user.lang;
-  document.getElementById('ui-avatar').innerText = (user.username || 'E')[0].toUpperCase();
-  document.getElementById('input-username').value = user.username || '';
+  // Salva progresso
+  const progress = { ...(user.progress||{}) };
+  const existing = progress[session.lessonId]?.stars || 0;
+  progress[session.lessonId] = { stars: Math.max(existing, stars), completedAt: Date.now() };
 
-  // Lang buttons active state
-  document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.innerText.includes(user.lang.substring(0, 3)));
+  await saveUser({
+    xp: newXp,
+    lvl: newLvl,
+    streak: newStreak,
+    lastPracticeDate: today,
+    streakDays: days.filter(d => d >= cutoff),
+    progress,
+    hearts: Math.min(hearts + 1, MAX_HEARTS),
   });
 
-  renderStreakRow();
+  if (newLvl > oldLvl) sndLevelUp();
+
+  // Tela de resultado
+  el('res-stars').innerText = '⭐'.repeat(stars) + (stars < 3 ? '☆'.repeat(3-stars) : '');
+  el('res-title').innerText = acc===100 ? '🎉 Perfeito!' : acc>=80 ? '🏆 Ótimo trabalho!' : '✅ Lição completa!';
+  el('res-sub').innerText   = `${acc}% de acertos • ${session.errors} erro(s)`;
+  el('res-xp').innerText    = '+' + xpEarned;
+  el('res-acc').innerText   = acc + '%';
+  el('res-streak').innerText= newStreak;
+
+  show('view-result');
 }
 
-// ─── AUTH ─────────────────────────────────────────────────────────────────
-onAuthStateChanged(auth, async (u) => {
-  // Cleanup previous listeners
-  if (userRef) off(userRef);
-  if (rankingRef) off(rankingRef);
-
-  if (u) {
-    currentUID = u.uid;
-    userRef = ref(db, 'users/' + u.uid);
-
-    onValue(userRef, (snap) => {
-      if (snap.exists()) {
-        user = { ...DEFAULT_USER, ...snap.val() };
-      } else {
-        user = { ...DEFAULT_USER };
-        set(ref(db, 'users/' + u.uid), user);
-      }
-      updateUI();
-    });
-
-    rankingRef = ref(db, 'users');
-    onValue(rankingRef, (snap) => {
-      if (snap.exists()) renderRanking(snap.val(), u.uid);
-    });
-
-    document.getElementById('view-auth').classList.add('hidden');
-    document.getElementById('view-app').classList.remove('hidden');
-  } else {
-    currentUID = null;
-    document.getElementById('view-app').classList.add('hidden');
-    document.getElementById('view-auth').classList.remove('hidden');
-  }
-});
-
-document.getElementById('btn-auth').onclick = async () => {
-  const email = document.getElementById('auth-email').value.trim();
-  const pass = document.getElementById('auth-password').value;
-  const errEl = document.getElementById('auth-error');
-  errEl.innerText = '';
-
-  if (!email || !pass) { errEl.innerText = 'Preencha e-mail e senha.'; return; }
-
-  try {
-    await signInWithEmailAndPassword(auth, email, pass);
-  } catch (e) {
-    if (e.code === 'auth/user-not-found' || e.code === 'auth/invalid-credential') {
-      try {
-        await createUserWithEmailAndPassword(auth, email, pass);
-      } catch (e2) {
-        errEl.innerText = 'Erro: ' + (e2.message || 'Tente novamente.');
-      }
-    } else {
-      errEl.innerText = 'Senha incorreta ou e-mail inválido.';
-    }
-  }
-};
-
-// ─── NAVIGATION ───────────────────────────────────────────────────────────
-const TABS = ['home', 'premium', 'ranking', 'settings'];
-TABS.forEach(t => {
-  document.getElementById('nav-' + t).onclick = () => {
-    TABS.forEach(x => {
-      document.getElementById('tab-' + x).classList.add('hidden');
-      document.getElementById('nav-' + x).classList.remove('active');
-    });
-    document.getElementById('tab-' + t).classList.remove('hidden');
-    document.getElementById('nav-' + t).classList.add('active');
-  };
-});
-
-// ─── PRACTICE ─────────────────────────────────────────────────────────────
-document.getElementById('btn-start').onclick = startPractice;
-document.getElementById('btn-close-practice').onclick = () => {
-  document.getElementById('view-practice').classList.add('hidden');
-  hideFeedback();
-};
-
-function startPractice() {
-  currentTaskNum = 0;
+// ═══════════════════════════════════════════════════════════
+//  GAME OVER & RESULTADO BTNS
+// ═══════════════════════════════════════════════════════════
+el('btn-go-retry').onclick = () => {
+  hide('view-gameover');
   hearts = MAX_HEARTS;
-  renderHearts();
-  document.getElementById('view-practice').classList.remove('hidden');
-  document.getElementById('learning-phase').classList.remove('hidden');
-  document.getElementById('task-phase').classList.add('hidden');
+  startLesson(session.lessonObj);
+};
+el('btn-go-home').onclick = () => {
+  hide('view-gameover');
+  renderTrail();
+};
+el('btn-res-continue').onclick = () => {
+  hide('view-result');
+  renderTrail();
+};
+el('btn-res-replay').onclick = () => {
+  hide('view-result');
+  hearts = MAX_HEARTS;
+  startLesson(session.lessonObj);
+};
+el('btn-close').onclick = () => {
+  hide('view-practice');
   hideFeedback();
-
-  // Generate 3 example sentences
-  const list = document.getElementById('learning-list');
-  list.innerHTML = '';
-  for (let i = 0; i < 3; i++) {
-    const s = getSentence();
-    const card = document.createElement('div');
-    card.className = 'phrase-card';
-    card.style.animationDelay = (i * 0.1) + 's';
-    card.innerHTML = `<div class="phrase-pt">🇧🇷 ${s.pt}</div><div class="phrase-target">🌍 ${s.target}</div>`;
-    list.appendChild(card);
-  }
-}
-
-document.getElementById('btn-start-tasks').onclick = () => {
-  document.getElementById('learning-phase').classList.add('hidden');
-  document.getElementById('task-phase').classList.remove('hidden');
-  nextTask();
+  renderTrail();
 };
 
-function nextTask() {
-  currentTaskNum++;
-  currentSelection = [];
-  currentPhrase = getSentence();
-
-  document.getElementById('q-text').innerText = currentPhrase.pt;
-  document.getElementById('drop-zone').innerHTML = '';
-  document.getElementById('drop-zone').classList.remove('has-words');
-  document.getElementById('ui-prog').style.width = ((currentTaskNum - 1) / 10 * 100) + '%';
-
-  // Build word bank with distractors
-  const correctWords = currentPhrase.target.split(' ');
-  const distractors = ['a', 'is', 'the', 'and', 'not', 'very'].filter(w => !correctWords.includes(w)).slice(0, 2);
-  const words = [...correctWords, ...distractors].sort(() => Math.random() - 0.5);
-
-  const bank = document.getElementById('word-bank');
-  bank.innerHTML = '';
-  words.forEach((w, idx) => {
-    const btn = document.createElement('button');
-    btn.className = 'chip';
-    btn.innerText = w;
-    btn.dataset.word = w;
-    btn.dataset.idx = idx;
-    btn.style.animationDelay = (idx * 0.05) + 's';
-    btn.onclick = () => selectWord(btn, w);
-    bank.appendChild(btn);
-  });
-}
-
-function selectWord(btn, word) {
-  // Speak word
-  try {
-    const utter = new SpeechSynthesisUtterance(word);
-    const langMap = { English: 'en-US', Spanish: 'es-ES', French: 'fr-FR', Italian: 'it-IT' };
-    utter.lang = langMap[user.lang] || 'en-US';
-    window.speechSynthesis.speak(utter);
-  } catch(e) {}
-
-  // Add to selection
-  currentSelection.push({ word, btnEl: btn });
-  btn.classList.add('used');
-
-  const zone = document.getElementById('drop-zone');
-  zone.classList.add('has-words');
-
-  const chip = document.createElement('span');
-  chip.className = 'chip in-zone';
-  chip.innerText = word;
-  chip.onclick = () => {
-    // Remove from selection
-    const idx = currentSelection.findIndex(s => s.btnEl === btn);
-    if (idx !== -1) currentSelection.splice(idx, 1);
-    btn.classList.remove('used');
-    chip.remove();
-    if (zone.children.length === 0) zone.classList.remove('has-words');
-  };
-  zone.appendChild(chip);
-}
-
-document.getElementById('btn-verify').onclick = () => {
-  if (currentSelection.length === 0) { showToast('Selecione as palavras!'); return; }
-
-  const answer = currentSelection.map(s => s.word).join(' ');
-  const correct = answer === currentPhrase.target;
-
-  showFeedback(correct, currentPhrase.target);
-
-  if (correct) {
-    playCorrect();
-    document.getElementById('ui-prog').style.width = (currentTaskNum / 10 * 100) + '%';
-  } else {
-    playWrong();
-    const alive = loseHeart();
-    if (!alive) return;
-    // Shake drop zone
-    const dz = document.getElementById('drop-zone');
-    dz.classList.add('shake');
-    setTimeout(() => dz.classList.remove('shake'), 400);
-  }
-};
-
-function showFeedback(correct, answer) {
-  const banner = document.getElementById('feedback-banner');
-  const icon = document.getElementById('feedback-icon');
-  const title = document.getElementById('feedback-title');
-  const ans = document.getElementById('feedback-answer');
-  const btnNext = document.getElementById('btn-next');
-
-  if (correct) {
-    banner.className = 'correct show';
-    icon.innerText = '✅';
-    title.className = 'feedback-title feedback-correct';
-    title.innerText = ['Excelente!', 'Perfeito!', 'Muito bem!', 'Arrasou!'][Math.floor(Math.random()*4)];
-    ans.innerText = '';
-    btnNext.className = 'btn btn-success';
-  } else {
-    banner.className = 'wrong show';
-    icon.innerText = '❌';
-    title.className = 'feedback-title feedback-wrong';
-    title.innerText = 'Quase lá!';
-    ans.innerText = 'Correto: ' + answer;
-    btnNext.className = 'btn btn-danger';
-  }
-}
-
-function hideFeedback() {
-  document.getElementById('feedback-banner').className = '';
-}
-
-document.getElementById('btn-next').onclick = async () => {
-  hideFeedback();
-  if (currentTaskNum < 10) {
-    nextTask();
-  } else {
-    // Lição concluída!
-    updateStreak();
-    user.xp += 100;
-    user.task = (user.task % 10) + 1;
-    const oldLvl = user.lvl;
-    user.lvl = Math.floor(user.xp / 1000) + 1;
-
-    await update(ref(db, 'users/' + currentUID), {
-      xp: user.xp,
-      task: user.task,
-      lvl: user.lvl,
-      streak: user.streak,
-      lastPracticeDate: user.lastPracticeDate,
-      streakDays: user.streakDays || []
-    });
-
-    document.getElementById('view-practice').classList.add('hidden');
-
-    if (user.lvl > oldLvl) {
-      playLevelUp();
-      document.getElementById('levelup-num').innerText = user.lvl;
-      document.getElementById('levelup-xp').innerText = `+100 XP conquistados`;
-      document.getElementById('view-levelup').classList.remove('hidden');
-    }
-    updateUI();
-  }
-};
-
-// ─── GAME OVER ────────────────────────────────────────────────────────────
-document.getElementById('btn-retry').onclick = () => {
-  document.getElementById('view-gameover').classList.add('hidden');
-  startPractice();
-};
-document.getElementById('btn-gameover-home').onclick = () => {
-  document.getElementById('view-gameover').classList.add('hidden');
-};
-
-// ─── LEVEL UP ─────────────────────────────────────────────────────────────
-document.getElementById('btn-levelup-ok').onclick = () => {
-  document.getElementById('view-levelup').classList.add('hidden');
-};
-
-// ─── RANKING ──────────────────────────────────────────────────────────────
-function renderRanking(allUsers, myUID) {
-  const sorted = Object.entries(allUsers)
-    .map(([uid, data]) => ({ uid, ...data }))
-    .sort((a, b) => b.xp - a.xp)
+// ═══════════════════════════════════════════════════════════
+//  RANKING
+// ═══════════════════════════════════════════════════════════
+function renderRanking(all) {
+  const sorted = Object.entries(all)
+    .map(([id, d]) => ({id,...d}))
+    .sort((a,b) => b.xp - a.xp)
     .slice(0, 10);
-
-  const colors = ['gold', 'silver', 'bronze'];
-  const medals = ['🥇', '🥈', '🥉'];
-
-  document.getElementById('ranking-list').innerHTML = sorted.map((u, i) => `
-    <div class="rank-item ${u.uid === myUID ? 'rank-self' : ''}" style="animation-delay:${i*0.05}s">
-      <div class="rank-pos ${colors[i] || ''}">${medals[i] || (i+1) + 'º'}</div>
-      <div class="rank-avatar">${(u.username || 'E')[0].toUpperCase()}</div>
-      <div class="rank-name">${u.username || 'Estudante'}${u.uid === myUID ? ' 👈' : ''}</div>
+  const medals = ['🥇','🥈','🥉'];
+  const colors = ['#F59E0B','#94A3B8','#C27803'];
+  el('ranking-list').innerHTML = sorted.map((u, i) => `
+    <div class="rank-item ${u.id===uid?'rank-self':''}">
+      <div class="rank-pos" style="${i<3?'color:'+colors[i]:''}">${medals[i]||((i+1)+'º')}</div>
+      <div class="rank-avatar">${(u.username||'E')[0].toUpperCase()}</div>
+      <div class="rank-name">${u.username||'Estudante'}${u.id===uid?' 👈':''}</div>
       <div class="rank-xp">${u.xp} XP</div>
     </div>
   `).join('');
 }
 
-// ─── SETTINGS ─────────────────────────────────────────────────────────────
-document.getElementById('btn-save-name').onclick = async () => {
-  const name = document.getElementById('input-username').value.trim();
-  if (!name) { showToast('Digite um nome!'); return; }
-  user.username = name;
-  await update(ref(db, 'users/' + currentUID), { username: name });
-  showToast('Nome salvo! ✓');
-  updateUI();
+// ═══════════════════════════════════════════════════════════
+//  NAVEGAÇÃO
+// ═══════════════════════════════════════════════════════════
+['home','ranking','settings'].forEach(t => {
+  el('ni-'+t).onclick = () => {
+    ['home','ranking','settings'].forEach(x => {
+      el('tab-'+x).classList.add('hidden');
+      el('ni-'+x).classList.remove('active');
+    });
+    el('tab-'+t).classList.remove('hidden');
+    el('ni-'+t).classList.add('active');
+  };
+});
+
+// ═══════════════════════════════════════════════════════════
+//  AUTH & SETTINGS
+// ═══════════════════════════════════════════════════════════
+el('btn-auth').onclick = async () => {
+  const email = el('auth-email').value.trim();
+  const pass  = el('auth-password').value;
+  const err   = el('auth-error');
+  err.innerText = '';
+  if (!email || !pass) { err.innerText = 'Preencha e-mail e senha.'; return; }
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch {
+    try { await createUserWithEmailAndPassword(auth, email, pass); }
+    catch(e2) { err.innerText = 'Erro: verifique seu e-mail e senha.'; }
+  }
+};
+
+el('btn-savename').onclick = async () => {
+  const name = el('input-uname').value.trim();
+  if (!name) { toast('Digite um nome!'); return; }
+  await saveUser({ username: name });
+  toast('Nome salvo ✓');
 };
 
 window.setLang = async (lang) => {
-  user.lang = lang;
-  await update(ref(db, 'users/' + currentUID), { lang });
-  updateUI();
-  showToast(`Idioma: ${lang} ✓`);
+  await saveUser({ lang, progress: {} }); // Reset progresso ao trocar idioma
+  toast(`Idioma: ${lang} ✓`);
+  renderTrail();
 };
 
-document.getElementById('btn-logout').onclick = () => {
+el('btn-logout').onclick = () => {
   if (userRef) off(userRef);
-  if (rankingRef) off(rankingRef);
+  if (rankRef)  off(rankRef);
   signOut(auth).then(() => location.reload());
 };
 </script>
