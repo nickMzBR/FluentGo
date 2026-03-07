@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>FluentGoGo</title>
+<title>FluentGo</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -400,18 +400,26 @@ nav { position:fixed; bottom:0; left:0; right:0; background:var(--bg2); display:
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script>
-// ── FIREBASE INIT ──
-const _fbApp = firebase.initializeApp({
+firebase.initializeApp({
   apiKey:"AIzaSyC1sJGJ26On1MFxsl3KDOCAdDxd_yKbkrw",
   authDomain:"fluentgo-35024.firebaseapp.com",
   databaseURL:"https://fluentgo-35024-default-rtdb.firebaseio.com",
   projectId:"fluentgo-35024",
   appId:"1:613715387990:web:0345ade26374dd32d1fdf7"
 });
-const _auth = _fbApp.auth();
-const _db   = _fbApp.database();
+const auth = firebase.auth();
+const db   = firebase.database();
 
-// ── LOGIN ISOLADO ── chamado diretamente pelo onclick do botão
+// ── Funções auxiliares Firebase compat ──
+function onAuthStateChanged(fn) { return auth.onAuthStateChanged(fn); }
+function signOut() { return auth.signOut(); }
+function ref(path) { return db.ref(path); }
+function onValue(r, cb) { r.on('value', cb); }
+function off(r) { if (r && r.off) r.off(); }
+function update(r, data) { return r.update(data); }
+function set(r, data) { return r.set(data); }
+
+// ── LOGIN ── chamado pelo onclick do botão
 async function fazerLogin() {
   const email = document.getElementById('auth-email').value.trim();
   const pass  = document.getElementById('auth-password').value;
@@ -430,18 +438,19 @@ async function fazerLogin() {
     'auth/invalid-credential':     'E-mail ou senha incorretos.',
     'auth/invalid-email':          'E-mail inválido.',
     'auth/too-many-requests':      'Muitas tentativas. Aguarde.',
-    'auth/network-request-failed': 'Sem internet. Verifique sua conexão.',
+    'auth/network-request-failed': 'Sem conexão com a internet.',
     'auth/weak-password':          'Senha muito fraca.',
     'auth/email-already-in-use':   'E-mail já cadastrado. Tente entrar.',
+    'auth/user-not-found':         null,
   };
 
   try {
-    await _auth.signInWithEmailAndPassword(email, pass);
+    await auth.signInWithEmailAndPassword(email, pass);
   } catch(e1) {
     if (e1.code === 'auth/user-not-found' || e1.code === 'auth/invalid-credential') {
       btn.innerText = 'Criando conta...';
       try {
-        await _auth.createUserWithEmailAndPassword(email, pass);
+        await auth.createUserWithEmailAndPassword(email, pass);
       } catch(e2) {
         err.innerText = MSGS[e2.code] || ('Erro: ' + e2.code);
       }
@@ -453,25 +462,6 @@ async function fazerLogin() {
     btn.innerText = 'Entrar / Cadastrar';
   }
 }
-</script>
-<script>
-// Aliases para o script principal usar
-const initializeApp = () => _fbApp;
-const getAuth = () => _auth;
-const getDatabase = () => _db;
-const onAuthStateChanged = (auth, cb) => auth.onAuthStateChanged(cb);
-const signInWithEmailAndPassword = (auth, e, p) => auth.signInWithEmailAndPassword(e, p);
-const createUserWithEmailAndPassword = (auth, e, p) => auth.createUserWithEmailAndPassword(e, p);
-const signOut = (auth) => auth.signOut();
-const ref = (db, path) => db.ref(path);
-const onValue = (r, cb) => r.on('value', cb);
-const off = (r) => { if(r && r.off) r.off(); };
-const update = (r, data) => r.update(data);
-const set = (r, data) => r.set(data);
-</script>
-<script>
-const auth = _auth;
-const db   = _db;
 
 // ═══════════════════════════════════════════════════════════
 //  DADOS DO CURSO — Unidades e Lições
@@ -880,13 +870,13 @@ function speak(text) {
 // ═══════════════════════════════════════════════════════════
 //  FIREBASE
 // ═══════════════════════════════════════════════════════════
-onAuthStateChanged(auth, u => {
+onAuthStateChanged(u => {
   if (userRef) off(userRef);
   if (rankRef)  off(rankRef);
 
   if (u) {
     uid = u.uid;
-    userRef = ref(db, 'users/' + uid);
+    userRef = ref('users/' + uid);
     onValue(userRef, snap => {
       user = snap.exists() ? { ...DEFAULT, ...snap.val() } : { ...DEFAULT };
       if (!snap.exists()) set(userRef, user);
@@ -894,7 +884,7 @@ onAuthStateChanged(auth, u => {
       updateUI();
       renderTrail();
     });
-    rankRef = ref(db, 'users');
+    rankRef = ref('users');
     onValue(rankRef, snap => {
       if (snap.exists()) renderRanking(snap.val());
     });
@@ -909,7 +899,7 @@ onAuthStateChanged(auth, u => {
 
 async function saveUser(fields) {
   user = { ...user, ...fields };
-  if (uid) await update(ref(db,'users/'+uid), fields);
+  if (uid) await update(ref('users/'+uid), fields);
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1486,7 +1476,7 @@ window.setLang = async (lang) => {
 el('btn-logout').onclick = () => {
   if (userRef) off(userRef);
   if (rankRef)  off(rankRef);
-  signOut(auth).then(() => location.reload());
+  signOut().then(() => location.reload());
 };
 </script>
 </body>
